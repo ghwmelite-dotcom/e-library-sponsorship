@@ -661,14 +661,14 @@ function LeadCaptureModal({
           animate={{ scale: 1, opacity: 1, y: 0 }}
           exit={{ scale: 0.9, opacity: 0, y: 20 }}
           transition={{ type: "spring", duration: 0.5 }}
-          className="relative w-full max-w-lg bg-gradient-to-br from-surface-800 to-surface-900 rounded-3xl border border-ghana-gold/20 shadow-2xl overflow-hidden"
+          className="relative w-full max-w-lg max-h-[90vh] bg-gradient-to-br from-surface-800 to-surface-900 rounded-3xl border border-ghana-gold/20 shadow-2xl flex flex-col"
         >
           {/* Header */}
-          <div className="relative p-6 pb-4 border-b border-white/10">
+          <div className="relative p-6 pb-4 border-b border-white/10 flex-shrink-0">
             <div className="absolute top-0 right-0 w-32 h-32 bg-ghana-gold/10 rounded-full blur-3xl" />
             <button
               onClick={onClose}
-              className="absolute top-4 right-4 p-2 rounded-lg hover:bg-white/10 transition-colors"
+              className="absolute top-4 right-4 p-2 rounded-lg hover:bg-white/10 transition-colors z-10"
             >
               <X className="w-5 h-5 text-surface-400" />
             </button>
@@ -685,8 +685,8 @@ function LeadCaptureModal({
 
           {/* Form or Success State */}
           {!isSubmitted ? (
-            <form onSubmit={handleSubmit} className="p-6 space-y-4">
-              <div className="grid grid-cols-2 gap-4">
+            <form onSubmit={handleSubmit} className="p-6 space-y-4 overflow-y-auto flex-1">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-surface-300 text-sm font-medium mb-2">
                     Full Name *
@@ -721,7 +721,7 @@ function LeadCaptureModal({
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-surface-300 text-sm font-medium mb-2">
                     Company/Organization *
