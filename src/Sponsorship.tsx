@@ -1,5 +1,8 @@
-import { useRef, useState, useEffect, useCallback } from 'react';
+import { useRef, useState, useEffect, useCallback, Suspense, lazy } from 'react';
 import { motion, useScroll, useTransform, useInView, useSpring, AnimatePresence } from 'framer-motion';
+
+// Lazy load the 3D Globe for better performance
+const GhanaGlobe = lazy(() => import('./components/GhanaGlobe'));
 import {
   Brain,
   BookOpen,
@@ -1393,6 +1396,52 @@ export default function Sponsorship() {
               </motion.div>
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* ===== INTERACTIVE GLOBE ===== */}
+      <section className="relative py-24 px-6 overflow-hidden">
+        <div className="max-w-7xl mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center mb-12"
+          >
+            <span className="inline-block px-4 py-2 bg-ghana-gold/20 text-ghana-gold rounded-full text-sm font-medium mb-6">
+              NATIONWIDE REACH
+            </span>
+            <h2 className="text-4xl md:text-5xl font-heading font-bold mb-6 text-white">
+              Connecting{' '}
+              <span className="bg-gradient-to-r from-ghana-green via-ghana-gold to-ghana-red bg-clip-text text-transparent">
+                All of Ghana
+              </span>
+            </h2>
+            <p className="text-xl text-surface-300 max-w-3xl mx-auto">
+              One unified platform connecting every Ministry, Department, and Agency across the nation.
+              Explore the network of government institutions that will be transformed.
+            </p>
+          </motion.div>
+
+          {/* 3D Globe */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8 }}
+            className="relative"
+          >
+            <Suspense fallback={
+              <div className="w-full h-[500px] md:h-[600px] flex items-center justify-center">
+                <div className="text-center">
+                  <div className="w-16 h-16 border-4 border-ghana-gold/30 border-t-ghana-gold rounded-full animate-spin mx-auto mb-4" />
+                  <p className="text-surface-400">Loading 3D Globe...</p>
+                </div>
+              </div>
+            }>
+              <GhanaGlobe />
+            </Suspense>
+          </motion.div>
         </div>
       </section>
 
