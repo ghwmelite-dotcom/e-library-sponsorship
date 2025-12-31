@@ -1577,9 +1577,9 @@ export default function Sponsorship() {
                 </div>
 
                 <div className="space-y-4">
-                  {/* Cal.com / Calendly Button - Replace URL with actual booking link */}
+                  {/* Cal.com Booking Button */}
                   <a
-                    href="https://cal.com/ohcs-elibrary/partnership"
+                    href="https://cal.com/osborn-hodges-fm7fyx"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="group w-full py-4 px-6 bg-gradient-to-r from-ghana-green to-ghana-green/80 text-white font-bold rounded-xl shadow-lg hover:shadow-xl hover:shadow-ghana-green/30 transition-all hover:scale-[1.02] flex items-center justify-center gap-3"
@@ -1604,11 +1604,11 @@ export default function Sponsorship() {
                   </a>
 
                   <a
-                    href="tel:+233000000000"
+                    href="tel:+233505982361"
                     className="group w-full py-4 px-6 bg-white/10 text-white font-semibold rounded-xl border border-white/20 hover:bg-white/20 transition-all flex items-center justify-center gap-3"
                   >
                     <Phone className="w-5 h-5" />
-                    Call Us Directly
+                    Call: +233 505 982 361
                   </a>
                 </div>
 
