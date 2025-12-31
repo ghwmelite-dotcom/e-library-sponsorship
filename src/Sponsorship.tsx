@@ -1,8 +1,9 @@
 import { useRef, useState, useEffect, useCallback, Suspense, lazy } from 'react';
 import { motion, useScroll, useTransform, useInView, useSpring, AnimatePresence } from 'framer-motion';
 
-// Lazy load the 3D Globe for better performance
+// Lazy load heavy components for better performance
 const GhanaGlobe = lazy(() => import('./components/GhanaGlobe'));
+const BrandingPreview = lazy(() => import('./components/BrandingPreview'));
 import {
   Brain,
   BookOpen,
@@ -1658,6 +1659,57 @@ export default function Sponsorship() {
           </motion.div>
 
           <ROICalculator />
+        </div>
+      </section>
+
+      {/* ===== VIRTUAL BRANDING PREVIEW ===== */}
+      <section className="relative py-24 px-6 overflow-hidden">
+        {/* Background decorations */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          <div className="absolute top-1/4 left-0 w-64 h-64 bg-ghana-gold/5 rounded-full blur-3xl" />
+          <div className="absolute bottom-1/4 right-0 w-64 h-64 bg-ghana-green/5 rounded-full blur-3xl" />
+        </div>
+
+        <div className="max-w-6xl mx-auto relative z-10">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center mb-12"
+          >
+            <span className="inline-block px-4 py-2 bg-ghana-green/20 text-ghana-green rounded-full text-sm font-medium mb-6">
+              VISUALIZE YOUR IMPACT
+            </span>
+            <h2 className="text-4xl md:text-5xl font-heading font-bold mb-6 text-white">
+              See Your Brand{' '}
+              <span className="bg-gradient-to-r from-ghana-green via-ghana-gold to-ghana-red bg-clip-text text-transparent">
+                Come to Life
+              </span>
+            </h2>
+            <p className="text-xl text-surface-300 max-w-3xl mx-auto">
+              Enter your company details and preview exactly how your brand will appear across
+              the OHCS E-Library platform, certificates, and launch events.
+            </p>
+          </motion.div>
+
+          {/* Branding Preview Component */}
+          <motion.div
+            initial={{ opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.2 }}
+          >
+            <Suspense fallback={
+              <div className="w-full h-[400px] flex items-center justify-center">
+                <div className="text-center">
+                  <div className="w-16 h-16 border-4 border-ghana-gold/30 border-t-ghana-gold rounded-full animate-spin mx-auto mb-4" />
+                  <p className="text-surface-400">Loading Preview...</p>
+                </div>
+              </div>
+            }>
+              <BrandingPreview />
+            </Suspense>
+          </motion.div>
         </div>
       </section>
 
