@@ -1,4 +1,4 @@
-import { useRef, useState, useEffect } from 'react';
+import { useRef, useState, useEffect, useCallback } from 'react';
 import { motion, useScroll, useTransform, useInView, useSpring, AnimatePresence } from 'framer-motion';
 import {
   Brain,
@@ -43,6 +43,238 @@ import {
   CheckCircle2,
   Loader2,
 } from 'lucide-react';
+
+// ===== LOADING SCREEN COMPONENT =====
+function LoadingScreen({ onComplete }: { onComplete: () => void }) {
+  useEffect(() => {
+    const timer = setTimeout(onComplete, 2000);
+    return () => clearTimeout(timer);
+  }, [onComplete]);
+
+  return (
+    <motion.div
+      initial={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.5 }}
+      className="fixed inset-0 z-[100] bg-[#0a0908] flex flex-col items-center justify-center"
+    >
+      {/* Animated background gradient */}
+      <div className="absolute inset-0 overflow-hidden">
+        <motion.div
+          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full"
+          style={{
+            background: 'radial-gradient(circle, rgba(252,209,22,0.15) 0%, rgba(0,107,63,0.1) 50%, transparent 70%)',
+          }}
+          animate={{
+            scale: [1, 1.2, 1],
+            opacity: [0.5, 0.8, 0.5],
+          }}
+          transition={{
+            duration: 2,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+        />
+      </div>
+
+      {/* Loading star */}
+      <motion.svg
+        viewBox="0 0 100 100"
+        className="w-24 h-24 text-ghana-gold loading-star"
+        initial={{ scale: 0, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        transition={{ duration: 0.5, type: "spring" }}
+      >
+        <polygon
+          points="50,5 61,35 95,35 68,57 79,91 50,70 21,91 32,57 5,35 39,35"
+          fill="currentColor"
+        />
+      </motion.svg>
+
+      {/* Loading text */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.3 }}
+        className="mt-8 text-center"
+      >
+        <h2 className="text-2xl font-heading font-bold text-white mb-2">OHCS E-Library</h2>
+        <p className="text-surface-400 text-sm">Empowering Ghana's Civil Service</p>
+      </motion.div>
+
+      {/* Progress bar */}
+      <motion.div
+        className="mt-8 w-48 h-1 bg-surface-800 rounded-full overflow-hidden"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.5 }}
+      >
+        <motion.div
+          className="h-full bg-gradient-to-r from-ghana-green via-ghana-gold to-ghana-red rounded-full"
+          initial={{ width: "0%" }}
+          animate={{ width: "100%" }}
+          transition={{ duration: 1.5, ease: "easeInOut" }}
+        />
+      </motion.div>
+    </motion.div>
+  );
+}
+
+// ===== TYPEWRITER TEXT COMPONENT =====
+function TypewriterText({
+  texts,
+  className = '',
+}: {
+  texts: string[];
+  className?: string;
+}) {
+  const [currentTextIndex, setCurrentTextIndex] = useState(0);
+  const [currentText, setCurrentText] = useState('');
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  useEffect(() => {
+    const text = texts[currentTextIndex];
+    const timeout = setTimeout(
+      () => {
+        if (!isDeleting) {
+          if (currentText.length < text.length) {
+            setCurrentText(text.slice(0, currentText.length + 1));
+          } else {
+            setTimeout(() => setIsDeleting(true), 2000);
+          }
+        } else {
+          if (currentText.length > 0) {
+            setCurrentText(text.slice(0, currentText.length - 1));
+          } else {
+            setIsDeleting(false);
+            setCurrentTextIndex((prev) => (prev + 1) % texts.length);
+          }
+        }
+      },
+      isDeleting ? 50 : 100
+    );
+
+    return () => clearTimeout(timeout);
+  }, [currentText, isDeleting, currentTextIndex, texts]);
+
+  return (
+    <span className={className}>
+      {currentText}
+      <span className="typewriter-cursor" />
+    </span>
+  );
+}
+
+// ===== CONFETTI COMPONENT =====
+function Confetti({ isActive }: { isActive: boolean }) {
+  const [pieces, setPieces] = useState<Array<{ id: number; left: number; color: string; delay: number; size: number }>>([]);
+
+  useEffect(() => {
+    if (isActive) {
+      const colors = ['#006B3F', '#FCD116', '#CE1126', '#ffffff'];
+      const newPieces = Array.from({ length: 50 }, (_, i) => ({
+        id: i,
+        left: Math.random() * 100,
+        color: colors[Math.floor(Math.random() * colors.length)],
+        delay: Math.random() * 0.5,
+        size: Math.random() * 8 + 6,
+      }));
+      setPieces(newPieces);
+
+      const timer = setTimeout(() => setPieces([]), 3500);
+      return () => clearTimeout(timer);
+    }
+  }, [isActive]);
+
+  if (!isActive && pieces.length === 0) return null;
+
+  return (
+    <div className="fixed inset-0 pointer-events-none z-[60]">
+      {pieces.map((piece) => (
+        <div
+          key={piece.id}
+          className="confetti-piece"
+          style={{
+            left: `${piece.left}%`,
+            backgroundColor: piece.color,
+            width: piece.size,
+            height: piece.size,
+            animationDelay: `${piece.delay}s`,
+            borderRadius: Math.random() > 0.5 ? '50%' : '2px',
+          }}
+        />
+      ))}
+    </div>
+  );
+}
+
+// ===== MAGNETIC BUTTON WRAPPER =====
+function MagneticButton({
+  children,
+  className = '',
+  onClick,
+  href,
+  target,
+  rel,
+}: {
+  children: React.ReactNode;
+  className?: string;
+  onClick?: () => void;
+  href?: string;
+  target?: string;
+  rel?: string;
+}) {
+  const buttonRef = useRef<HTMLElement>(null);
+  const [position, setPosition] = useState({ x: 0, y: 0 });
+
+  const handleMouseMove = useCallback((e: React.MouseEvent) => {
+    if (!buttonRef.current) return;
+    const rect = buttonRef.current.getBoundingClientRect();
+    const centerX = rect.left + rect.width / 2;
+    const centerY = rect.top + rect.height / 2;
+    const distanceX = (e.clientX - centerX) * 0.2;
+    const distanceY = (e.clientY - centerY) * 0.2;
+    setPosition({ x: distanceX, y: distanceY });
+  }, []);
+
+  const handleMouseLeave = useCallback(() => {
+    setPosition({ x: 0, y: 0 });
+  }, []);
+
+  const style = {
+    transform: `translate(${position.x}px, ${position.y}px)`,
+  };
+
+  if (href) {
+    return (
+      <a
+        ref={buttonRef as React.RefObject<HTMLAnchorElement>}
+        href={href}
+        target={target}
+        rel={rel}
+        className={`magnetic-btn inline-block ${className}`}
+        style={style}
+        onMouseMove={handleMouseMove}
+        onMouseLeave={handleMouseLeave}
+      >
+        {children}
+      </a>
+    );
+  }
+
+  return (
+    <button
+      ref={buttonRef as React.RefObject<HTMLButtonElement>}
+      className={`magnetic-btn ${className}`}
+      style={style}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+      onClick={onClick}
+    >
+      {children}
+    </button>
+  );
+}
 
 // Animated counter component
 function AnimatedCounter({
@@ -310,8 +542,9 @@ function SponsorTierCard({
 
         {/* CTA */}
         <div className="p-6 pt-0">
-          <button className={`w-full py-3 rounded-xl font-semibold transition-all duration-300 bg-gradient-to-r ${config.gradient} text-black hover:shadow-lg hover:${config.glow} hover:scale-[1.02]`}>
-            Become a Partner
+          <button className={`w-full py-3 rounded-xl font-semibold transition-all duration-300 bg-gradient-to-r ${config.gradient} text-black hover:shadow-lg hover:${config.glow} hover:scale-[1.02] relative overflow-hidden group`}>
+            <span className="relative z-10">Become a Partner</span>
+            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
           </button>
         </div>
       </div>
@@ -589,10 +822,10 @@ function ROICalculator() {
         </p>
         <a
           href="#schedule-meeting"
-          className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-ghana-gold to-yellow-400 text-black font-bold rounded-xl hover:shadow-lg hover:shadow-ghana-gold/30 transition-all hover:scale-105"
+          className="inline-flex items-center gap-2 px-6 py-3 btn-animated-gradient text-black font-bold rounded-xl hover:shadow-lg hover:shadow-ghana-gold/30 transition-all hover:scale-105"
         >
-          <CalendarClock className="w-5 h-5" />
-          Schedule a Discussion
+          <CalendarClock className="w-5 h-5 relative z-10" />
+          <span className="relative z-10">Schedule a Discussion</span>
         </a>
       </div>
     </motion.div>
@@ -854,11 +1087,20 @@ export default function Sponsorship() {
   // Smooth scroll indicator
   const smoothProgress = useSpring(scrollYProgress, { stiffness: 100, damping: 30 });
 
+  // Loading screen state
+  const [isLoading, setIsLoading] = useState(true);
+
   // Lead Capture Modal State
   const [isLeadModalOpen, setIsLeadModalOpen] = useState(false);
 
+  // Confetti state
+  const [showConfetti, setShowConfetti] = useState(false);
+
   // Handle PDF download after lead capture
   const handleDownloadProposal = () => {
+    // Trigger confetti celebration
+    setShowConfetti(true);
+
     // Create and trigger download
     const link = document.createElement('a');
     link.href = '/SPONSORSHIP_PROPOSAL.md';
@@ -973,14 +1215,26 @@ export default function Sponsorship() {
   ];
 
   return (
-    <div ref={containerRef} className="relative bg-[#0a0908] text-white overflow-hidden">
-      {/* Progress indicator */}
-      <motion.div
-        className="fixed top-0 left-0 right-0 h-1 bg-gradient-to-r from-ghana-red via-ghana-gold to-ghana-green z-50 origin-left"
-        style={{ scaleX: smoothProgress }}
-      />
+    <>
+      {/* Loading Screen */}
+      <AnimatePresence>
+        {isLoading && <LoadingScreen onComplete={() => setIsLoading(false)} />}
+      </AnimatePresence>
 
-      {/* Animated background elements */}
+      {/* Confetti Celebration */}
+      <Confetti isActive={showConfetti} />
+
+      {/* Premium Noise Texture Overlay */}
+      <div className="noise-overlay" />
+
+      <div ref={containerRef} className="relative bg-[#0a0908] text-white overflow-hidden">
+        {/* Progress indicator */}
+        <motion.div
+          className="fixed top-0 left-0 right-0 h-1 bg-gradient-to-r from-ghana-red via-ghana-gold to-ghana-green z-50 origin-left"
+          style={{ scaleX: smoothProgress }}
+        />
+
+        {/* Animated background elements */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden">
         <motion.div
           className="absolute top-1/4 -left-32 w-96 h-96 bg-ghana-green/10 rounded-full blur-3xl"
@@ -1049,44 +1303,52 @@ export default function Sponsorship() {
             </span>
           </motion.h1>
 
-          {/* Subtitle */}
-          <motion.p
+          {/* Subtitle with typewriter */}
+          <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.5, duration: 0.8 }}
             className="text-xl md:text-2xl text-surface-300 max-w-3xl mx-auto mb-10"
           >
-            Join us in transforming public service delivery through Africa's most comprehensive
-            AI-powered knowledge platform
-          </motion.p>
+            <span>Join us in transforming public service delivery through </span>
+            <TypewriterText
+              texts={[
+                "Africa's most comprehensive AI platform",
+                "intelligent knowledge management",
+                "digital transformation excellence",
+                "the future of governance",
+              ]}
+              className="text-ghana-gold font-semibold"
+            />
+          </motion.div>
 
-          {/* CTA buttons */}
+          {/* CTA buttons with magnetic effect */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.7, duration: 0.8 }}
             className="flex flex-col sm:flex-row items-center justify-center gap-4"
           >
-            <a
+            <MagneticButton
               href="#sponsor-tiers"
-              className="group px-8 py-4 bg-gradient-to-r from-ghana-gold to-yellow-400 text-black font-bold rounded-xl shadow-lg shadow-ghana-gold/30 hover:shadow-xl hover:shadow-ghana-gold/40 transition-all hover:scale-105"
+              className="group px-8 py-4 btn-animated-gradient text-black font-bold rounded-xl shadow-lg shadow-ghana-gold/30 hover:shadow-xl hover:shadow-ghana-gold/40 transition-all hover:scale-105"
             >
-              <span className="flex items-center gap-2">
+              <span className="flex items-center gap-2 relative z-10">
                 Become a Sponsor
                 <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
               </span>
-            </a>
-            <a
+            </MagneticButton>
+            <MagneticButton
               href="https://ohcs-elibrary.pages.dev"
               target="_blank"
               rel="noopener noreferrer"
-              className="group px-8 py-4 bg-white/10 backdrop-blur-sm text-white font-semibold rounded-xl border border-white/20 hover:bg-white/20 transition-all"
+              className="group px-8 py-4 bg-white/10 backdrop-blur-sm text-white font-semibold rounded-xl border border-white/20 hover:bg-white/20 transition-all btn-shimmer"
             >
-              <span className="flex items-center gap-2">
+              <span className="flex items-center gap-2 relative z-10">
                 <Play className="w-5 h-5" />
                 View Platform Demo
               </span>
-            </a>
+            </MagneticButton>
           </motion.div>
 
           {/* Scroll indicator */}
@@ -1578,16 +1840,16 @@ export default function Sponsorship() {
 
                 <div className="space-y-4">
                   {/* Cal.com Booking Button */}
-                  <a
+                  <MagneticButton
                     href="https://cal.com/osborn-hodges-fm7fyx"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="group w-full py-4 px-6 bg-gradient-to-r from-ghana-green to-ghana-green/80 text-white font-bold rounded-xl shadow-lg hover:shadow-xl hover:shadow-ghana-green/30 transition-all hover:scale-[1.02] flex items-center justify-center gap-3"
+                    className="group w-full py-4 px-6 bg-gradient-to-r from-ghana-green to-ghana-green/80 text-white font-bold rounded-xl shadow-lg hover:shadow-xl hover:shadow-ghana-green/30 transition-all hover:scale-[1.02] flex items-center justify-center gap-3 glow-green"
                   >
                     <CalendarClock className="w-5 h-5" />
                     Book a Meeting Online
                     <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                  </a>
+                  </MagneticButton>
 
                   <div className="flex items-center gap-4">
                     <div className="flex-1 h-px bg-white/10" />
@@ -1597,18 +1859,18 @@ export default function Sponsorship() {
 
                   <a
                     href="mailto:rsimd@ohcs.gov.gh?subject=OHCS E-Library Partnership Meeting Request&body=Hello,%0A%0AI would like to schedule a meeting to discuss partnership opportunities for the OHCS E-Library project.%0A%0APreferred meeting times:%0A-%0A-%0A%0AOrganization:%0AName:%0APhone:%0A%0AThank you."
-                    className="group w-full py-4 px-6 bg-white/10 text-white font-semibold rounded-xl border border-white/20 hover:bg-white/20 transition-all flex items-center justify-center gap-3"
+                    className="group w-full py-4 px-6 bg-white/10 text-white font-semibold rounded-xl border border-white/20 hover:bg-white/20 transition-all flex items-center justify-center gap-3 btn-shimmer"
                   >
-                    <Mail className="w-5 h-5" />
-                    Email to Schedule
+                    <Mail className="w-5 h-5 relative z-10" />
+                    <span className="relative z-10">Email to Schedule</span>
                   </a>
 
                   <a
                     href="tel:+233505982361"
-                    className="group w-full py-4 px-6 bg-white/10 text-white font-semibold rounded-xl border border-white/20 hover:bg-white/20 transition-all flex items-center justify-center gap-3"
+                    className="group w-full py-4 px-6 bg-white/10 text-white font-semibold rounded-xl border border-white/20 hover:bg-white/20 transition-all flex items-center justify-center gap-3 btn-shimmer"
                   >
-                    <Phone className="w-5 h-5" />
-                    Call: +233 505 982 361
+                    <Phone className="w-5 h-5 relative z-10" />
+                    <span className="relative z-10">Call: +233 505 982 361</span>
                   </a>
                 </div>
 
@@ -1649,21 +1911,21 @@ export default function Sponsorship() {
               </p>
 
               <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-8">
-                <a
+                <MagneticButton
                   href="#schedule-meeting"
-                  className="group px-8 py-4 bg-ghana-gold text-black font-bold rounded-xl shadow-lg hover:shadow-xl transition-all hover:scale-105 flex items-center gap-2"
+                  className="group px-8 py-4 btn-animated-gradient text-black font-bold rounded-xl shadow-lg hover:shadow-xl transition-all hover:scale-105 flex items-center gap-2"
                 >
-                  <CalendarClock className="w-5 h-5" />
-                  Schedule a Meeting
-                  <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                </a>
-                <button
+                  <CalendarClock className="w-5 h-5 relative z-10" />
+                  <span className="relative z-10">Schedule a Meeting</span>
+                  <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform relative z-10" />
+                </MagneticButton>
+                <MagneticButton
                   onClick={() => setIsLeadModalOpen(true)}
-                  className="px-8 py-4 bg-white/20 backdrop-blur-sm text-white font-semibold rounded-xl border border-white/30 hover:bg-white/30 transition-all flex items-center gap-2"
+                  className="px-8 py-4 bg-white/20 backdrop-blur-sm text-white font-semibold rounded-xl border border-white/30 hover:bg-white/30 transition-all flex items-center gap-2 btn-shimmer"
                 >
-                  <Download className="w-5 h-5" />
-                  Download Full Proposal
-                </button>
+                  <Download className="w-5 h-5 relative z-10" />
+                  <span className="relative z-10">Download Full Proposal</span>
+                </MagneticButton>
               </div>
 
               {/* Contact info */}
@@ -1708,12 +1970,13 @@ export default function Sponsorship() {
         </div>
       </footer>
 
-      {/* Lead Capture Modal */}
-      <LeadCaptureModal
-        isOpen={isLeadModalOpen}
-        onClose={() => setIsLeadModalOpen(false)}
-        onSuccess={handleDownloadProposal}
-      />
-    </div>
+        {/* Lead Capture Modal */}
+        <LeadCaptureModal
+          isOpen={isLeadModalOpen}
+          onClose={() => setIsLeadModalOpen(false)}
+          onSuccess={handleDownloadProposal}
+        />
+      </div>
+    </>
   );
 }
