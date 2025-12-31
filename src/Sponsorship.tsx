@@ -653,7 +653,7 @@ function LeadCaptureModal({
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
-        className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm"
+        className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 bg-black/70 backdrop-blur-sm"
         onClick={(e) => e.target === e.currentTarget && onClose()}
       >
         <motion.div
@@ -661,34 +661,34 @@ function LeadCaptureModal({
           animate={{ scale: 1, opacity: 1, y: 0 }}
           exit={{ scale: 0.9, opacity: 0, y: 20 }}
           transition={{ type: "spring", duration: 0.5 }}
-          className="relative w-full max-w-lg max-h-[90vh] bg-gradient-to-br from-surface-800 to-surface-900 rounded-3xl border border-ghana-gold/20 shadow-2xl flex flex-col"
+          className="relative w-full max-w-lg max-h-[85vh] sm:max-h-[90vh] bg-gradient-to-br from-surface-800 to-surface-900 rounded-2xl sm:rounded-3xl border border-ghana-gold/20 shadow-2xl flex flex-col min-h-0"
         >
           {/* Header */}
-          <div className="relative p-6 pb-4 border-b border-white/10 flex-shrink-0">
+          <div className="relative p-4 sm:p-6 sm:pb-4 border-b border-white/10 flex-shrink-0">
             <div className="absolute top-0 right-0 w-32 h-32 bg-ghana-gold/10 rounded-full blur-3xl" />
             <button
               onClick={onClose}
-              className="absolute top-4 right-4 p-2 rounded-lg hover:bg-white/10 transition-colors z-10"
+              className="absolute top-3 right-3 sm:top-4 sm:right-4 p-2 rounded-lg hover:bg-white/10 transition-colors z-10"
             >
               <X className="w-5 h-5 text-surface-400" />
             </button>
             <div className="flex items-center gap-3">
-              <div className="p-3 rounded-xl bg-ghana-gold/20">
-                <FileText className="w-6 h-6 text-ghana-gold" />
+              <div className="p-2 sm:p-3 rounded-xl bg-ghana-gold/20">
+                <FileText className="w-5 h-5 sm:w-6 sm:h-6 text-ghana-gold" />
               </div>
               <div>
-                <h3 className="text-xl font-heading font-bold text-white">Download Full Proposal</h3>
-                <p className="text-surface-400 text-sm">Get the complete sponsorship details</p>
+                <h3 className="text-lg sm:text-xl font-heading font-bold text-white">Download Full Proposal</h3>
+                <p className="text-surface-400 text-xs sm:text-sm">Get the complete sponsorship details</p>
               </div>
             </div>
           </div>
 
           {/* Form or Success State */}
           {!isSubmitted ? (
-            <form onSubmit={handleSubmit} className="p-6 space-y-4 overflow-y-auto flex-1">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <form onSubmit={handleSubmit} className="p-4 sm:p-6 space-y-3 sm:space-y-4 overflow-y-auto flex-1 min-h-0">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                 <div>
-                  <label className="block text-surface-300 text-sm font-medium mb-2">
+                  <label className="block text-surface-300 text-xs sm:text-sm font-medium mb-1 sm:mb-2">
                     Full Name *
                   </label>
                   <div className="relative">
@@ -699,12 +699,12 @@ function LeadCaptureModal({
                       value={formData.name}
                       onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                       placeholder="John Doe"
-                      className="w-full pl-10 pr-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-surface-500 focus:border-ghana-gold/50 focus:outline-none focus:ring-1 focus:ring-ghana-gold/50 transition-all"
+                      className="w-full pl-10 pr-4 py-2.5 sm:py-3 bg-white/5 border border-white/10 rounded-xl text-sm sm:text-base text-white placeholder-surface-500 focus:border-ghana-gold/50 focus:outline-none focus:ring-1 focus:ring-ghana-gold/50 transition-all"
                     />
                   </div>
                 </div>
                 <div>
-                  <label className="block text-surface-300 text-sm font-medium mb-2">
+                  <label className="block text-surface-300 text-xs sm:text-sm font-medium mb-1 sm:mb-2">
                     Email Address *
                   </label>
                   <div className="relative">
@@ -715,15 +715,15 @@ function LeadCaptureModal({
                       value={formData.email}
                       onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                       placeholder="john@company.com"
-                      className="w-full pl-10 pr-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-surface-500 focus:border-ghana-gold/50 focus:outline-none focus:ring-1 focus:ring-ghana-gold/50 transition-all"
+                      className="w-full pl-10 pr-4 py-2.5 sm:py-3 bg-white/5 border border-white/10 rounded-xl text-sm sm:text-base text-white placeholder-surface-500 focus:border-ghana-gold/50 focus:outline-none focus:ring-1 focus:ring-ghana-gold/50 transition-all"
                     />
                   </div>
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                 <div>
-                  <label className="block text-surface-300 text-sm font-medium mb-2">
+                  <label className="block text-surface-300 text-xs sm:text-sm font-medium mb-1 sm:mb-2">
                     Company/Organization *
                   </label>
                   <div className="relative">
@@ -734,12 +734,12 @@ function LeadCaptureModal({
                       value={formData.company}
                       onChange={(e) => setFormData({ ...formData, company: e.target.value })}
                       placeholder="Acme Corp"
-                      className="w-full pl-10 pr-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-surface-500 focus:border-ghana-gold/50 focus:outline-none focus:ring-1 focus:ring-ghana-gold/50 transition-all"
+                      className="w-full pl-10 pr-4 py-2.5 sm:py-3 bg-white/5 border border-white/10 rounded-xl text-sm sm:text-base text-white placeholder-surface-500 focus:border-ghana-gold/50 focus:outline-none focus:ring-1 focus:ring-ghana-gold/50 transition-all"
                     />
                   </div>
                 </div>
                 <div>
-                  <label className="block text-surface-300 text-sm font-medium mb-2">
+                  <label className="block text-surface-300 text-xs sm:text-sm font-medium mb-1 sm:mb-2">
                     Phone (Optional)
                   </label>
                   <div className="relative">
@@ -749,20 +749,20 @@ function LeadCaptureModal({
                       value={formData.phone}
                       onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                       placeholder="+233 XX XXX XXXX"
-                      className="w-full pl-10 pr-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-surface-500 focus:border-ghana-gold/50 focus:outline-none focus:ring-1 focus:ring-ghana-gold/50 transition-all"
+                      className="w-full pl-10 pr-4 py-2.5 sm:py-3 bg-white/5 border border-white/10 rounded-xl text-sm sm:text-base text-white placeholder-surface-500 focus:border-ghana-gold/50 focus:outline-none focus:ring-1 focus:ring-ghana-gold/50 transition-all"
                     />
                   </div>
                 </div>
               </div>
 
               <div>
-                <label className="block text-surface-300 text-sm font-medium mb-2">
+                <label className="block text-surface-300 text-xs sm:text-sm font-medium mb-1 sm:mb-2">
                   Interested Partnership Tier
                 </label>
                 <select
                   value={formData.tier}
                   onChange={(e) => setFormData({ ...formData, tier: e.target.value })}
-                  className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white focus:border-ghana-gold/50 focus:outline-none focus:ring-1 focus:ring-ghana-gold/50 transition-all appearance-none cursor-pointer"
+                  className="w-full px-4 py-2.5 sm:py-3 bg-white/5 border border-white/10 rounded-xl text-sm sm:text-base text-white focus:border-ghana-gold/50 focus:outline-none focus:ring-1 focus:ring-ghana-gold/50 transition-all appearance-none cursor-pointer"
                 >
                   <option value="" className="bg-surface-800">Select a tier...</option>
                   <option value="platinum" className="bg-surface-800">Platinum (GHS 7.5M+)</option>
@@ -774,22 +774,22 @@ function LeadCaptureModal({
               </div>
 
               <div>
-                <label className="block text-surface-300 text-sm font-medium mb-2">
+                <label className="block text-surface-300 text-xs sm:text-sm font-medium mb-1 sm:mb-2">
                   Message (Optional)
                 </label>
                 <textarea
                   value={formData.message}
                   onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                   placeholder="Any questions or specific interests..."
-                  rows={3}
-                  className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-surface-500 focus:border-ghana-gold/50 focus:outline-none focus:ring-1 focus:ring-ghana-gold/50 transition-all resize-none"
+                  rows={2}
+                  className="w-full px-4 py-2.5 sm:py-3 bg-white/5 border border-white/10 rounded-xl text-sm sm:text-base text-white placeholder-surface-500 focus:border-ghana-gold/50 focus:outline-none focus:ring-1 focus:ring-ghana-gold/50 transition-all resize-none"
                 />
               </div>
 
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="w-full py-4 bg-gradient-to-r from-ghana-gold to-yellow-400 text-black font-bold rounded-xl shadow-lg hover:shadow-xl hover:shadow-ghana-gold/30 transition-all hover:scale-[1.02] disabled:opacity-70 disabled:cursor-not-allowed disabled:hover:scale-100 flex items-center justify-center gap-2"
+                className="w-full py-3 sm:py-4 bg-gradient-to-r from-ghana-gold to-yellow-400 text-black font-bold rounded-xl shadow-lg hover:shadow-xl hover:shadow-ghana-gold/30 transition-all hover:scale-[1.02] disabled:opacity-70 disabled:cursor-not-allowed disabled:hover:scale-100 flex items-center justify-center gap-2 text-sm sm:text-base"
               >
                 {isSubmitting ? (
                   <>
