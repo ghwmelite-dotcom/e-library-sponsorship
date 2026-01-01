@@ -2332,23 +2332,91 @@ export default function Sponsorship() {
         </div>
       </section>
 
-      {/* ===== SCHEDULE A MEETING ===== */}
-      <section id="schedule-meeting" className="relative py-24 px-6">
-        <div className="max-w-5xl mx-auto">
+      {/* ===== ENHANCED SCHEDULE A MEETING ===== */}
+      <section id="schedule-meeting" className="relative py-24 px-6 overflow-hidden">
+        {/* Background floating particles */}
+        <div className="absolute inset-0 pointer-events-none">
+          {Array.from({ length: 25 }).map((_, i) => (
+            <motion.div
+              key={`schedule-particle-${i}`}
+              className="absolute rounded-full bg-ghana-green/20"
+              style={{
+                left: `${Math.random() * 100}%`,
+                top: `${Math.random() * 100}%`,
+                width: Math.random() * 6 + 2,
+                height: Math.random() * 6 + 2,
+              }}
+              animate={{
+                y: [-30, 30, -30],
+                x: [-15, 15, -15],
+                opacity: [0.2, 0.5, 0.2],
+              }}
+              transition={{
+                duration: Math.random() * 10 + 10,
+                delay: Math.random() * 5,
+                repeat: Infinity,
+                ease: "easeInOut",
+              }}
+            />
+          ))}
+        </div>
+
+        {/* Animated background gradient orbs */}
+        <motion.div
+          className="absolute top-1/4 left-1/4 w-96 h-96 bg-ghana-green/10 rounded-full blur-3xl"
+          animate={{
+            scale: [1, 1.2, 1],
+            opacity: [0.3, 0.5, 0.3],
+          }}
+          transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+        />
+        <motion.div
+          className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-ghana-gold/10 rounded-full blur-3xl"
+          animate={{
+            scale: [1.2, 1, 1.2],
+            opacity: [0.3, 0.5, 0.3],
+          }}
+          transition={{ duration: 8, repeat: Infinity, ease: "easeInOut", delay: 2 }}
+        />
+
+        <div className="max-w-5xl mx-auto relative z-10">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             className="text-center mb-12"
           >
-            <span className="inline-block px-4 py-2 bg-ghana-green/20 text-ghana-green rounded-full text-sm font-medium mb-6">
-              LET'S CONNECT
-            </span>
+            {/* Enhanced badge */}
+            <motion.span
+              className="relative inline-block px-6 py-2 bg-gradient-to-r from-ghana-green/30 to-ghana-green/10 text-ghana-green rounded-full text-sm font-medium mb-6 border border-ghana-green/30 overflow-hidden"
+              whileHover={{ scale: 1.05 }}
+            >
+              <motion.div
+                className="absolute inset-0 bg-gradient-to-r from-transparent via-ghana-green/20 to-transparent"
+                animate={{ x: ['-100%', '100%'] }}
+                transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+              />
+              <span className="relative z-10 flex items-center gap-2">
+                <motion.span
+                  animate={{ rotate: [0, 15, -15, 0] }}
+                  transition={{ duration: 2, repeat: Infinity }}
+                >
+                  <Handshake className="w-4 h-4" />
+                </motion.span>
+                LET'S CONNECT
+              </span>
+            </motion.span>
+
+            {/* Enhanced title */}
             <h2 className="text-4xl md:text-5xl font-heading font-bold mb-6 text-white">
               Schedule a{' '}
-              <span className="bg-gradient-to-r from-ghana-green to-ghana-gold bg-clip-text text-transparent">
+              <motion.span
+                className="bg-gradient-to-r from-ghana-green via-ghana-gold to-ghana-green bg-clip-text text-transparent bg-[length:200%_auto]"
+                animate={{ backgroundPosition: ['0% center', '200% center'] }}
+                transition={{ duration: 5, repeat: Infinity, ease: "linear" }}
+              >
                 Partnership Discussion
-              </span>
+              </motion.span>
             </h2>
             <p className="text-xl text-surface-300 max-w-2xl mx-auto">
               Book a 30-minute call with our team to explore how your organization can be part of this historic initiative.
@@ -2360,95 +2428,285 @@ export default function Sponsorship() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.2 }}
-            className="bg-gradient-to-br from-surface-800/70 to-surface-900/90 rounded-3xl border border-ghana-green/20 overflow-hidden"
+            className="relative bg-gradient-to-br from-surface-800/80 to-surface-900/95 rounded-3xl border border-ghana-green/30 overflow-hidden"
           >
-            <div className="grid lg:grid-cols-2 gap-0">
+            {/* Animated border glow */}
+            <motion.div
+              className="absolute inset-0 rounded-3xl"
+              style={{
+                background: 'conic-gradient(from 0deg, transparent, rgba(0,107,63,0.3), transparent, rgba(252,209,22,0.2), transparent)',
+              }}
+              animate={{ rotate: 360 }}
+              transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
+            />
+            <div className="absolute inset-[1px] bg-gradient-to-br from-surface-800/95 to-surface-900/98 rounded-3xl" />
+
+            {/* Corner accents */}
+            <div className="absolute top-0 left-0 w-20 h-20 pointer-events-none">
+              <motion.div
+                className="absolute top-3 left-3 w-10 h-[2px] bg-gradient-to-r from-ghana-green to-transparent"
+                animate={{ opacity: [0.5, 1, 0.5] }}
+                transition={{ duration: 2, repeat: Infinity }}
+              />
+              <motion.div
+                className="absolute top-3 left-3 w-[2px] h-10 bg-gradient-to-b from-ghana-green to-transparent"
+                animate={{ opacity: [0.5, 1, 0.5] }}
+                transition={{ duration: 2, repeat: Infinity, delay: 0.5 }}
+              />
+            </div>
+            <div className="absolute bottom-0 right-0 w-20 h-20 pointer-events-none">
+              <motion.div
+                className="absolute bottom-3 right-3 w-10 h-[2px] bg-gradient-to-l from-ghana-gold to-transparent"
+                animate={{ opacity: [0.5, 1, 0.5] }}
+                transition={{ duration: 2, repeat: Infinity }}
+              />
+              <motion.div
+                className="absolute bottom-3 right-3 w-[2px] h-10 bg-gradient-to-t from-ghana-gold to-transparent"
+                animate={{ opacity: [0.5, 1, 0.5] }}
+                transition={{ duration: 2, repeat: Infinity, delay: 0.5 }}
+              />
+            </div>
+
+            <div className="relative z-10 grid lg:grid-cols-2 gap-0">
               {/* Left side - Info */}
               <div className="p-4 sm:p-8 lg:p-12 border-b lg:border-b-0 lg:border-r border-white/10">
-                <div className="flex items-center gap-2 sm:gap-3 mb-4 sm:mb-6">
-                  <div className="p-2 sm:p-3 rounded-lg sm:rounded-xl bg-ghana-green/20">
-                    <CalendarClock className="w-5 h-5 sm:w-6 sm:h-6 text-ghana-green" />
-                  </div>
+                <div className="flex items-center gap-3 sm:gap-4 mb-6 sm:mb-8">
+                  <motion.div
+                    className="relative p-3 sm:p-4 rounded-xl sm:rounded-2xl bg-gradient-to-br from-ghana-green/30 to-ghana-green/10 border border-ghana-green/30"
+                    animate={{
+                      boxShadow: ['0 0 20px rgba(0,107,63,0.2)', '0 0 40px rgba(0,107,63,0.4)', '0 0 20px rgba(0,107,63,0.2)']
+                    }}
+                    transition={{ duration: 2, repeat: Infinity }}
+                  >
+                    <CalendarClock className="w-6 h-6 sm:w-8 sm:h-8 text-ghana-green" />
+                    {/* Orbiting dot */}
+                    <motion.div
+                      className="absolute w-2 h-2 bg-ghana-green rounded-full"
+                      animate={{ rotate: 360 }}
+                      transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
+                      style={{ top: '50%', left: '50%', transformOrigin: '0 -20px' }}
+                    />
+                  </motion.div>
                   <div>
                     <h3 className="text-lg sm:text-xl font-heading font-bold text-white">Partnership Consultation</h3>
-                    <p className="text-surface-400 text-xs sm:text-sm">30 minutes</p>
+                    <div className="flex items-center gap-2 text-surface-400 text-xs sm:text-sm">
+                      <motion.div
+                        className="w-2 h-2 rounded-full bg-ghana-green"
+                        animate={{ scale: [1, 1.3, 1], opacity: [0.5, 1, 0.5] }}
+                        transition={{ duration: 1.5, repeat: Infinity }}
+                      />
+                      30 minutes • Free consultation
+                    </div>
                   </div>
                 </div>
 
-                <div className="space-y-3 sm:space-y-4 mb-6 sm:mb-8">
-                  <div className="flex items-start gap-2 sm:gap-3">
-                    <Check className="w-4 h-4 sm:w-5 sm:h-5 text-ghana-gold flex-shrink-0 mt-0.5" />
-                    <span className="text-surface-300 text-sm sm:text-base">Learn about partnership tiers and benefits</span>
-                  </div>
-                  <div className="flex items-start gap-2 sm:gap-3">
-                    <Check className="w-4 h-4 sm:w-5 sm:h-5 text-ghana-gold flex-shrink-0 mt-0.5" />
-                    <span className="text-surface-300 text-sm sm:text-base">Get a personalized ROI projection</span>
-                  </div>
-                  <div className="flex items-start gap-2 sm:gap-3">
-                    <Check className="w-4 h-4 sm:w-5 sm:h-5 text-ghana-gold flex-shrink-0 mt-0.5" />
-                    <span className="text-surface-300 text-sm sm:text-base">See a live platform demonstration</span>
-                  </div>
-                  <div className="flex items-start gap-2 sm:gap-3">
-                    <Check className="w-4 h-4 sm:w-5 sm:h-5 text-ghana-gold flex-shrink-0 mt-0.5" />
-                    <span className="text-surface-300 text-sm sm:text-base">Discuss custom partnership arrangements</span>
-                  </div>
+                {/* Enhanced benefit list */}
+                <div className="space-y-4 sm:space-y-5 mb-6 sm:mb-8">
+                  {[
+                    { text: 'Learn about partnership tiers and benefits', delay: 0 },
+                    { text: 'Get a personalized ROI projection', delay: 0.1 },
+                    { text: 'See a live platform demonstration', delay: 0.2 },
+                    { text: 'Discuss custom partnership arrangements', delay: 0.3 },
+                  ].map((item, index) => (
+                    <motion.div
+                      key={index}
+                      initial={{ opacity: 0, x: -20 }}
+                      whileInView={{ opacity: 1, x: 0 }}
+                      viewport={{ once: true }}
+                      transition={{ delay: item.delay }}
+                      className="group flex items-start gap-3 sm:gap-4 p-2 rounded-lg hover:bg-white/5 transition-colors cursor-default"
+                    >
+                      <motion.div
+                        className="relative flex-shrink-0 mt-0.5 w-6 h-6 rounded-full bg-gradient-to-br from-ghana-gold/30 to-ghana-gold/10 flex items-center justify-center"
+                        whileHover={{ scale: 1.2 }}
+                      >
+                        <Check className="w-3.5 h-3.5 text-ghana-gold" />
+                        <motion.div
+                          className="absolute inset-0 rounded-full border border-ghana-gold/50"
+                          initial={{ scale: 1, opacity: 0 }}
+                          whileHover={{ scale: 1.5, opacity: [0, 0.5, 0] }}
+                          transition={{ duration: 0.5 }}
+                        />
+                      </motion.div>
+                      <span className="text-surface-300 text-sm sm:text-base group-hover:text-white transition-colors">{item.text}</span>
+                    </motion.div>
+                  ))}
                 </div>
 
-                <div className="p-3 sm:p-4 bg-ghana-gold/10 rounded-lg sm:rounded-xl border border-ghana-gold/20">
-                  <p className="text-xs sm:text-sm text-surface-300">
-                    <span className="text-ghana-gold font-semibold">Limited founding partner slots available.</span>{' '}
-                    Founding partners receive maximum visibility at the national launch event.
-                  </p>
-                </div>
+                {/* Enhanced founding partner notice */}
+                <motion.div
+                  className="relative p-4 sm:p-5 rounded-xl sm:rounded-2xl border border-ghana-gold/30 overflow-hidden"
+                  whileHover={{ scale: 1.02 }}
+                  transition={{ type: "spring", stiffness: 300 }}
+                >
+                  {/* Animated background */}
+                  <div className="absolute inset-0 bg-gradient-to-br from-ghana-gold/20 to-ghana-gold/5" />
+                  <motion.div
+                    className="absolute inset-0 bg-gradient-to-r from-transparent via-ghana-gold/10 to-transparent"
+                    animate={{ x: ['-100%', '100%'] }}
+                    transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
+                  />
+
+                  <div className="relative z-10 flex items-start gap-3">
+                    <motion.div
+                      animate={{ rotate: [0, 10, -10, 0] }}
+                      transition={{ duration: 2, repeat: Infinity }}
+                    >
+                      <Sparkles className="w-5 h-5 text-ghana-gold flex-shrink-0" />
+                    </motion.div>
+                    <p className="text-xs sm:text-sm text-surface-300">
+                      <span className="text-ghana-gold font-semibold">Limited founding partner slots available.</span>{' '}
+                      Founding partners receive maximum visibility at the national launch event.
+                    </p>
+                  </div>
+                </motion.div>
               </div>
 
               {/* Right side - Booking Options */}
-              <div className="p-4 sm:p-8 lg:p-12 flex flex-col justify-center">
-                <div className="text-center mb-4 sm:mb-8">
-                  <p className="text-surface-400 text-xs sm:text-sm mb-4 sm:mb-6">Choose your preferred way to connect</p>
+              <div className="relative p-4 sm:p-8 lg:p-12 flex flex-col justify-center">
+                {/* Subtle grid pattern */}
+                <div className="absolute inset-0 opacity-5 pointer-events-none">
+                  <svg width="100%" height="100%">
+                    <defs>
+                      <pattern id="schedule-grid" width="30" height="30" patternUnits="userSpaceOnUse">
+                        <circle cx="15" cy="15" r="1" fill="currentColor" className="text-white" />
+                      </pattern>
+                    </defs>
+                    <rect width="100%" height="100%" fill="url(#schedule-grid)" />
+                  </svg>
                 </div>
 
-                <div className="space-y-4">
-                  {/* Cal.com Booking Button */}
-                  <MagneticButton
-                    href="https://cal.com/osborn-hodges-fm7fyx"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="group w-full py-3 sm:py-4 px-4 sm:px-6 bg-gradient-to-r from-ghana-green to-ghana-green/80 text-white font-bold rounded-lg sm:rounded-xl shadow-lg hover:shadow-xl hover:shadow-ghana-green/30 transition-all hover:scale-[1.02] flex items-center justify-center gap-2 sm:gap-3 glow-green text-sm sm:text-base"
+                <div className="relative z-10 text-center mb-6 sm:mb-8">
+                  <p className="text-surface-400 text-sm sm:text-base mb-2">Choose your preferred way to connect</p>
+                  <motion.div
+                    className="flex justify-center gap-1"
+                    initial={{ opacity: 0 }}
+                    whileInView={{ opacity: 1 }}
+                    viewport={{ once: true }}
                   >
-                    <CalendarClock className="w-4 h-4 sm:w-5 sm:h-5" />
-                    <span className="hidden xs:inline">Book a Meeting Online</span>
-                    <span className="xs:hidden">Book Meeting</span>
-                    <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 group-hover:translate-x-1 transition-transform" />
-                  </MagneticButton>
+                    {[0, 1, 2].map((i) => (
+                      <motion.div
+                        key={i}
+                        className="w-1.5 h-1.5 rounded-full bg-ghana-green"
+                        animate={{ scale: [1, 1.5, 1], opacity: [0.3, 1, 0.3] }}
+                        transition={{ duration: 1.5, repeat: Infinity, delay: i * 0.2 }}
+                      />
+                    ))}
+                  </motion.div>
+                </div>
 
-                  <div className="flex items-center gap-4">
-                    <div className="flex-1 h-px bg-white/10" />
-                    <span className="text-surface-500 text-sm">or</span>
-                    <div className="flex-1 h-px bg-white/10" />
+                <div className="relative z-10 space-y-4">
+                  {/* Enhanced Cal.com Booking Button */}
+                  <motion.div
+                    whileHover={{ scale: 1.02, y: -2 }}
+                    whileTap={{ scale: 0.98 }}
+                  >
+                    <MagneticButton
+                      href="https://cal.com/osborn-hodges-fm7fyx"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="group relative w-full py-4 sm:py-5 px-4 sm:px-6 bg-gradient-to-r from-ghana-green to-ghana-green/80 text-white font-bold rounded-xl sm:rounded-2xl shadow-lg shadow-ghana-green/30 transition-all flex items-center justify-center gap-2 sm:gap-3 overflow-hidden text-sm sm:text-base"
+                    >
+                      {/* Animated background shimmer */}
+                      <motion.div
+                        className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent"
+                        animate={{ x: ['-100%', '100%'] }}
+                        transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+                      />
+                      {/* Pulse rings on hover */}
+                      <motion.div
+                        className="absolute inset-0 rounded-xl sm:rounded-2xl border-2 border-white/30"
+                        initial={{ scale: 1, opacity: 0 }}
+                        whileHover={{ scale: 1.05, opacity: [0, 0.5, 0] }}
+                        transition={{ duration: 0.8, repeat: Infinity }}
+                      />
+                      <CalendarClock className="w-5 h-5 sm:w-6 sm:h-6 relative z-10" />
+                      <span className="relative z-10">Book a Meeting Online</span>
+                      <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 relative z-10 group-hover:translate-x-1 transition-transform" />
+                    </MagneticButton>
+                  </motion.div>
+
+                  {/* Enhanced divider */}
+                  <div className="flex items-center gap-4 py-2">
+                    <motion.div
+                      className="flex-1 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent"
+                      initial={{ scaleX: 0 }}
+                      whileInView={{ scaleX: 1 }}
+                      viewport={{ once: true }}
+                      transition={{ duration: 0.8 }}
+                    />
+                    <motion.span
+                      className="text-surface-500 text-sm px-3 py-1 rounded-full bg-white/5 border border-white/10"
+                      whileHover={{ scale: 1.1 }}
+                    >
+                      or
+                    </motion.span>
+                    <motion.div
+                      className="flex-1 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent"
+                      initial={{ scaleX: 0 }}
+                      whileInView={{ scaleX: 1 }}
+                      viewport={{ once: true }}
+                      transition={{ duration: 0.8 }}
+                    />
                   </div>
 
-                  <a
+                  {/* Enhanced Email Button */}
+                  <motion.a
                     href="mailto:rsimd@ohcs.gov.gh?subject=OHCS E-Library Partnership Meeting Request&body=Hello,%0A%0AI would like to schedule a meeting to discuss partnership opportunities for the OHCS E-Library project.%0A%0APreferred meeting times:%0A-%0A-%0A%0AOrganization:%0AName:%0APhone:%0A%0AThank you."
-                    className="group w-full py-3 sm:py-4 px-4 sm:px-6 bg-white/10 text-white font-semibold rounded-lg sm:rounded-xl border border-white/20 hover:bg-white/20 transition-all flex items-center justify-center gap-2 sm:gap-3 btn-shimmer text-sm sm:text-base"
+                    className="group relative w-full py-3.5 sm:py-4 px-4 sm:px-6 bg-white/5 text-white font-semibold rounded-xl sm:rounded-2xl border border-white/20 hover:bg-white/10 hover:border-white/30 transition-all flex items-center justify-center gap-2 sm:gap-3 overflow-hidden text-sm sm:text-base"
+                    whileHover={{ scale: 1.02, y: -2 }}
+                    whileTap={{ scale: 0.98 }}
                   >
-                    <Mail className="w-4 h-4 sm:w-5 sm:h-5 relative z-10" />
+                    <motion.div
+                      className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent"
+                      initial={{ x: '-100%' }}
+                      whileHover={{ x: '100%' }}
+                      transition={{ duration: 0.6 }}
+                    />
+                    <Mail className="w-4 h-4 sm:w-5 sm:h-5 relative z-10 group-hover:scale-110 transition-transform" />
                     <span className="relative z-10">Email to Schedule</span>
-                  </a>
+                  </motion.a>
 
-                  <a
+                  {/* Enhanced Phone Button */}
+                  <motion.a
                     href="tel:+233505982361"
-                    className="group w-full py-3 sm:py-4 px-4 sm:px-6 bg-white/10 text-white font-semibold rounded-lg sm:rounded-xl border border-white/20 hover:bg-white/20 transition-all flex items-center justify-center gap-2 sm:gap-3 btn-shimmer text-sm sm:text-base"
+                    className="group relative w-full py-3.5 sm:py-4 px-4 sm:px-6 bg-white/5 text-white font-semibold rounded-xl sm:rounded-2xl border border-white/20 hover:bg-white/10 hover:border-white/30 transition-all flex items-center justify-center gap-2 sm:gap-3 overflow-hidden text-sm sm:text-base"
+                    whileHover={{ scale: 1.02, y: -2 }}
+                    whileTap={{ scale: 0.98 }}
                   >
-                    <Phone className="w-4 h-4 sm:w-5 sm:h-5 relative z-10" />
+                    <motion.div
+                      className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent"
+                      initial={{ x: '-100%' }}
+                      whileHover={{ x: '100%' }}
+                      transition={{ duration: 0.6 }}
+                    />
+                    <motion.div
+                      className="relative z-10"
+                      animate={{ rotate: [0, 15, -15, 0] }}
+                      transition={{ duration: 0.5, repeat: Infinity, repeatDelay: 3 }}
+                    >
+                      <Phone className="w-4 h-4 sm:w-5 sm:h-5" />
+                    </motion.div>
                     <span className="relative z-10 hidden sm:inline">Call: +233 505 982 361</span>
                     <span className="relative z-10 sm:hidden">+233 505 982 361</span>
-                  </a>
+                  </motion.a>
                 </div>
 
-                <p className="text-center text-surface-500 text-xs mt-6">
+                {/* Enhanced response time notice */}
+                <motion.p
+                  className="relative z-10 text-center text-surface-500 text-xs sm:text-sm mt-6 flex items-center justify-center gap-2"
+                  initial={{ opacity: 0 }}
+                  whileInView={{ opacity: 1 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: 0.5 }}
+                >
+                  <motion.span
+                    className="inline-block w-2 h-2 rounded-full bg-ghana-green"
+                    animate={{ scale: [1, 1.2, 1], opacity: [0.5, 1, 0.5] }}
+                    transition={{ duration: 2, repeat: Infinity }}
+                  />
                   Response within 24 hours on business days
-                </p>
+                </motion.p>
               </div>
             </div>
           </motion.div>
