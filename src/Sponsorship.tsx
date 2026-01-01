@@ -4,6 +4,7 @@ import { motion, useScroll, useTransform, useInView, useSpring, AnimatePresence 
 // Lazy load heavy components for better performance
 const GhanaGlobe = lazy(() => import('./components/GhanaGlobe'));
 const BrandingPreview = lazy(() => import('./components/BrandingPreview'));
+const DataVisualization = lazy(() => import('./components/DataVisualization'));
 import {
   Brain,
   BookOpen,
@@ -1631,6 +1632,57 @@ export default function Sponsorship() {
                 </div>
               ))}
             </div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* ===== ANIMATED DATA VISUALIZATION ===== */}
+      <section className="relative py-24 px-6 bg-gradient-to-b from-ghana-green/5 via-transparent to-ghana-gold/5">
+        {/* Background decorations */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          <div className="absolute top-0 left-1/4 w-96 h-96 bg-ghana-green/5 rounded-full blur-3xl" />
+          <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-ghana-gold/5 rounded-full blur-3xl" />
+        </div>
+
+        <div className="max-w-6xl mx-auto relative z-10">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center mb-16"
+          >
+            <span className="inline-block px-4 py-2 bg-ghana-red/20 text-ghana-red rounded-full text-sm font-medium mb-6">
+              LIVE DATA INSIGHTS
+            </span>
+            <h2 className="text-4xl md:text-5xl font-heading font-bold mb-6 text-white">
+              Impact by the{' '}
+              <span className="bg-gradient-to-r from-ghana-green via-ghana-gold to-ghana-red bg-clip-text text-transparent">
+                Numbers
+              </span>
+            </h2>
+            <p className="text-xl text-surface-300 max-w-3xl mx-auto">
+              Watch the projected impact come to life with real-time visualizations
+              of efficiency gains, growth projections, and platform activity.
+            </p>
+          </motion.div>
+
+          {/* Data Visualization Component */}
+          <motion.div
+            initial={{ opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.2 }}
+          >
+            <Suspense fallback={
+              <div className="w-full h-[400px] flex items-center justify-center">
+                <div className="text-center">
+                  <div className="w-16 h-16 border-4 border-ghana-gold/30 border-t-ghana-gold rounded-full animate-spin mx-auto mb-4" />
+                  <p className="text-surface-400">Loading Visualizations...</p>
+                </div>
+              </div>
+            }>
+              <DataVisualization />
+            </Suspense>
           </motion.div>
         </div>
       </section>
