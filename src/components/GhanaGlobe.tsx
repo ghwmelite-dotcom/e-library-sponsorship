@@ -747,14 +747,14 @@ export default function GhanaGlobe() {
   , []);
 
   return (
-    <div className="relative w-full h-[500px] md:h-[650px] lg:h-[700px]">
+    <div className="relative w-full h-[420px] sm:h-[500px] md:h-[650px] lg:h-[700px]">
       {/* Deep space background */}
-      <div className="absolute inset-0 overflow-hidden rounded-3xl">
+      <div className="absolute inset-0 overflow-hidden rounded-2xl sm:rounded-3xl">
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-[#0a192f] via-[#020c1b] to-black" />
 
-        {/* Animated gradient meshes */}
+        {/* Animated gradient meshes - responsive sizes */}
         <motion.div
-          className="absolute top-0 left-1/4 w-[600px] h-[600px] rounded-full"
+          className="absolute top-0 left-1/4 w-[300px] sm:w-[450px] lg:w-[600px] h-[300px] sm:h-[450px] lg:h-[600px] rounded-full"
           style={{
             background: 'radial-gradient(circle, rgba(0,255,136,0.15) 0%, transparent 70%)',
           }}
@@ -766,7 +766,7 @@ export default function GhanaGlobe() {
           transition={{ duration: 12, repeat: Infinity }}
         />
         <motion.div
-          className="absolute bottom-0 right-1/4 w-[500px] h-[500px] rounded-full"
+          className="absolute bottom-0 right-1/4 w-[250px] sm:w-[400px] lg:w-[500px] h-[250px] sm:h-[400px] lg:h-[500px] rounded-full"
           style={{
             background: 'radial-gradient(circle, rgba(252,209,22,0.1) 0%, transparent 70%)',
           }}
@@ -778,7 +778,7 @@ export default function GhanaGlobe() {
           transition={{ duration: 10, repeat: Infinity }}
         />
         <motion.div
-          className="absolute top-1/2 left-1/2 w-[400px] h-[400px] rounded-full -translate-x-1/2 -translate-y-1/2"
+          className="absolute top-1/2 left-1/2 w-[200px] sm:w-[300px] lg:w-[400px] h-[200px] sm:h-[300px] lg:h-[400px] rounded-full -translate-x-1/2 -translate-y-1/2"
           style={{
             background: 'radial-gradient(circle, rgba(0,255,255,0.08) 0%, transparent 70%)',
           }}
@@ -813,46 +813,46 @@ export default function GhanaGlobe() {
       </div>
 
       {/* Main stats panel - top left */}
-      <div className="absolute top-3 left-3 sm:top-5 sm:left-5 z-20">
+      <div className="absolute top-2 left-2 sm:top-4 sm:left-4 z-20">
         <motion.div
           initial={{ opacity: 0, x: -30 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ delay: 0.2 }}
           className="relative"
         >
-          <div className="absolute inset-0 bg-gradient-to-r from-[#00ff88]/20 to-transparent rounded-2xl blur-xl" />
-          <div className="relative bg-[#0a192f]/90 backdrop-blur-xl rounded-2xl p-4 sm:p-5 border border-[#00ff88]/30 shadow-2xl shadow-[#00ff88]/10">
+          <div className="absolute inset-0 bg-gradient-to-r from-[#00ff88]/20 to-transparent rounded-xl sm:rounded-2xl blur-xl" />
+          <div className="relative bg-[#0a192f]/90 backdrop-blur-xl rounded-xl sm:rounded-2xl p-2.5 sm:p-4 md:p-5 border border-[#00ff88]/30 shadow-2xl shadow-[#00ff88]/10">
             {/* Header with animated indicator */}
-            <div className="flex items-center gap-2 mb-3">
+            <div className="flex items-center gap-1.5 sm:gap-2 mb-2 sm:mb-3">
               <motion.div
-                className="w-2 h-2 rounded-full bg-[#00ff88]"
+                className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-[#00ff88]"
                 animate={{
                   boxShadow: ['0 0 5px #00ff88', '0 0 20px #00ff88', '0 0 5px #00ff88'],
                   scale: [1, 1.2, 1]
                 }}
                 transition={{ duration: 1.5, repeat: Infinity }}
               />
-              <span className="text-[#00ff88] text-[10px] sm:text-xs uppercase tracking-[0.2em] font-mono">
+              <span className="text-[#00ff88] text-[8px] sm:text-[10px] md:text-xs uppercase tracking-[0.15em] sm:tracking-[0.2em] font-mono">
                 NETWORK ACTIVE
               </span>
             </div>
 
             {/* Main stat */}
             <motion.div
-              className="text-white font-bold text-4xl sm:text-5xl font-mono"
+              className="text-white font-bold text-2xl sm:text-4xl md:text-5xl font-mono"
               animate={{ opacity: [1, 0.8, 1] }}
               transition={{ duration: 2, repeat: Infinity }}
             >
               {MDA_LOCATIONS.length}
             </motion.div>
-            <div className="text-[#64ffda] text-xs sm:text-sm font-mono mt-1">MDAs Connected</div>
+            <div className="text-[#64ffda] text-[10px] sm:text-xs md:text-sm font-mono mt-0.5 sm:mt-1">MDAs Connected</div>
 
-            {/* Secondary stats */}
-            <div className="mt-4 pt-4 border-t border-[#64ffda]/20 space-y-2">
-              <div className="flex justify-between items-center">
-                <span className="text-[#8892b0] text-[10px] sm:text-xs font-mono">ACTIVE LINKS</span>
+            {/* Secondary stats - hidden on very small screens */}
+            <div className="hidden sm:block mt-3 md:mt-4 pt-3 md:pt-4 border-t border-[#64ffda]/20 space-y-1.5 md:space-y-2">
+              <div className="flex justify-between items-center gap-4">
+                <span className="text-[#8892b0] text-[10px] md:text-xs font-mono">ACTIVE LINKS</span>
                 <motion.span
-                  className="text-[#00ff88] text-xs sm:text-sm font-mono font-bold"
+                  className="text-[#00ff88] text-[10px] md:text-sm font-mono font-bold"
                   key={activeConnections}
                   initial={{ opacity: 0.5 }}
                   animate={{ opacity: 1 }}
@@ -860,10 +860,10 @@ export default function GhanaGlobe() {
                   {activeConnections}
                 </motion.span>
               </div>
-              <div className="flex justify-between items-center">
-                <span className="text-[#8892b0] text-[10px] sm:text-xs font-mono">DATA FLOW</span>
+              <div className="flex justify-between items-center gap-4">
+                <span className="text-[#8892b0] text-[10px] md:text-xs font-mono">DATA FLOW</span>
                 <motion.span
-                  className="text-[#FCD116] text-xs sm:text-sm font-mono font-bold"
+                  className="text-[#FCD116] text-[10px] md:text-sm font-mono font-bold"
                   key={dataFlow}
                   initial={{ opacity: 0.5 }}
                   animate={{ opacity: 1 }}
@@ -871,9 +871,9 @@ export default function GhanaGlobe() {
                   {dataFlow.toLocaleString()} KB/s
                 </motion.span>
               </div>
-              <div className="flex justify-between items-center">
-                <span className="text-[#8892b0] text-[10px] sm:text-xs font-mono">STATUS</span>
-                <span className="text-[#00ff88] text-xs sm:text-sm font-mono font-bold flex items-center gap-1">
+              <div className="flex justify-between items-center gap-4">
+                <span className="text-[#8892b0] text-[10px] md:text-xs font-mono">STATUS</span>
+                <span className="text-[#00ff88] text-[10px] md:text-sm font-mono font-bold flex items-center gap-1">
                   <motion.span
                     animate={{ opacity: [1, 0.5, 1] }}
                     transition={{ duration: 1, repeat: Infinity }}
@@ -888,27 +888,27 @@ export default function GhanaGlobe() {
         </motion.div>
       </div>
 
-      {/* Node type legend - bottom left */}
-      <div className="absolute bottom-3 left-3 sm:bottom-5 sm:left-5 z-20">
+      {/* Node type legend - bottom left - hidden on very small screens */}
+      <div className="hidden sm:block absolute bottom-2 left-2 sm:bottom-4 sm:left-4 z-20">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4 }}
-          className="bg-[#0a192f]/90 backdrop-blur-xl rounded-2xl p-4 border border-[#64ffda]/20 shadow-xl"
+          className="bg-[#0a192f]/90 backdrop-blur-xl rounded-xl sm:rounded-2xl p-2.5 sm:p-3 md:p-4 border border-[#64ffda]/20 shadow-xl"
         >
-          <div className="text-[#64ffda] text-[10px] sm:text-xs uppercase tracking-[0.15em] font-mono mb-3">
+          <div className="text-[#64ffda] text-[9px] sm:text-[10px] md:text-xs uppercase tracking-[0.1em] sm:tracking-[0.15em] font-mono mb-2 sm:mb-3">
             Node Classification
           </div>
-          <div className="space-y-2">
+          <div className="space-y-1.5 sm:space-y-2">
             {[
               { color: '#FCD116', label: 'Headquarters', glow: true },
               { color: '#00ff88', label: 'Regional Admin' },
               { color: '#ff6b6b', label: 'Agencies' },
               { color: '#00ffff', label: 'Commission' },
             ].map((item) => (
-              <div key={item.label} className="flex items-center gap-2">
+              <div key={item.label} className="flex items-center gap-1.5 sm:gap-2">
                 <motion.div
-                  className="w-3 h-3 rounded-full"
+                  className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full"
                   style={{
                     backgroundColor: item.color,
                     boxShadow: item.glow ? `0 0 10px ${item.color}` : 'none'
@@ -918,24 +918,27 @@ export default function GhanaGlobe() {
                   } : {}}
                   transition={{ duration: 2, repeat: Infinity }}
                 />
-                <span className="text-[#ccd6f6] text-[10px] sm:text-xs font-mono">{item.label}</span>
+                <span className="text-[#ccd6f6] text-[9px] sm:text-[10px] md:text-xs font-mono">{item.label}</span>
               </div>
             ))}
           </div>
         </motion.div>
       </div>
 
-      {/* Interactive hint - top right */}
+      {/* Interactive hint - top right - hidden on mobile, shown as tap on small screens */}
       <motion.div
         initial={{ opacity: 0, x: 30 }}
         animate={{ opacity: 1, x: 0 }}
         transition={{ delay: 0.6 }}
-        className="absolute top-3 right-3 sm:top-5 sm:right-5 z-20"
+        className="absolute top-2 right-2 sm:top-4 sm:right-4 z-20"
       >
-        <div className="bg-[#0a192f]/80 backdrop-blur-xl rounded-xl px-4 py-2 border border-[#FCD116]/30 flex items-center gap-3">
-          <span className="text-[#ccd6f6] text-[10px] sm:text-xs font-mono">HOVER TO EXPLORE</span>
+        <div className="bg-[#0a192f]/80 backdrop-blur-xl rounded-lg sm:rounded-xl px-2 sm:px-3 md:px-4 py-1.5 sm:py-2 border border-[#FCD116]/30 flex items-center gap-2 sm:gap-3">
+          <span className="text-[#ccd6f6] text-[8px] sm:text-[10px] md:text-xs font-mono hidden xs:inline">
+            <span className="hidden md:inline">HOVER TO EXPLORE</span>
+            <span className="md:hidden">TAP TO EXPLORE</span>
+          </span>
           <motion.div
-            className="relative w-6 h-6"
+            className="relative w-5 h-5 sm:w-6 sm:h-6"
             animate={{ scale: [1, 1.1, 1] }}
             transition={{ duration: 1.5, repeat: Infinity }}
           >
@@ -945,7 +948,7 @@ export default function GhanaGlobe() {
               animate={{ rotate: [0, 10, -10, 0] }}
               transition={{ duration: 2, repeat: Infinity }}
             >
-              <svg className="w-3 h-3 text-[#FCD116]" fill="currentColor" viewBox="0 0 24 24">
+              <svg className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-[#FCD116]" fill="currentColor" viewBox="0 0 24 24">
                 <path d="M13.5 9a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/>
               </svg>
             </motion.div>
@@ -954,10 +957,10 @@ export default function GhanaGlobe() {
       </motion.div>
 
       {/* Main SVG visualization */}
-      <div className="absolute inset-0 flex items-center justify-center p-6 sm:p-10">
+      <div className="absolute inset-0 flex items-center justify-center p-3 sm:p-6 md:p-10">
         <motion.svg
           viewBox="0 0 100 112"
-          className="w-full h-full max-w-[550px] max-h-[650px]"
+          className="w-full h-full max-w-[320px] sm:max-w-[450px] md:max-w-[550px] max-h-[380px] sm:max-h-[500px] md:max-h-[650px]"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 1 }}
@@ -1138,23 +1141,23 @@ export default function GhanaGlobe() {
         </motion.svg>
       </div>
 
-      {/* Hovered MDA detail panel */}
+      {/* Hovered MDA detail panel - responsive positioning */}
       <AnimatePresence>
         {hoveredMDA && (
           <motion.div
-            initial={{ opacity: 0, x: 30, scale: 0.95 }}
-            animate={{ opacity: 1, x: 0, scale: 1 }}
-            exit={{ opacity: 0, x: 30, scale: 0.95 }}
-            className="absolute bottom-3 right-3 sm:bottom-5 sm:right-5 z-20"
+            initial={{ opacity: 0, y: 20, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 20, scale: 0.95 }}
+            className="absolute bottom-2 left-2 right-2 sm:left-auto sm:bottom-4 sm:right-4 z-20"
           >
             <div className="relative">
-              <div className="absolute inset-0 bg-gradient-to-r from-[#FCD116]/20 to-[#00ff88]/20 rounded-2xl blur-xl" />
-              <div className="relative bg-[#0a192f]/95 backdrop-blur-xl rounded-2xl p-5 border border-[#FCD116]/40 shadow-2xl shadow-[#FCD116]/10 max-w-[260px]">
+              <div className="absolute inset-0 bg-gradient-to-r from-[#FCD116]/20 to-[#00ff88]/20 rounded-xl sm:rounded-2xl blur-xl" />
+              <div className="relative bg-[#0a192f]/95 backdrop-blur-xl rounded-xl sm:rounded-2xl p-3 sm:p-4 md:p-5 border border-[#FCD116]/40 shadow-2xl shadow-[#FCD116]/10 sm:max-w-[260px]">
                 {/* Status header */}
-                <div className="flex items-center justify-between mb-3">
-                  <div className="flex items-center gap-2">
+                <div className="flex items-center justify-between mb-2 sm:mb-3">
+                  <div className="flex items-center gap-1.5 sm:gap-2">
                     <motion.div
-                      className="w-2 h-2 rounded-full"
+                      className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full"
                       style={{ backgroundColor: hoveredMDA.type === 'headquarters' ? '#FCD116' : '#00ff88' }}
                       animate={{
                         boxShadow: [
@@ -1165,48 +1168,48 @@ export default function GhanaGlobe() {
                       }}
                       transition={{ duration: 1, repeat: Infinity }}
                     />
-                    <span className="text-[#00ff88] text-[10px] font-mono uppercase tracking-wider">ONLINE</span>
+                    <span className="text-[#00ff88] text-[8px] sm:text-[10px] font-mono uppercase tracking-wider">ONLINE</span>
                   </div>
-                  <span className="text-[#64ffda] text-[10px] font-mono opacity-70">
+                  <span className="text-[#64ffda] text-[8px] sm:text-[10px] font-mono opacity-70">
                     NODE #{MDA_LOCATIONS.indexOf(hoveredMDA) + 1}
                   </span>
                 </div>
 
                 {/* Main info */}
-                <h4 className="text-white font-bold text-sm sm:text-base leading-tight mb-1 font-mono">
+                <h4 className="text-white font-bold text-xs sm:text-sm md:text-base leading-tight mb-0.5 sm:mb-1 font-mono">
                   {hoveredMDA.name}
                 </h4>
-                <p className="text-[#FCD116] text-xs sm:text-sm font-mono">
+                <p className="text-[#FCD116] text-[10px] sm:text-xs md:text-sm font-mono">
                   {hoveredMDA.city}, Ghana
                 </p>
 
-                {/* Details grid */}
-                <div className="mt-4 pt-4 border-t border-[#64ffda]/20 grid grid-cols-2 gap-3">
+                {/* Details grid - simplified on mobile */}
+                <div className="mt-2 sm:mt-4 pt-2 sm:pt-4 border-t border-[#64ffda]/20 grid grid-cols-4 sm:grid-cols-2 gap-2 sm:gap-3">
                   <div>
-                    <span className="text-[#8892b0] text-[10px] font-mono block">TYPE</span>
-                    <span className="text-[#ccd6f6] text-xs font-mono capitalize">{hoveredMDA.type}</span>
+                    <span className="text-[#8892b0] text-[8px] sm:text-[10px] font-mono block">TYPE</span>
+                    <span className="text-[#ccd6f6] text-[10px] sm:text-xs font-mono capitalize">{hoveredMDA.type}</span>
                   </div>
                   <div>
-                    <span className="text-[#8892b0] text-[10px] font-mono block">LATENCY</span>
-                    <span className="text-[#00ff88] text-xs font-mono">{Math.floor(Math.random() * 20) + 5}ms</span>
+                    <span className="text-[#8892b0] text-[8px] sm:text-[10px] font-mono block">LATENCY</span>
+                    <span className="text-[#00ff88] text-[10px] sm:text-xs font-mono">{Math.floor(Math.random() * 20) + 5}ms</span>
                   </div>
                   <div>
-                    <span className="text-[#8892b0] text-[10px] font-mono block">UPTIME</span>
-                    <span className="text-[#ccd6f6] text-xs font-mono">99.{Math.floor(Math.random() * 9) + 1}%</span>
+                    <span className="text-[#8892b0] text-[8px] sm:text-[10px] font-mono block">UPTIME</span>
+                    <span className="text-[#ccd6f6] text-[10px] sm:text-xs font-mono">99.{Math.floor(Math.random() * 9) + 1}%</span>
                   </div>
                   <div>
-                    <span className="text-[#8892b0] text-[10px] font-mono block">PACKETS</span>
-                    <span className="text-[#FCD116] text-xs font-mono">{(Math.floor(Math.random() * 500) + 100).toLocaleString()}</span>
+                    <span className="text-[#8892b0] text-[8px] sm:text-[10px] font-mono block">PACKETS</span>
+                    <span className="text-[#FCD116] text-[10px] sm:text-xs font-mono">{(Math.floor(Math.random() * 500) + 100).toLocaleString()}</span>
                   </div>
                 </div>
 
-                {/* Connection status bar */}
-                <div className="mt-4 pt-3 border-t border-[#64ffda]/20">
+                {/* Connection status bar - hidden on very small screens */}
+                <div className="hidden sm:block mt-3 md:mt-4 pt-2 md:pt-3 border-t border-[#64ffda]/20">
                   <div className="flex items-center justify-between mb-1">
-                    <span className="text-[#8892b0] text-[10px] font-mono">CONNECTION STRENGTH</span>
-                    <span className="text-[#00ff88] text-[10px] font-mono">EXCELLENT</span>
+                    <span className="text-[#8892b0] text-[9px] md:text-[10px] font-mono">CONNECTION STRENGTH</span>
+                    <span className="text-[#00ff88] text-[9px] md:text-[10px] font-mono">EXCELLENT</span>
                   </div>
-                  <div className="h-1.5 bg-[#1a365d] rounded-full overflow-hidden">
+                  <div className="h-1 md:h-1.5 bg-[#1a365d] rounded-full overflow-hidden">
                     <motion.div
                       className="h-full bg-gradient-to-r from-[#00ff88] to-[#FCD116] rounded-full"
                       initial={{ width: '0%' }}
@@ -1222,7 +1225,7 @@ export default function GhanaGlobe() {
       </AnimatePresence>
 
       {/* Decorative animated lines at edges */}
-      <div className="absolute inset-0 pointer-events-none overflow-hidden rounded-3xl">
+      <div className="absolute inset-0 pointer-events-none overflow-hidden rounded-2xl sm:rounded-3xl">
         {/* Top edge */}
         <motion.div
           className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#FCD116] to-transparent"
@@ -1248,11 +1251,11 @@ export default function GhanaGlobe() {
           transition={{ duration: 3, repeat: Infinity, delay: 2.25 }}
         />
 
-        {/* Corner glow effects */}
-        <div className="absolute top-0 left-0 w-32 h-32 bg-gradient-to-br from-[#FCD116]/20 to-transparent" />
-        <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-bl from-[#00ff88]/20 to-transparent" />
-        <div className="absolute bottom-0 left-0 w-32 h-32 bg-gradient-to-tr from-[#00ffcc]/20 to-transparent" />
-        <div className="absolute bottom-0 right-0 w-32 h-32 bg-gradient-to-tl from-[#FCD116]/20 to-transparent" />
+        {/* Corner glow effects - responsive sizes */}
+        <div className="absolute top-0 left-0 w-16 h-16 sm:w-24 sm:h-24 md:w-32 md:h-32 bg-gradient-to-br from-[#FCD116]/20 to-transparent" />
+        <div className="absolute top-0 right-0 w-16 h-16 sm:w-24 sm:h-24 md:w-32 md:h-32 bg-gradient-to-bl from-[#00ff88]/20 to-transparent" />
+        <div className="absolute bottom-0 left-0 w-16 h-16 sm:w-24 sm:h-24 md:w-32 md:h-32 bg-gradient-to-tr from-[#00ffcc]/20 to-transparent" />
+        <div className="absolute bottom-0 right-0 w-16 h-16 sm:w-24 sm:h-24 md:w-32 md:h-32 bg-gradient-to-tl from-[#FCD116]/20 to-transparent" />
       </div>
     </div>
   );
