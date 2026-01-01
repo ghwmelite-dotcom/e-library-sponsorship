@@ -622,18 +622,318 @@ function TimelinePhase({
   );
 }
 
-// ===== INTERACTIVE ROI CALCULATOR =====
+// ===== ENHANCED ROI CALCULATOR =====
+
+// Floating particles for ROI Calculator background
+function ROIFloatingParticles() {
+  const particles = Array.from({ length: 30 }, (_, i) => ({
+    id: i,
+    x: Math.random() * 100,
+    y: Math.random() * 100,
+    size: Math.random() * 4 + 2,
+    duration: Math.random() * 15 + 10,
+    delay: Math.random() * 5,
+  }));
+
+  return (
+    <div className="absolute inset-0 overflow-hidden pointer-events-none">
+      {particles.map((particle) => (
+        <motion.div
+          key={particle.id}
+          className="absolute rounded-full bg-ghana-gold/20"
+          style={{
+            left: `${particle.x}%`,
+            top: `${particle.y}%`,
+            width: particle.size,
+            height: particle.size,
+          }}
+          animate={{
+            y: [-20, 20, -20],
+            x: [-10, 10, -10],
+            opacity: [0.2, 0.5, 0.2],
+            scale: [1, 1.2, 1],
+          }}
+          transition={{
+            duration: particle.duration,
+            delay: particle.delay,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+        />
+      ))}
+    </div>
+  );
+}
+
+// Animated grid pattern for ROI background
+function ROIGridPattern() {
+  return (
+    <div className="absolute inset-0 overflow-hidden pointer-events-none opacity-10">
+      <svg width="100%" height="100%" className="absolute inset-0">
+        <defs>
+          <pattern id="roi-grid" width="40" height="40" patternUnits="userSpaceOnUse">
+            <path d="M 40 0 L 0 0 0 40" fill="none" stroke="currentColor" strokeWidth="0.5" className="text-ghana-gold" />
+          </pattern>
+          <linearGradient id="roi-grid-fade" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor="white" stopOpacity="0.5" />
+            <stop offset="50%" stopColor="white" stopOpacity="1" />
+            <stop offset="100%" stopColor="white" stopOpacity="0.5" />
+          </linearGradient>
+          <mask id="roi-grid-mask">
+            <rect width="100%" height="100%" fill="url(#roi-grid-fade)" />
+          </mask>
+        </defs>
+        <rect width="100%" height="100%" fill="url(#roi-grid)" mask="url(#roi-grid-mask)" />
+      </svg>
+      <motion.div
+        className="absolute inset-0 bg-gradient-to-r from-ghana-gold/0 via-ghana-gold/20 to-ghana-gold/0"
+        animate={{ x: ['-100%', '100%'] }}
+        transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
+      />
+    </div>
+  );
+}
+
+// Pulse ring effect for investment amount
+function InvestmentPulseRings() {
+  return (
+    <div className="absolute inset-0 pointer-events-none">
+      {[0, 1, 2].map((i) => (
+        <motion.div
+          key={i}
+          className="absolute inset-0 rounded-xl border border-ghana-gold/30"
+          initial={{ scale: 1, opacity: 0.5 }}
+          animate={{ scale: [1, 1.5, 2], opacity: [0.5, 0.2, 0] }}
+          transition={{
+            duration: 2,
+            delay: i * 0.7,
+            repeat: Infinity,
+            ease: "easeOut",
+          }}
+        />
+      ))}
+    </div>
+  );
+}
+
+// Enhanced result card with glow and particles
+function EnhancedResultCard({
+  icon: Icon,
+  value,
+  label,
+  color,
+  delay,
+  investment,
+}: {
+  icon: React.ElementType;
+  value: string;
+  label: string;
+  color: 'green' | 'gold';
+  delay: number;
+  investment: number;
+}) {
+  const [isHovered, setIsHovered] = useState(false);
+  const iconColor = color === 'gold' ? 'text-ghana-gold' : 'text-ghana-green';
+  const glowColor = color === 'gold' ? 'shadow-ghana-gold/30' : 'shadow-ghana-green/30';
+  const borderColor = color === 'gold' ? 'border-ghana-gold/30' : 'border-ghana-green/30';
+
+  return (
+    <motion.div
+      key={`result-${investment}-${label}`}
+      initial={{ scale: 0.8, opacity: 0, y: 20 }}
+      animate={{ scale: 1, opacity: 1, y: 0 }}
+      transition={{ delay, type: "spring", stiffness: 200 }}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+      className={`relative group bg-gradient-to-br from-white/10 to-white/5 rounded-xl sm:rounded-2xl p-3 sm:p-4 border ${borderColor} backdrop-blur-sm overflow-hidden cursor-pointer transition-all duration-300 hover:scale-105 hover:shadow-lg hover:${glowColor}`}
+    >
+      {/* Animated background glow */}
+      <motion.div
+        className={`absolute inset-0 bg-gradient-to-br ${color === 'gold' ? 'from-ghana-gold/20 to-transparent' : 'from-ghana-green/20 to-transparent'}`}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: isHovered ? 1 : 0 }}
+        transition={{ duration: 0.3 }}
+      />
+
+      {/* Shimmer effect on hover */}
+      <motion.div
+        className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent"
+        initial={{ x: '-100%' }}
+        animate={isHovered ? { x: '100%' } : { x: '-100%' }}
+        transition={{ duration: 0.6 }}
+      />
+
+      {/* Floating mini particles */}
+      {isHovered && (
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          {Array.from({ length: 5 }).map((_, i) => (
+            <motion.div
+              key={i}
+              className={`absolute w-1 h-1 rounded-full ${color === 'gold' ? 'bg-ghana-gold' : 'bg-ghana-green'}`}
+              initial={{
+                x: Math.random() * 100,
+                y: 80,
+                opacity: 0
+              }}
+              animate={{
+                y: -20,
+                opacity: [0, 1, 0],
+              }}
+              transition={{
+                duration: 1,
+                delay: i * 0.1,
+                ease: "easeOut",
+              }}
+            />
+          ))}
+        </div>
+      )}
+
+      {/* Icon with pulse effect */}
+      <div className="relative">
+        <motion.div
+          animate={isHovered ? { scale: [1, 1.2, 1] } : {}}
+          transition={{ duration: 0.5 }}
+        >
+          <Icon className={`w-4 h-4 sm:w-5 sm:h-5 ${iconColor} mb-1 sm:mb-2 relative z-10`} />
+        </motion.div>
+        {isHovered && (
+          <motion.div
+            className={`absolute -inset-2 rounded-full ${color === 'gold' ? 'bg-ghana-gold/20' : 'bg-ghana-green/20'} blur-md`}
+            initial={{ scale: 0, opacity: 0 }}
+            animate={{ scale: 1.5, opacity: 1 }}
+            transition={{ duration: 0.3 }}
+          />
+        )}
+      </div>
+
+      {/* Value with counting animation feel */}
+      <motion.div
+        className="text-lg sm:text-2xl font-bold text-white relative z-10"
+        animate={isHovered ? { scale: 1.05 } : { scale: 1 }}
+      >
+        {value}
+      </motion.div>
+      <div className="text-[10px] sm:text-xs text-surface-400 relative z-10">{label}</div>
+
+      {/* Corner accent */}
+      <div className={`absolute top-0 right-0 w-8 h-8 ${color === 'gold' ? 'bg-ghana-gold/10' : 'bg-ghana-green/10'} rounded-bl-full`} />
+    </motion.div>
+  );
+}
+
+// Enhanced tier button with glow effects
+function EnhancedTierButton({
+  tier,
+  isSelected,
+  onSelect,
+}: {
+  tier: { id: string; name: string; min: number; color: string; icon: React.ElementType };
+  isSelected: boolean;
+  onSelect: () => void;
+}) {
+  const [isHovered, setIsHovered] = useState(false);
+  const Icon = tier.icon;
+
+  return (
+    <motion.button
+      onClick={onSelect}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+      whileHover={{ scale: 1.05, y: -2 }}
+      whileTap={{ scale: 0.98 }}
+      className={`relative p-3 sm:p-4 rounded-xl sm:rounded-2xl border-2 transition-all duration-300 overflow-hidden ${
+        isSelected
+          ? 'border-ghana-gold bg-ghana-gold/15 shadow-lg shadow-ghana-gold/20'
+          : 'border-white/10 hover:border-white/30 bg-white/5'
+      }`}
+    >
+      {/* Animated background gradient */}
+      <motion.div
+        className={`absolute inset-0 bg-gradient-to-br ${tier.color.replace('from-', 'from-').replace('to-', 'to-')}/20`}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: isSelected || isHovered ? 1 : 0 }}
+        transition={{ duration: 0.3 }}
+      />
+
+      {/* Rotating border glow for selected */}
+      {isSelected && (
+        <motion.div
+          className="absolute inset-0 rounded-xl sm:rounded-2xl"
+          style={{
+            background: `conic-gradient(from 0deg, transparent, ${tier.id === 'gold' ? '#FCD116' : tier.id === 'platinum' ? '#e2e8f0' : tier.id === 'silver' ? '#9ca3af' : '#d97706'}40, transparent)`,
+          }}
+          animate={{ rotate: 360 }}
+          transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
+        />
+      )}
+
+      {/* Inner content background */}
+      <div className={`absolute inset-[2px] rounded-xl sm:rounded-2xl ${isSelected ? 'bg-surface-900/90' : 'bg-transparent'}`} />
+
+      {/* Icon */}
+      <motion.div
+        className="relative z-10 mb-1"
+        animate={isSelected ? { rotate: [0, -10, 10, 0] } : {}}
+        transition={{ duration: 0.5 }}
+      >
+        <Icon className={`w-5 h-5 sm:w-6 sm:h-6 mx-auto bg-gradient-to-r ${tier.color} bg-clip-text`} style={{ color: tier.id === 'gold' ? '#FCD116' : tier.id === 'platinum' ? '#e2e8f0' : tier.id === 'silver' ? '#9ca3af' : '#d97706' }} />
+      </motion.div>
+
+      {/* Tier name */}
+      <div className={`relative z-10 text-sm sm:text-lg font-bold bg-gradient-to-r ${tier.color} bg-clip-text text-transparent`}>
+        {tier.name}
+      </div>
+
+      {/* Investment amount */}
+      <div className="relative z-10 text-surface-400 text-xs sm:text-sm mt-0.5 sm:mt-1">
+        GHS {(tier.min / 1000000).toFixed(tier.min >= 1000000 ? 2 : 1)}M+
+      </div>
+
+      {/* Selected indicator */}
+      {isSelected && (
+        <motion.div
+          layoutId="roi-tier-indicator"
+          className="absolute -top-1 -right-1 w-5 h-5 sm:w-6 sm:h-6 bg-gradient-to-br from-ghana-gold to-yellow-400 rounded-full flex items-center justify-center shadow-lg shadow-ghana-gold/50"
+          initial={{ scale: 0 }}
+          animate={{ scale: 1 }}
+          transition={{ type: "spring", stiffness: 500 }}
+        >
+          <Check className="w-3 h-3 sm:w-4 sm:h-4 text-black" />
+        </motion.div>
+      )}
+
+      {/* Sparkle effects on hover */}
+      {(isHovered || isSelected) && (
+        <>
+          <motion.div
+            className="absolute top-2 left-2 w-1 h-1 bg-white rounded-full"
+            animate={{ scale: [0, 1, 0], opacity: [0, 1, 0] }}
+            transition={{ duration: 1, repeat: Infinity, delay: 0 }}
+          />
+          <motion.div
+            className="absolute bottom-2 right-2 w-1 h-1 bg-white rounded-full"
+            animate={{ scale: [0, 1, 0], opacity: [0, 1, 0] }}
+            transition={{ duration: 1, repeat: Infinity, delay: 0.5 }}
+          />
+        </>
+      )}
+    </motion.button>
+  );
+}
+
 function ROICalculator() {
   const ref = useRef<HTMLDivElement>(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
   const [investment, setInvestment] = useState(3750000); // Default to Gold tier
   const [selectedTier, setSelectedTier] = useState<string>('gold');
+  const [sliderHovered, setSliderHovered] = useState(false);
 
   const tiers = [
-    { id: 'bronze', name: 'Bronze', min: 750000, color: 'from-amber-600 to-orange-400' },
-    { id: 'silver', name: 'Silver', min: 1500000, color: 'from-gray-400 to-gray-300' },
-    { id: 'gold', name: 'Gold', min: 3750000, color: 'from-ghana-gold to-yellow-300' },
-    { id: 'platinum', name: 'Platinum', min: 7500000, color: 'from-slate-300 to-white' },
+    { id: 'bronze', name: 'Bronze', min: 750000, color: 'from-amber-600 to-orange-400', icon: Medal },
+    { id: 'silver', name: 'Silver', min: 1500000, color: 'from-gray-400 to-gray-300', icon: Award },
+    { id: 'gold', name: 'Gold', min: 3750000, color: 'from-ghana-gold to-yellow-300', icon: Crown },
+    { id: 'platinum', name: 'Platinum', min: 7500000, color: 'from-slate-300 to-white', icon: Gem },
   ];
 
   // Calculate ROI metrics based on investment
@@ -662,176 +962,293 @@ function ROICalculator() {
     setInvestment(minAmount);
   };
 
+  // Calculate slider fill percentage
+  const sliderPercent = ((investment - 750000) / (15000000 - 750000)) * 100;
+
   return (
     <motion.div
       ref={ref}
       initial={{ opacity: 0, y: 30 }}
       animate={isInView ? { opacity: 1, y: 0 } : {}}
       transition={{ duration: 0.6 }}
-      className="bg-gradient-to-br from-surface-800/70 to-surface-900/90 rounded-2xl sm:rounded-3xl p-4 sm:p-6 md:p-8 border border-ghana-gold/20 backdrop-blur-xl"
+      className="relative bg-gradient-to-br from-surface-800/80 to-surface-900/95 rounded-2xl sm:rounded-3xl p-4 sm:p-6 md:p-8 border border-ghana-gold/30 backdrop-blur-xl overflow-hidden"
     >
-      <div className="flex items-center gap-2 sm:gap-3 mb-6 sm:mb-8">
-        <div className="p-2 sm:p-3 rounded-lg sm:rounded-xl bg-ghana-gold/20">
-          <Calculator className="w-5 h-5 sm:w-6 sm:h-6 text-ghana-gold" />
-        </div>
+      {/* Background effects */}
+      <ROIFloatingParticles />
+      <ROIGridPattern />
+
+      {/* Animated corner accents */}
+      <div className="absolute top-0 left-0 w-20 h-20 overflow-hidden pointer-events-none">
+        <motion.div
+          className="absolute top-2 left-2 w-8 h-[2px] bg-gradient-to-r from-ghana-gold to-transparent"
+          animate={{ opacity: [0.5, 1, 0.5] }}
+          transition={{ duration: 2, repeat: Infinity }}
+        />
+        <motion.div
+          className="absolute top-2 left-2 w-[2px] h-8 bg-gradient-to-b from-ghana-gold to-transparent"
+          animate={{ opacity: [0.5, 1, 0.5] }}
+          transition={{ duration: 2, repeat: Infinity, delay: 0.5 }}
+        />
+      </div>
+      <div className="absolute bottom-0 right-0 w-20 h-20 overflow-hidden pointer-events-none">
+        <motion.div
+          className="absolute bottom-2 right-2 w-8 h-[2px] bg-gradient-to-l from-ghana-gold to-transparent"
+          animate={{ opacity: [0.5, 1, 0.5] }}
+          transition={{ duration: 2, repeat: Infinity }}
+        />
+        <motion.div
+          className="absolute bottom-2 right-2 w-[2px] h-8 bg-gradient-to-t from-ghana-gold to-transparent"
+          animate={{ opacity: [0.5, 1, 0.5] }}
+          transition={{ duration: 2, repeat: Infinity, delay: 0.5 }}
+        />
+      </div>
+
+      {/* Header with enhanced styling */}
+      <div className="relative z-10 flex items-center gap-3 sm:gap-4 mb-6 sm:mb-8">
+        <motion.div
+          className="relative p-3 sm:p-4 rounded-xl sm:rounded-2xl bg-gradient-to-br from-ghana-gold/30 to-ghana-gold/10 border border-ghana-gold/30"
+          animate={{
+            boxShadow: ['0 0 20px rgba(252,209,22,0.2)', '0 0 40px rgba(252,209,22,0.4)', '0 0 20px rgba(252,209,22,0.2)']
+          }}
+          transition={{ duration: 2, repeat: Infinity }}
+        >
+          <Calculator className="w-6 h-6 sm:w-8 sm:h-8 text-ghana-gold" />
+          {/* Orbiting dot */}
+          <motion.div
+            className="absolute w-2 h-2 bg-ghana-gold rounded-full"
+            animate={{
+              rotate: 360,
+            }}
+            transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
+            style={{
+              top: '50%',
+              left: '50%',
+              transformOrigin: '0 -20px',
+            }}
+          />
+        </motion.div>
         <div>
-          <h3 className="text-lg sm:text-xl md:text-2xl font-heading font-bold text-white">Partnership Value Calculator</h3>
-          <p className="text-surface-400 text-xs sm:text-sm">See your potential return on investment</p>
+          <motion.h3
+            className="text-lg sm:text-xl md:text-2xl font-heading font-bold bg-gradient-to-r from-white via-ghana-gold to-white bg-clip-text text-transparent bg-[length:200%_auto]"
+            animate={{ backgroundPosition: ['0% center', '200% center'] }}
+            transition={{ duration: 5, repeat: Infinity, ease: "linear" }}
+          >
+            Partnership Value Calculator
+          </motion.h3>
+          <p className="text-surface-400 text-xs sm:text-sm flex items-center gap-2">
+            <Sparkles className="w-3 h-3 text-ghana-gold" />
+            See your potential return on investment
+          </p>
         </div>
       </div>
 
-      {/* Tier Selection */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-2 sm:gap-3 mb-6 sm:mb-8">
+      {/* Enhanced Tier Selection */}
+      <div className="relative z-10 grid grid-cols-2 md:grid-cols-4 gap-2 sm:gap-3 mb-6 sm:mb-8">
         {tiers.map((tier) => (
-          <button
+          <EnhancedTierButton
             key={tier.id}
-            onClick={() => handleTierSelect(tier.id, tier.min)}
-            className={`relative p-2.5 sm:p-4 rounded-lg sm:rounded-xl border-2 transition-all duration-300 ${
-              selectedTier === tier.id
-                ? 'border-ghana-gold bg-ghana-gold/10 scale-105'
-                : 'border-white/10 hover:border-white/30 bg-white/5'
-            }`}
-          >
-            <div className={`text-sm sm:text-lg font-bold bg-gradient-to-r ${tier.color} bg-clip-text text-transparent`}>
-              {tier.name}
-            </div>
-            <div className="text-surface-400 text-xs sm:text-sm mt-0.5 sm:mt-1">
-              GHS {(tier.min / 1000000).toFixed(tier.min >= 1000000 ? 2 : 1)}M+
-            </div>
-            {selectedTier === tier.id && (
-              <motion.div
-                layoutId="tier-indicator"
-                className="absolute -top-1 -right-1 w-4 h-4 bg-ghana-gold rounded-full flex items-center justify-center"
-              >
-                <Check className="w-3 h-3 text-black" />
-              </motion.div>
-            )}
-          </button>
+            tier={tier}
+            isSelected={selectedTier === tier.id}
+            onSelect={() => handleTierSelect(tier.id, tier.min)}
+          />
         ))}
       </div>
 
-      {/* Investment Slider */}
-      <div className="mb-6 sm:mb-8">
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-1 sm:gap-0 mb-3">
-          <span className="text-surface-300 text-xs sm:text-sm font-medium">Your Investment</span>
-          <span className="text-xl sm:text-2xl font-bold text-ghana-gold">
-            GHS {investment.toLocaleString()}
+      {/* Enhanced Investment Slider */}
+      <div className="relative z-10 mb-6 sm:mb-8">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 sm:gap-0 mb-4">
+          <span className="text-surface-300 text-sm sm:text-base font-medium flex items-center gap-2">
+            <TrendingUp className="w-4 h-4 text-ghana-green" />
+            Your Investment
+          </span>
+          <motion.div
+            className="relative"
+            animate={sliderHovered ? { scale: 1.05 } : { scale: 1 }}
+          >
+            <InvestmentPulseRings />
+            <motion.span
+              key={investment}
+              initial={{ scale: 0.8, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              className="relative z-10 text-2xl sm:text-3xl font-bold bg-gradient-to-r from-ghana-gold via-yellow-300 to-ghana-gold bg-clip-text text-transparent px-4 py-2 rounded-xl bg-ghana-gold/10 border border-ghana-gold/20"
+            >
+              GHS {investment.toLocaleString()}
+            </motion.span>
+          </motion.div>
+        </div>
+
+        {/* Custom styled slider container */}
+        <div
+          className="relative h-12 flex items-center"
+          onMouseEnter={() => setSliderHovered(true)}
+          onMouseLeave={() => setSliderHovered(false)}
+        >
+          {/* Track background with gradient fill */}
+          <div className="absolute inset-x-0 h-3 bg-surface-700/50 rounded-full overflow-hidden">
+            <motion.div
+              className="h-full bg-gradient-to-r from-ghana-green via-ghana-gold to-yellow-300 rounded-full"
+              style={{ width: `${sliderPercent}%` }}
+              layoutId="slider-fill"
+            />
+            {/* Animated shimmer on track */}
+            <motion.div
+              className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent"
+              animate={{ x: ['-100%', '100%'] }}
+              transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+            />
+          </div>
+
+          {/* Tier markers on track */}
+          {tiers.map((tier) => {
+            const percent = ((tier.min - 750000) / (15000000 - 750000)) * 100;
+            return (
+              <motion.div
+                key={tier.id}
+                className={`absolute w-2 h-2 rounded-full transition-all duration-300 ${
+                  investment >= tier.min ? 'bg-white shadow-lg' : 'bg-surface-600'
+                }`}
+                style={{ left: `${percent}%`, transform: 'translateX(-50%)' }}
+                animate={investment >= tier.min ? { scale: [1, 1.3, 1] } : {}}
+                transition={{ duration: 0.3 }}
+              />
+            );
+          })}
+
+          <input
+            type="range"
+            min={750000}
+            max={15000000}
+            step={250000}
+            value={investment}
+            onChange={(e) => {
+              const val = Number(e.target.value);
+              setInvestment(val);
+              // Auto-select tier based on slider
+              if (val >= 7500000) setSelectedTier('platinum');
+              else if (val >= 3750000) setSelectedTier('gold');
+              else if (val >= 1500000) setSelectedTier('silver');
+              else setSelectedTier('bronze');
+            }}
+            className="absolute inset-0 w-full opacity-0 cursor-pointer z-10"
+          />
+
+          {/* Custom thumb */}
+          <motion.div
+            className="absolute w-6 h-6 sm:w-8 sm:h-8 bg-gradient-to-br from-ghana-gold to-yellow-400 rounded-full shadow-lg shadow-ghana-gold/50 pointer-events-none flex items-center justify-center"
+            style={{ left: `${sliderPercent}%`, transform: 'translateX(-50%)' }}
+            animate={sliderHovered ? { scale: 1.2 } : { scale: 1 }}
+            transition={{ type: "spring", stiffness: 300 }}
+          >
+            <motion.div
+              className="w-2 h-2 bg-black/30 rounded-full"
+              animate={{ scale: [1, 0.8, 1] }}
+              transition={{ duration: 1, repeat: Infinity }}
+            />
+          </motion.div>
+        </div>
+
+        <div className="flex justify-between text-xs text-surface-500 mt-3">
+          <span className="flex items-center gap-1">
+            <Medal className="w-3 h-3 text-amber-500" />
+            GHS 750K
+          </span>
+          <span className="flex items-center gap-1">
+            <Gem className="w-3 h-3 text-slate-300" />
+            GHS 15M
           </span>
         </div>
-        <input
-          type="range"
-          min={750000}
-          max={15000000}
-          step={250000}
-          value={investment}
-          onChange={(e) => {
-            const val = Number(e.target.value);
-            setInvestment(val);
-            // Auto-select tier based on slider
-            if (val >= 7500000) setSelectedTier('platinum');
-            else if (val >= 3750000) setSelectedTier('gold');
-            else if (val >= 1500000) setSelectedTier('silver');
-            else setSelectedTier('bronze');
-          }}
-          className="w-full h-2 bg-surface-700 rounded-full appearance-none cursor-pointer
-            [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-6 [&::-webkit-slider-thumb]:h-6
-            [&::-webkit-slider-thumb]:bg-gradient-to-r [&::-webkit-slider-thumb]:from-ghana-gold [&::-webkit-slider-thumb]:to-yellow-300
-            [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:cursor-pointer [&::-webkit-slider-thumb]:shadow-lg
-            [&::-webkit-slider-thumb]:shadow-ghana-gold/30 [&::-webkit-slider-thumb]:transition-transform
-            [&::-webkit-slider-thumb]:hover:scale-110"
+      </div>
+
+      {/* Enhanced ROI Results */}
+      <div className="relative z-10 grid grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4">
+        <EnhancedResultCard
+          icon={Users}
+          value={`${roi.impressions.toLocaleString()}+`}
+          label="Civil Servants Reached"
+          color="green"
+          delay={0}
+          investment={investment}
         />
-        <div className="flex justify-between text-xs text-surface-500 mt-2">
-          <span>GHS 750K</span>
-          <span>GHS 15M</span>
-        </div>
+        <EnhancedResultCard
+          icon={Award}
+          value={roi.certificateLogos.toLocaleString()}
+          label="Certificate Logo Impressions"
+          color="gold"
+          delay={0.1}
+          investment={investment}
+        />
+        <EnhancedResultCard
+          icon={TrendingUp}
+          value={`GHS ${(roi.estimatedMediaValue / 1000000).toFixed(1)}M`}
+          label="Estimated Media Value"
+          color="green"
+          delay={0.2}
+          investment={investment}
+        />
+        <EnhancedResultCard
+          icon={Building2}
+          value={`${roi.governmentConnections}+`}
+          label="MDA Connections"
+          color="gold"
+          delay={0.3}
+          investment={investment}
+        />
+        <EnhancedResultCard
+          icon={Calendar}
+          value={roi.brandExposureMonths.toString()}
+          label="Months Brand Exposure"
+          color="green"
+          delay={0.4}
+          investment={investment}
+        />
+        <EnhancedResultCard
+          icon={Star}
+          value={roi.launchEventRole}
+          label="National Launch Role"
+          color="gold"
+          delay={0.5}
+          investment={investment}
+        />
       </div>
 
-      {/* ROI Results */}
-      <div className="grid grid-cols-2 md:grid-cols-3 gap-2 sm:gap-4">
-        <motion.div
-          key={`impressions-${investment}`}
-          initial={{ scale: 0.9, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          className="bg-white/5 rounded-lg sm:rounded-xl p-3 sm:p-4 border border-white/10"
+      {/* Enhanced CTA */}
+      <div className="relative z-10 mt-8 sm:mt-10 text-center">
+        <motion.p
+          className="text-surface-300 text-sm sm:text-base mb-4 sm:mb-5"
+          initial={{ opacity: 0 }}
+          animate={isInView ? { opacity: 1 } : {}}
+          transition={{ delay: 0.6 }}
         >
-          <Users className="w-4 h-4 sm:w-5 sm:h-5 text-ghana-green mb-1 sm:mb-2" />
-          <div className="text-lg sm:text-2xl font-bold text-white">{roi.impressions.toLocaleString()}+</div>
-          <div className="text-[10px] sm:text-xs text-surface-400">Civil Servants Reached</div>
-        </motion.div>
-
-        <motion.div
-          key={`certificates-${investment}`}
-          initial={{ scale: 0.9, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          transition={{ delay: 0.1 }}
-          className="bg-white/5 rounded-lg sm:rounded-xl p-3 sm:p-4 border border-white/10"
-        >
-          <Award className="w-4 h-4 sm:w-5 sm:h-5 text-ghana-gold mb-1 sm:mb-2" />
-          <div className="text-lg sm:text-2xl font-bold text-white">{roi.certificateLogos.toLocaleString()}</div>
-          <div className="text-[10px] sm:text-xs text-surface-400">Certificate Logo Impressions</div>
-        </motion.div>
-
-        <motion.div
-          key={`media-${investment}`}
-          initial={{ scale: 0.9, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          transition={{ delay: 0.2 }}
-          className="bg-white/5 rounded-lg sm:rounded-xl p-3 sm:p-4 border border-white/10"
-        >
-          <TrendingUp className="w-4 h-4 sm:w-5 sm:h-5 text-ghana-green mb-1 sm:mb-2" />
-          <div className="text-lg sm:text-2xl font-bold text-white">GHS {(roi.estimatedMediaValue / 1000000).toFixed(1)}M</div>
-          <div className="text-[10px] sm:text-xs text-surface-400">Estimated Media Value</div>
-        </motion.div>
-
-        <motion.div
-          key={`connections-${investment}`}
-          initial={{ scale: 0.9, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          transition={{ delay: 0.3 }}
-          className="bg-white/5 rounded-lg sm:rounded-xl p-3 sm:p-4 border border-white/10"
-        >
-          <Building2 className="w-4 h-4 sm:w-5 sm:h-5 text-ghana-gold mb-1 sm:mb-2" />
-          <div className="text-lg sm:text-2xl font-bold text-white">{roi.governmentConnections}+</div>
-          <div className="text-[10px] sm:text-xs text-surface-400">MDA Connections</div>
-        </motion.div>
-
-        <motion.div
-          key={`exposure-${investment}`}
-          initial={{ scale: 0.9, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          transition={{ delay: 0.4 }}
-          className="bg-white/5 rounded-lg sm:rounded-xl p-3 sm:p-4 border border-white/10"
-        >
-          <Calendar className="w-4 h-4 sm:w-5 sm:h-5 text-ghana-green mb-1 sm:mb-2" />
-          <div className="text-lg sm:text-2xl font-bold text-white">{roi.brandExposureMonths}</div>
-          <div className="text-[10px] sm:text-xs text-surface-400">Months Brand Exposure</div>
-        </motion.div>
-
-        <motion.div
-          key={`event-${investment}`}
-          initial={{ scale: 0.9, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          transition={{ delay: 0.5 }}
-          className="bg-white/5 rounded-lg sm:rounded-xl p-3 sm:p-4 border border-white/10"
-        >
-          <Star className="w-4 h-4 sm:w-5 sm:h-5 text-ghana-gold mb-1 sm:mb-2" />
-          <div className="text-lg sm:text-2xl font-bold text-white">{roi.launchEventRole}</div>
-          <div className="text-[10px] sm:text-xs text-surface-400">National Launch Role</div>
-        </motion.div>
-      </div>
-
-      {/* CTA */}
-      <div className="mt-6 sm:mt-8 text-center">
-        <p className="text-surface-300 text-xs sm:text-sm mb-3 sm:mb-4">
           Ready to maximize your impact? Let's discuss your partnership.
-        </p>
-        <a
+        </motion.p>
+        <motion.a
           href="#schedule-meeting"
-          className="inline-flex items-center gap-2 px-4 sm:px-6 py-2.5 sm:py-3 btn-animated-gradient text-black font-bold rounded-lg sm:rounded-xl hover:shadow-lg hover:shadow-ghana-gold/30 transition-all hover:scale-105 text-sm sm:text-base"
+          initial={{ opacity: 0, y: 20 }}
+          animate={isInView ? { opacity: 1, y: 0 } : {}}
+          transition={{ delay: 0.7 }}
+          whileHover={{ scale: 1.05, y: -2 }}
+          whileTap={{ scale: 0.98 }}
+          className="relative inline-flex items-center gap-2 px-6 sm:px-8 py-3 sm:py-4 bg-gradient-to-r from-ghana-gold via-yellow-400 to-ghana-gold bg-[length:200%_auto] text-black font-bold rounded-xl sm:rounded-2xl shadow-lg shadow-ghana-gold/30 overflow-hidden group"
         >
-          <CalendarClock className="w-4 h-4 sm:w-5 sm:h-5 relative z-10" />
-          <span className="relative z-10">Schedule a Discussion</span>
-        </a>
+          {/* Animated background */}
+          <motion.div
+            className="absolute inset-0 bg-gradient-to-r from-ghana-gold via-yellow-400 to-ghana-gold bg-[length:200%_auto]"
+            animate={{ backgroundPosition: ['0% center', '200% center'] }}
+            transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
+          />
+
+          {/* Shimmer effect */}
+          <motion.div
+            className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent"
+            initial={{ x: '-100%' }}
+            whileHover={{ x: '100%' }}
+            transition={{ duration: 0.6 }}
+          />
+
+          <CalendarClock className="w-5 h-5 sm:w-6 sm:h-6 relative z-10" />
+          <span className="relative z-10 text-sm sm:text-base">Schedule a Discussion</span>
+          <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 relative z-10 group-hover:translate-x-1 transition-transform" />
+        </motion.a>
       </div>
     </motion.div>
   );
