@@ -956,7 +956,7 @@ export default function GhanaGlobe() {
       {/* Main SVG visualization */}
       <div className="absolute inset-0 flex items-center justify-center p-6 sm:p-10">
         <motion.svg
-          viewBox="0 0 100 100"
+          viewBox="0 0 100 112"
           className="w-full h-full max-w-[550px] max-h-[650px]"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -1122,15 +1122,15 @@ export default function GhanaGlobe() {
           {/* Map title */}
           <motion.text
             x="50"
-            y="98"
+            y="107"
             textAnchor="middle"
             fill="#FCD116"
-            fontSize="3"
+            fontSize="3.5"
             fontFamily="monospace"
             fontWeight="bold"
             letterSpacing="0.3em"
             initial={{ opacity: 0 }}
-            animate={{ opacity: [0.3, 0.6, 0.3] }}
+            animate={{ opacity: [0.5, 0.9, 0.5] }}
             transition={{ duration: 3, repeat: Infinity }}
           >
             GHANA DIGITAL NETWORK
