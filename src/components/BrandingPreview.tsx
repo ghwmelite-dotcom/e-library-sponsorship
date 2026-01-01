@@ -34,12 +34,12 @@ const PREVIEW_TABS: PreviewTab[] = [
 // Certificate Preview Component
 function CertificatePreview({ companyName, logoUrl }: { companyName: string; logoUrl: string | null }) {
   return (
-    <div className="relative bg-gradient-to-br from-amber-50 to-orange-50 rounded-lg p-8 shadow-2xl border-8 border-double border-ghana-gold/30 max-w-md mx-auto">
-      {/* Decorative corners */}
-      <div className="absolute top-4 left-4 w-12 h-12 border-l-4 border-t-4 border-ghana-gold/50" />
-      <div className="absolute top-4 right-4 w-12 h-12 border-r-4 border-t-4 border-ghana-gold/50" />
-      <div className="absolute bottom-4 left-4 w-12 h-12 border-l-4 border-b-4 border-ghana-gold/50" />
-      <div className="absolute bottom-4 right-4 w-12 h-12 border-r-4 border-b-4 border-ghana-gold/50" />
+    <div className="relative bg-gradient-to-br from-amber-50 to-orange-50 rounded-lg p-4 sm:p-8 shadow-2xl border-4 sm:border-8 border-double border-ghana-gold/30 max-w-md mx-auto">
+      {/* Decorative corners - hidden on very small screens */}
+      <div className="absolute top-2 left-2 sm:top-4 sm:left-4 w-8 h-8 sm:w-12 sm:h-12 border-l-2 sm:border-l-4 border-t-2 sm:border-t-4 border-ghana-gold/50 hidden xs:block" />
+      <div className="absolute top-2 right-2 sm:top-4 sm:right-4 w-8 h-8 sm:w-12 sm:h-12 border-r-2 sm:border-r-4 border-t-2 sm:border-t-4 border-ghana-gold/50 hidden xs:block" />
+      <div className="absolute bottom-2 left-2 sm:bottom-4 sm:left-4 w-8 h-8 sm:w-12 sm:h-12 border-l-2 sm:border-l-4 border-b-2 sm:border-b-4 border-ghana-gold/50 hidden xs:block" />
+      <div className="absolute bottom-2 right-2 sm:bottom-4 sm:right-4 w-8 h-8 sm:w-12 sm:h-12 border-r-2 sm:border-r-4 border-b-2 sm:border-b-4 border-ghana-gold/50 hidden xs:block" />
 
       {/* Header */}
       <div className="text-center mb-6">
@@ -49,24 +49,24 @@ function CertificatePreview({ companyName, logoUrl }: { companyName: string; log
             <Star className="w-8 h-8 text-ghana-gold" />
           </div>
         </div>
-        <h3 className="text-2xl font-serif font-bold text-gray-800">REPUBLIC OF GHANA</h3>
+        <h3 className="text-lg sm:text-2xl font-serif font-bold text-gray-800">REPUBLIC OF GHANA</h3>
         <p className="text-sm text-gray-600">Office of the Head of Civil Service</p>
       </div>
 
       {/* Certificate Title */}
-      <div className="text-center mb-6">
-        <h2 className="text-3xl font-serif font-bold text-ghana-green mb-2">Certificate of Completion</h2>
-        <div className="w-32 h-1 bg-gradient-to-r from-transparent via-ghana-gold to-transparent mx-auto" />
+      <div className="text-center mb-4 sm:mb-6">
+        <h2 className="text-xl sm:text-3xl font-serif font-bold text-ghana-green mb-2">Certificate of Completion</h2>
+        <div className="w-24 sm:w-32 h-1 bg-gradient-to-r from-transparent via-ghana-gold to-transparent mx-auto" />
       </div>
 
       {/* Recipient */}
-      <div className="text-center mb-6">
-        <p className="text-gray-600 mb-2">This is to certify that</p>
-        <p className="text-2xl font-serif font-bold text-gray-800 border-b-2 border-ghana-gold/30 pb-2 px-4 inline-block">
+      <div className="text-center mb-4 sm:mb-6">
+        <p className="text-gray-600 text-sm sm:text-base mb-2">This is to certify that</p>
+        <p className="text-lg sm:text-2xl font-serif font-bold text-gray-800 border-b-2 border-ghana-gold/30 pb-2 px-2 sm:px-4 inline-block">
           John Kwame Mensah
         </p>
-        <p className="text-gray-600 mt-4">has successfully completed</p>
-        <p className="text-xl font-semibold text-ghana-green mt-2">
+        <p className="text-gray-600 text-sm sm:text-base mt-3 sm:mt-4">has successfully completed</p>
+        <p className="text-base sm:text-xl font-semibold text-ghana-green mt-2">
           Advanced Public Administration
         </p>
       </div>
@@ -75,7 +75,7 @@ function CertificatePreview({ companyName, logoUrl }: { companyName: string; log
       <motion.div
         initial={{ opacity: 0, scale: 0.9 }}
         animate={{ opacity: 1, scale: 1 }}
-        className="bg-white/80 rounded-lg p-4 mb-6 border border-ghana-gold/20"
+        className="bg-white/80 rounded-lg p-3 sm:p-4 mb-4 sm:mb-6 border border-ghana-gold/20"
       >
         <p className="text-xs text-gray-500 text-center mb-2">Sponsored by</p>
         <div className="flex items-center justify-center gap-3">
@@ -91,14 +91,14 @@ function CertificatePreview({ companyName, logoUrl }: { companyName: string; log
       </motion.div>
 
       {/* Signature */}
-      <div className="flex justify-between items-end">
-        <div className="text-center">
-          <div className="w-32 h-px bg-gray-400 mb-1" />
-          <p className="text-xs text-gray-600">Date</p>
+      <div className="flex justify-between items-end gap-2 sm:gap-4">
+        <div className="text-center flex-1">
+          <div className="w-full max-w-[100px] sm:max-w-[128px] h-px bg-gray-400 mb-1 mx-auto" />
+          <p className="text-[10px] sm:text-xs text-gray-600">Date</p>
         </div>
-        <div className="text-center">
-          <div className="w-32 h-px bg-gray-400 mb-1" />
-          <p className="text-xs text-gray-600">Head of Civil Service</p>
+        <div className="text-center flex-1">
+          <div className="w-full max-w-[100px] sm:max-w-[128px] h-px bg-gray-400 mb-1 mx-auto" />
+          <p className="text-[10px] sm:text-xs text-gray-600 whitespace-nowrap">Head of Civil Service</p>
         </div>
       </div>
 
@@ -421,7 +421,7 @@ export default function BrandingPreview() {
   return (
     <div className="relative">
       {/* Input Section */}
-      <div className="bg-surface-800/50 backdrop-blur-sm rounded-2xl p-6 border border-white/10 mb-8 max-w-xl mx-auto">
+      <div className="bg-surface-800/50 backdrop-blur-sm rounded-2xl p-4 sm:p-6 border border-white/10 mb-6 sm:mb-8 max-w-xl mx-auto">
         <h3 className="text-white font-semibold mb-4 flex items-center gap-2">
           <Building2 className="w-5 h-5 text-ghana-gold" />
           Enter Your Company Details
@@ -485,19 +485,19 @@ export default function BrandingPreview() {
       </div>
 
       {/* Preview Tabs */}
-      <div className="flex flex-wrap justify-center gap-2 mb-6">
+      <div className="flex flex-wrap justify-center gap-1.5 sm:gap-2 mb-4 sm:mb-6 px-2">
         {PREVIEW_TABS.map((tab) => (
           <button
             key={tab.id}
             onClick={() => setActivePreview(tab.id)}
-            className={`px-4 py-2 rounded-xl font-medium transition-all flex items-center gap-2 ${
+            className={`px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-lg sm:rounded-xl font-medium transition-all flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm ${
               activePreview === tab.id
                 ? 'bg-ghana-gold text-black'
                 : 'bg-surface-800 text-surface-300 hover:bg-surface-700'
             }`}
           >
-            <tab.icon className="w-4 h-4" />
-            {tab.label}
+            <tab.icon className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+            <span className="hidden xs:inline sm:inline">{tab.label}</span>
           </button>
         ))}
       </div>
@@ -519,7 +519,7 @@ export default function BrandingPreview() {
         </button>
 
         {/* Preview Content */}
-        <div className="px-4 md:px-16">
+        <div className="px-2 sm:px-4 md:px-16">
           <AnimatePresence mode="wait">
             <motion.div
               key={activePreview}

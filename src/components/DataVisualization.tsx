@@ -289,15 +289,15 @@ function GrowthChart({ delay = 0 }: { delay?: number }) {
   const usersPath = createPath(dataPoints, 'users', maxUsers);
 
   return (
-    <div ref={ref} className="bg-surface-800/50 rounded-xl border border-white/10 p-6">
-      <div className="flex items-center justify-between mb-6">
+    <div ref={ref} className="bg-surface-800/50 rounded-xl border border-white/10 p-4 sm:p-6">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 mb-6">
         <div>
-          <h4 className="text-white font-semibold">Projected User Growth</h4>
-          <p className="text-surface-400 text-sm">First 12 months after launch</p>
+          <h4 className="text-white font-semibold text-sm sm:text-base">Projected User Growth</h4>
+          <p className="text-surface-400 text-xs sm:text-sm">First 12 months after launch</p>
         </div>
         <div className="flex items-center gap-2 text-ghana-green">
-          <TrendingUp className="w-5 h-5" />
-          <span className="font-bold">500K+</span>
+          <TrendingUp className="w-4 h-4 sm:w-5 sm:h-5" />
+          <span className="font-bold text-sm sm:text-base">500K+</span>
         </div>
       </div>
 
@@ -384,7 +384,7 @@ function GrowthChart({ delay = 0 }: { delay?: number }) {
       </div>
 
       {/* Milestone markers */}
-      <div className="flex items-center justify-center gap-6 mt-6 pt-4 border-t border-white/10">
+      <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6 mt-6 pt-4 border-t border-white/10">
         {[
           { month: 3, users: '75K', label: 'Pilot Complete' },
           { month: 6, users: '250K', label: 'Half Target' },
@@ -455,7 +455,7 @@ function ImpactMetricsDashboard() {
   ];
 
   return (
-    <div ref={ref} className="grid grid-cols-3 gap-4">
+    <div ref={ref} className="grid grid-cols-1 sm:grid-cols-3 gap-4">
       {metrics.map((metric, i) => (
         <motion.div
           key={metric.label}
@@ -489,7 +489,7 @@ export default function DataVisualization() {
       {/* Section 1: Circular Progress Metrics */}
       <div>
         <h3 className="text-xl font-semibold text-white mb-6 text-center">Platform Efficiency Gains</h3>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 justify-items-center">
+        <div className="grid grid-cols-2 gap-4 sm:gap-8 md:grid-cols-4 justify-items-center">
           <CircularProgress
             value={99}
             label="Faster Document Access"
@@ -520,9 +520,9 @@ export default function DataVisualization() {
       {/* Section 2: Two-column layout */}
       <div className="grid lg:grid-cols-2 gap-8">
         {/* Cost Savings Chart */}
-        <div className="bg-surface-800/50 rounded-xl border border-white/10 p-6">
-          <h3 className="text-lg font-semibold text-white mb-2">Annual Cost Savings</h3>
-          <p className="text-surface-400 text-sm mb-6">Projected vs. current spending (in millions GHS)</p>
+        <div className="bg-surface-800/50 rounded-xl border border-white/10 p-4 sm:p-6">
+          <h3 className="text-base sm:text-lg font-semibold text-white mb-2">Annual Cost Savings</h3>
+          <p className="text-surface-400 text-xs sm:text-sm mb-4 sm:mb-6">Projected vs. current spending (in millions GHS)</p>
           <AnimatedBarChart data={costSavingsData} delay={0.3} />
           <div className="mt-6 pt-4 border-t border-white/10 flex items-center justify-between">
             <span className="text-surface-400 text-sm">Total Annual Savings</span>
@@ -532,8 +532,8 @@ export default function DataVisualization() {
 
         {/* Live Activity Feed */}
         <div>
-          <h3 className="text-lg font-semibold text-white mb-2">Real-Time Activity</h3>
-          <p className="text-surface-400 text-sm mb-6">Simulated platform activity feed</p>
+          <h3 className="text-base sm:text-lg font-semibold text-white mb-2">Real-Time Activity</h3>
+          <p className="text-surface-400 text-xs sm:text-sm mb-4 sm:mb-6">Simulated platform activity feed</p>
           <LiveActivityFeed />
         </div>
       </div>

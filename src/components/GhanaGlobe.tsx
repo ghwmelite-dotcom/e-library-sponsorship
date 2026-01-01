@@ -333,32 +333,32 @@ export default function GhanaGlobe() {
       <div className="absolute inset-0 bg-gradient-to-b from-transparent via-ghana-green/5 to-transparent rounded-3xl" />
 
       {/* Stats overlay */}
-      <div className="absolute top-4 left-4 z-10 bg-surface-900/80 backdrop-blur-sm rounded-xl p-4 border border-white/10">
-        <div className="text-ghana-gold font-bold text-2xl">{MDA_LOCATIONS.length}</div>
-        <div className="text-surface-300 text-sm">MDAs Connected</div>
+      <div className="absolute top-2 left-2 sm:top-4 sm:left-4 z-10 bg-surface-900/80 backdrop-blur-sm rounded-lg sm:rounded-xl p-2 sm:p-4 border border-white/10">
+        <div className="text-ghana-gold font-bold text-lg sm:text-2xl">{MDA_LOCATIONS.length}</div>
+        <div className="text-surface-300 text-xs sm:text-sm">MDAs Connected</div>
       </div>
 
       {/* Legend */}
-      <div className="absolute bottom-4 left-4 z-10 bg-surface-900/80 backdrop-blur-sm rounded-xl p-4 border border-white/10 space-y-2">
-        <div className="flex items-center gap-2">
-          <div className="w-3 h-3 rounded-full bg-ghana-gold" />
-          <span className="text-surface-300 text-xs">Headquarters</span>
+      <div className="absolute bottom-2 left-2 sm:bottom-4 sm:left-4 z-10 bg-surface-900/80 backdrop-blur-sm rounded-lg sm:rounded-xl p-2 sm:p-4 border border-white/10 space-y-1 sm:space-y-2">
+        <div className="flex items-center gap-1.5 sm:gap-2">
+          <div className="w-2 h-2 sm:w-3 sm:h-3 rounded-full bg-ghana-gold" />
+          <span className="text-surface-300 text-[10px] sm:text-xs">Headquarters</span>
         </div>
-        <div className="flex items-center gap-2">
-          <div className="w-3 h-3 rounded-full bg-ghana-green" />
-          <span className="text-surface-300 text-xs">Regional Offices</span>
+        <div className="flex items-center gap-1.5 sm:gap-2">
+          <div className="w-2 h-2 sm:w-3 sm:h-3 rounded-full bg-ghana-green" />
+          <span className="text-surface-300 text-[10px] sm:text-xs">Regional Offices</span>
         </div>
-        <div className="flex items-center gap-2">
-          <div className="w-3 h-3 rounded-full bg-ghana-red" />
-          <span className="text-surface-300 text-xs">Agencies</span>
+        <div className="flex items-center gap-1.5 sm:gap-2">
+          <div className="w-2 h-2 sm:w-3 sm:h-3 rounded-full bg-ghana-red" />
+          <span className="text-surface-300 text-[10px] sm:text-xs">Agencies</span>
         </div>
       </div>
 
       {/* Instruction */}
-      <div className="absolute top-4 right-4 z-10 text-surface-400 text-sm flex items-center gap-2">
+      <div className="absolute top-2 right-2 sm:top-4 sm:right-4 z-10 text-surface-400 text-[10px] sm:text-sm flex items-center gap-1 sm:gap-2">
         <span className="hidden md:inline">Drag to rotate</span>
         <span className="inline md:hidden">Touch to explore</span>
-        <svg className="w-4 h-4 animate-pulse" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <svg className="w-3 h-3 sm:w-4 sm:h-4 animate-pulse" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5M7.188 2.239l.777 2.897M5.136 7.965l-2.898-.777M13.95 4.05l-2.122 2.122m-5.657 5.656l-2.12 2.122" />
         </svg>
       </div>
@@ -396,16 +396,16 @@ export default function GhanaGlobe() {
 
       {/* Hovered MDA info panel */}
       {hoveredMDA && (
-        <div className="absolute bottom-4 right-4 z-10 bg-surface-900/95 backdrop-blur-sm rounded-xl p-4 border border-ghana-gold/30 shadow-xl max-w-xs animate-fade-in">
-          <div className="flex items-start gap-3">
-            <div className={`w-3 h-3 rounded-full mt-1.5 ${
+        <div className="absolute bottom-2 right-2 sm:bottom-4 sm:right-4 z-10 bg-surface-900/95 backdrop-blur-sm rounded-lg sm:rounded-xl p-3 sm:p-4 border border-ghana-gold/30 shadow-xl max-w-[200px] sm:max-w-xs animate-fade-in">
+          <div className="flex items-start gap-2 sm:gap-3">
+            <div className={`w-2 h-2 sm:w-3 sm:h-3 rounded-full mt-1 sm:mt-1.5 flex-shrink-0 ${
               hoveredMDA.type === 'headquarters' ? 'bg-ghana-gold' :
               hoveredMDA.type === 'regional' ? 'bg-ghana-green' : 'bg-ghana-red'
             }`} />
             <div>
-              <h4 className="text-white font-semibold">{hoveredMDA.name}</h4>
-              <p className="text-ghana-gold text-sm">{hoveredMDA.city}</p>
-              <p className="text-surface-400 text-xs mt-1 capitalize">{hoveredMDA.type.replace('_', ' ')}</p>
+              <h4 className="text-white font-semibold text-xs sm:text-sm leading-tight">{hoveredMDA.name}</h4>
+              <p className="text-ghana-gold text-[10px] sm:text-sm">{hoveredMDA.city}</p>
+              <p className="text-surface-400 text-[10px] sm:text-xs mt-0.5 sm:mt-1 capitalize">{hoveredMDA.type.replace('_', ' ')}</p>
             </div>
           </div>
         </div>

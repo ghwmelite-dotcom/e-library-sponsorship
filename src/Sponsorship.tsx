@@ -668,34 +668,34 @@ function ROICalculator() {
       initial={{ opacity: 0, y: 30 }}
       animate={isInView ? { opacity: 1, y: 0 } : {}}
       transition={{ duration: 0.6 }}
-      className="bg-gradient-to-br from-surface-800/70 to-surface-900/90 rounded-3xl p-8 border border-ghana-gold/20 backdrop-blur-xl"
+      className="bg-gradient-to-br from-surface-800/70 to-surface-900/90 rounded-2xl sm:rounded-3xl p-4 sm:p-6 md:p-8 border border-ghana-gold/20 backdrop-blur-xl"
     >
-      <div className="flex items-center gap-3 mb-8">
-        <div className="p-3 rounded-xl bg-ghana-gold/20">
-          <Calculator className="w-6 h-6 text-ghana-gold" />
+      <div className="flex items-center gap-2 sm:gap-3 mb-6 sm:mb-8">
+        <div className="p-2 sm:p-3 rounded-lg sm:rounded-xl bg-ghana-gold/20">
+          <Calculator className="w-5 h-5 sm:w-6 sm:h-6 text-ghana-gold" />
         </div>
         <div>
-          <h3 className="text-2xl font-heading font-bold text-white">Partnership Value Calculator</h3>
-          <p className="text-surface-400 text-sm">See your potential return on investment</p>
+          <h3 className="text-lg sm:text-xl md:text-2xl font-heading font-bold text-white">Partnership Value Calculator</h3>
+          <p className="text-surface-400 text-xs sm:text-sm">See your potential return on investment</p>
         </div>
       </div>
 
       {/* Tier Selection */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-8">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-2 sm:gap-3 mb-6 sm:mb-8">
         {tiers.map((tier) => (
           <button
             key={tier.id}
             onClick={() => handleTierSelect(tier.id, tier.min)}
-            className={`relative p-4 rounded-xl border-2 transition-all duration-300 ${
+            className={`relative p-2.5 sm:p-4 rounded-lg sm:rounded-xl border-2 transition-all duration-300 ${
               selectedTier === tier.id
                 ? 'border-ghana-gold bg-ghana-gold/10 scale-105'
                 : 'border-white/10 hover:border-white/30 bg-white/5'
             }`}
           >
-            <div className={`text-lg font-bold bg-gradient-to-r ${tier.color} bg-clip-text text-transparent`}>
+            <div className={`text-sm sm:text-lg font-bold bg-gradient-to-r ${tier.color} bg-clip-text text-transparent`}>
               {tier.name}
             </div>
-            <div className="text-surface-400 text-sm mt-1">
+            <div className="text-surface-400 text-xs sm:text-sm mt-0.5 sm:mt-1">
               GHS {(tier.min / 1000000).toFixed(tier.min >= 1000000 ? 2 : 1)}M+
             </div>
             {selectedTier === tier.id && (
@@ -711,10 +711,10 @@ function ROICalculator() {
       </div>
 
       {/* Investment Slider */}
-      <div className="mb-8">
-        <div className="flex justify-between items-center mb-3">
-          <span className="text-surface-300 text-sm font-medium">Your Investment</span>
-          <span className="text-2xl font-bold text-ghana-gold">
+      <div className="mb-6 sm:mb-8">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-1 sm:gap-0 mb-3">
+          <span className="text-surface-300 text-xs sm:text-sm font-medium">Your Investment</span>
+          <span className="text-xl sm:text-2xl font-bold text-ghana-gold">
             GHS {investment.toLocaleString()}
           </span>
         </div>
@@ -747,16 +747,16 @@ function ROICalculator() {
       </div>
 
       {/* ROI Results */}
-      <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-3 gap-2 sm:gap-4">
         <motion.div
           key={`impressions-${investment}`}
           initial={{ scale: 0.9, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
-          className="bg-white/5 rounded-xl p-4 border border-white/10"
+          className="bg-white/5 rounded-lg sm:rounded-xl p-3 sm:p-4 border border-white/10"
         >
-          <Users className="w-5 h-5 text-ghana-green mb-2" />
-          <div className="text-2xl font-bold text-white">{roi.impressions.toLocaleString()}+</div>
-          <div className="text-xs text-surface-400">Civil Servants Reached</div>
+          <Users className="w-4 h-4 sm:w-5 sm:h-5 text-ghana-green mb-1 sm:mb-2" />
+          <div className="text-lg sm:text-2xl font-bold text-white">{roi.impressions.toLocaleString()}+</div>
+          <div className="text-[10px] sm:text-xs text-surface-400">Civil Servants Reached</div>
         </motion.div>
 
         <motion.div
@@ -764,11 +764,11 @@ function ROICalculator() {
           initial={{ scale: 0.9, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           transition={{ delay: 0.1 }}
-          className="bg-white/5 rounded-xl p-4 border border-white/10"
+          className="bg-white/5 rounded-lg sm:rounded-xl p-3 sm:p-4 border border-white/10"
         >
-          <Award className="w-5 h-5 text-ghana-gold mb-2" />
-          <div className="text-2xl font-bold text-white">{roi.certificateLogos.toLocaleString()}</div>
-          <div className="text-xs text-surface-400">Certificate Logo Impressions</div>
+          <Award className="w-4 h-4 sm:w-5 sm:h-5 text-ghana-gold mb-1 sm:mb-2" />
+          <div className="text-lg sm:text-2xl font-bold text-white">{roi.certificateLogos.toLocaleString()}</div>
+          <div className="text-[10px] sm:text-xs text-surface-400">Certificate Logo Impressions</div>
         </motion.div>
 
         <motion.div
@@ -776,11 +776,11 @@ function ROICalculator() {
           initial={{ scale: 0.9, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           transition={{ delay: 0.2 }}
-          className="bg-white/5 rounded-xl p-4 border border-white/10"
+          className="bg-white/5 rounded-lg sm:rounded-xl p-3 sm:p-4 border border-white/10"
         >
-          <TrendingUp className="w-5 h-5 text-ghana-green mb-2" />
-          <div className="text-2xl font-bold text-white">GHS {(roi.estimatedMediaValue / 1000000).toFixed(1)}M</div>
-          <div className="text-xs text-surface-400">Estimated Media Value</div>
+          <TrendingUp className="w-4 h-4 sm:w-5 sm:h-5 text-ghana-green mb-1 sm:mb-2" />
+          <div className="text-lg sm:text-2xl font-bold text-white">GHS {(roi.estimatedMediaValue / 1000000).toFixed(1)}M</div>
+          <div className="text-[10px] sm:text-xs text-surface-400">Estimated Media Value</div>
         </motion.div>
 
         <motion.div
@@ -788,11 +788,11 @@ function ROICalculator() {
           initial={{ scale: 0.9, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           transition={{ delay: 0.3 }}
-          className="bg-white/5 rounded-xl p-4 border border-white/10"
+          className="bg-white/5 rounded-lg sm:rounded-xl p-3 sm:p-4 border border-white/10"
         >
-          <Building2 className="w-5 h-5 text-ghana-gold mb-2" />
-          <div className="text-2xl font-bold text-white">{roi.governmentConnections}+</div>
-          <div className="text-xs text-surface-400">MDA Connections</div>
+          <Building2 className="w-4 h-4 sm:w-5 sm:h-5 text-ghana-gold mb-1 sm:mb-2" />
+          <div className="text-lg sm:text-2xl font-bold text-white">{roi.governmentConnections}+</div>
+          <div className="text-[10px] sm:text-xs text-surface-400">MDA Connections</div>
         </motion.div>
 
         <motion.div
@@ -800,11 +800,11 @@ function ROICalculator() {
           initial={{ scale: 0.9, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           transition={{ delay: 0.4 }}
-          className="bg-white/5 rounded-xl p-4 border border-white/10"
+          className="bg-white/5 rounded-lg sm:rounded-xl p-3 sm:p-4 border border-white/10"
         >
-          <Calendar className="w-5 h-5 text-ghana-green mb-2" />
-          <div className="text-2xl font-bold text-white">{roi.brandExposureMonths}</div>
-          <div className="text-xs text-surface-400">Months Brand Exposure</div>
+          <Calendar className="w-4 h-4 sm:w-5 sm:h-5 text-ghana-green mb-1 sm:mb-2" />
+          <div className="text-lg sm:text-2xl font-bold text-white">{roi.brandExposureMonths}</div>
+          <div className="text-[10px] sm:text-xs text-surface-400">Months Brand Exposure</div>
         </motion.div>
 
         <motion.div
@@ -812,24 +812,24 @@ function ROICalculator() {
           initial={{ scale: 0.9, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           transition={{ delay: 0.5 }}
-          className="bg-white/5 rounded-xl p-4 border border-white/10"
+          className="bg-white/5 rounded-lg sm:rounded-xl p-3 sm:p-4 border border-white/10"
         >
-          <Star className="w-5 h-5 text-ghana-gold mb-2" />
-          <div className="text-2xl font-bold text-white">{roi.launchEventRole}</div>
-          <div className="text-xs text-surface-400">National Launch Role</div>
+          <Star className="w-4 h-4 sm:w-5 sm:h-5 text-ghana-gold mb-1 sm:mb-2" />
+          <div className="text-lg sm:text-2xl font-bold text-white">{roi.launchEventRole}</div>
+          <div className="text-[10px] sm:text-xs text-surface-400">National Launch Role</div>
         </motion.div>
       </div>
 
       {/* CTA */}
-      <div className="mt-8 text-center">
-        <p className="text-surface-300 text-sm mb-4">
+      <div className="mt-6 sm:mt-8 text-center">
+        <p className="text-surface-300 text-xs sm:text-sm mb-3 sm:mb-4">
           Ready to maximize your impact? Let's discuss your partnership.
         </p>
         <a
           href="#schedule-meeting"
-          className="inline-flex items-center gap-2 px-6 py-3 btn-animated-gradient text-black font-bold rounded-xl hover:shadow-lg hover:shadow-ghana-gold/30 transition-all hover:scale-105"
+          className="inline-flex items-center gap-2 px-4 sm:px-6 py-2.5 sm:py-3 btn-animated-gradient text-black font-bold rounded-lg sm:rounded-xl hover:shadow-lg hover:shadow-ghana-gold/30 transition-all hover:scale-105 text-sm sm:text-base"
         >
-          <CalendarClock className="w-5 h-5 relative z-10" />
+          <CalendarClock className="w-4 h-4 sm:w-5 sm:h-5 relative z-10" />
           <span className="relative z-10">Schedule a Discussion</span>
         </a>
       </div>
@@ -1947,38 +1947,38 @@ export default function Sponsorship() {
           >
             <div className="grid lg:grid-cols-2 gap-0">
               {/* Left side - Info */}
-              <div className="p-8 lg:p-12 border-b lg:border-b-0 lg:border-r border-white/10">
-                <div className="flex items-center gap-3 mb-6">
-                  <div className="p-3 rounded-xl bg-ghana-green/20">
-                    <CalendarClock className="w-6 h-6 text-ghana-green" />
+              <div className="p-4 sm:p-8 lg:p-12 border-b lg:border-b-0 lg:border-r border-white/10">
+                <div className="flex items-center gap-2 sm:gap-3 mb-4 sm:mb-6">
+                  <div className="p-2 sm:p-3 rounded-lg sm:rounded-xl bg-ghana-green/20">
+                    <CalendarClock className="w-5 h-5 sm:w-6 sm:h-6 text-ghana-green" />
                   </div>
                   <div>
-                    <h3 className="text-xl font-heading font-bold text-white">Partnership Consultation</h3>
-                    <p className="text-surface-400 text-sm">30 minutes</p>
+                    <h3 className="text-lg sm:text-xl font-heading font-bold text-white">Partnership Consultation</h3>
+                    <p className="text-surface-400 text-xs sm:text-sm">30 minutes</p>
                   </div>
                 </div>
 
-                <div className="space-y-4 mb-8">
-                  <div className="flex items-start gap-3">
-                    <Check className="w-5 h-5 text-ghana-gold flex-shrink-0 mt-0.5" />
-                    <span className="text-surface-300">Learn about partnership tiers and benefits</span>
+                <div className="space-y-3 sm:space-y-4 mb-6 sm:mb-8">
+                  <div className="flex items-start gap-2 sm:gap-3">
+                    <Check className="w-4 h-4 sm:w-5 sm:h-5 text-ghana-gold flex-shrink-0 mt-0.5" />
+                    <span className="text-surface-300 text-sm sm:text-base">Learn about partnership tiers and benefits</span>
                   </div>
-                  <div className="flex items-start gap-3">
-                    <Check className="w-5 h-5 text-ghana-gold flex-shrink-0 mt-0.5" />
-                    <span className="text-surface-300">Get a personalized ROI projection</span>
+                  <div className="flex items-start gap-2 sm:gap-3">
+                    <Check className="w-4 h-4 sm:w-5 sm:h-5 text-ghana-gold flex-shrink-0 mt-0.5" />
+                    <span className="text-surface-300 text-sm sm:text-base">Get a personalized ROI projection</span>
                   </div>
-                  <div className="flex items-start gap-3">
-                    <Check className="w-5 h-5 text-ghana-gold flex-shrink-0 mt-0.5" />
-                    <span className="text-surface-300">See a live platform demonstration</span>
+                  <div className="flex items-start gap-2 sm:gap-3">
+                    <Check className="w-4 h-4 sm:w-5 sm:h-5 text-ghana-gold flex-shrink-0 mt-0.5" />
+                    <span className="text-surface-300 text-sm sm:text-base">See a live platform demonstration</span>
                   </div>
-                  <div className="flex items-start gap-3">
-                    <Check className="w-5 h-5 text-ghana-gold flex-shrink-0 mt-0.5" />
-                    <span className="text-surface-300">Discuss custom partnership arrangements</span>
+                  <div className="flex items-start gap-2 sm:gap-3">
+                    <Check className="w-4 h-4 sm:w-5 sm:h-5 text-ghana-gold flex-shrink-0 mt-0.5" />
+                    <span className="text-surface-300 text-sm sm:text-base">Discuss custom partnership arrangements</span>
                   </div>
                 </div>
 
-                <div className="p-4 bg-ghana-gold/10 rounded-xl border border-ghana-gold/20">
-                  <p className="text-sm text-surface-300">
+                <div className="p-3 sm:p-4 bg-ghana-gold/10 rounded-lg sm:rounded-xl border border-ghana-gold/20">
+                  <p className="text-xs sm:text-sm text-surface-300">
                     <span className="text-ghana-gold font-semibold">Limited founding partner slots available.</span>{' '}
                     Founding partners receive maximum visibility at the national launch event.
                   </p>
@@ -1986,9 +1986,9 @@ export default function Sponsorship() {
               </div>
 
               {/* Right side - Booking Options */}
-              <div className="p-8 lg:p-12 flex flex-col justify-center">
-                <div className="text-center mb-8">
-                  <p className="text-surface-400 text-sm mb-6">Choose your preferred way to connect</p>
+              <div className="p-4 sm:p-8 lg:p-12 flex flex-col justify-center">
+                <div className="text-center mb-4 sm:mb-8">
+                  <p className="text-surface-400 text-xs sm:text-sm mb-4 sm:mb-6">Choose your preferred way to connect</p>
                 </div>
 
                 <div className="space-y-4">
@@ -1997,11 +1997,12 @@ export default function Sponsorship() {
                     href="https://cal.com/osborn-hodges-fm7fyx"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="group w-full py-4 px-6 bg-gradient-to-r from-ghana-green to-ghana-green/80 text-white font-bold rounded-xl shadow-lg hover:shadow-xl hover:shadow-ghana-green/30 transition-all hover:scale-[1.02] flex items-center justify-center gap-3 glow-green"
+                    className="group w-full py-3 sm:py-4 px-4 sm:px-6 bg-gradient-to-r from-ghana-green to-ghana-green/80 text-white font-bold rounded-lg sm:rounded-xl shadow-lg hover:shadow-xl hover:shadow-ghana-green/30 transition-all hover:scale-[1.02] flex items-center justify-center gap-2 sm:gap-3 glow-green text-sm sm:text-base"
                   >
-                    <CalendarClock className="w-5 h-5" />
-                    Book a Meeting Online
-                    <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                    <CalendarClock className="w-4 h-4 sm:w-5 sm:h-5" />
+                    <span className="hidden xs:inline">Book a Meeting Online</span>
+                    <span className="xs:hidden">Book Meeting</span>
+                    <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 group-hover:translate-x-1 transition-transform" />
                   </MagneticButton>
 
                   <div className="flex items-center gap-4">
@@ -2012,18 +2013,19 @@ export default function Sponsorship() {
 
                   <a
                     href="mailto:rsimd@ohcs.gov.gh?subject=OHCS E-Library Partnership Meeting Request&body=Hello,%0A%0AI would like to schedule a meeting to discuss partnership opportunities for the OHCS E-Library project.%0A%0APreferred meeting times:%0A-%0A-%0A%0AOrganization:%0AName:%0APhone:%0A%0AThank you."
-                    className="group w-full py-4 px-6 bg-white/10 text-white font-semibold rounded-xl border border-white/20 hover:bg-white/20 transition-all flex items-center justify-center gap-3 btn-shimmer"
+                    className="group w-full py-3 sm:py-4 px-4 sm:px-6 bg-white/10 text-white font-semibold rounded-lg sm:rounded-xl border border-white/20 hover:bg-white/20 transition-all flex items-center justify-center gap-2 sm:gap-3 btn-shimmer text-sm sm:text-base"
                   >
-                    <Mail className="w-5 h-5 relative z-10" />
+                    <Mail className="w-4 h-4 sm:w-5 sm:h-5 relative z-10" />
                     <span className="relative z-10">Email to Schedule</span>
                   </a>
 
                   <a
                     href="tel:+233505982361"
-                    className="group w-full py-4 px-6 bg-white/10 text-white font-semibold rounded-xl border border-white/20 hover:bg-white/20 transition-all flex items-center justify-center gap-3 btn-shimmer"
+                    className="group w-full py-3 sm:py-4 px-4 sm:px-6 bg-white/10 text-white font-semibold rounded-lg sm:rounded-xl border border-white/20 hover:bg-white/20 transition-all flex items-center justify-center gap-2 sm:gap-3 btn-shimmer text-sm sm:text-base"
                   >
-                    <Phone className="w-5 h-5 relative z-10" />
-                    <span className="relative z-10">Call: +233 505 982 361</span>
+                    <Phone className="w-4 h-4 sm:w-5 sm:h-5 relative z-10" />
+                    <span className="relative z-10 hidden sm:inline">Call: +233 505 982 361</span>
+                    <span className="relative z-10 sm:hidden">+233 505 982 361</span>
                   </a>
                 </div>
 
@@ -2052,43 +2054,43 @@ export default function Sponsorship() {
             {/* Golden accent */}
             <div className="absolute top-0 right-0 w-64 h-64 bg-ghana-gold/20 rounded-full blur-3xl" />
 
-            <div className="relative z-10 p-8 md:p-12 text-center">
-              <BlackStar className="w-16 h-16 mx-auto text-ghana-gold mb-6" animate={false} />
+            <div className="relative z-10 p-4 sm:p-8 md:p-12 text-center">
+              <BlackStar className="w-12 h-12 sm:w-16 sm:h-16 mx-auto text-ghana-gold mb-4 sm:mb-6" animate={false} />
 
-              <h2 className="text-3xl md:text-4xl font-heading font-bold text-white mb-4">
+              <h2 className="text-2xl sm:text-3xl md:text-4xl font-heading font-bold text-white mb-3 sm:mb-4">
                 Be Part of History
               </h2>
-              <p className="text-xl text-white/80 mb-8 max-w-2xl mx-auto">
+              <p className="text-base sm:text-xl text-white/80 mb-6 sm:mb-8 max-w-2xl mx-auto">
                 Join us in building Africa's most comprehensive civil service digital platform.
                 Your partnership will empower 500,000+ public servants and transform governance in Ghana.
               </p>
 
-              <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-8">
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 mb-6 sm:mb-8">
                 <MagneticButton
                   href="#schedule-meeting"
-                  className="group px-8 py-4 btn-animated-gradient text-black font-bold rounded-xl shadow-lg hover:shadow-xl transition-all hover:scale-105 flex items-center gap-2"
+                  className="group px-4 sm:px-8 py-3 sm:py-4 btn-animated-gradient text-black font-bold rounded-lg sm:rounded-xl shadow-lg hover:shadow-xl transition-all hover:scale-105 flex items-center gap-2 text-sm sm:text-base"
                 >
-                  <CalendarClock className="w-5 h-5 relative z-10" />
+                  <CalendarClock className="w-4 h-4 sm:w-5 sm:h-5 relative z-10" />
                   <span className="relative z-10">Schedule a Meeting</span>
-                  <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform relative z-10" />
+                  <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 group-hover:translate-x-1 transition-transform relative z-10" />
                 </MagneticButton>
                 <MagneticButton
                   onClick={() => setIsLeadModalOpen(true)}
-                  className="px-8 py-4 bg-white/20 backdrop-blur-sm text-white font-semibold rounded-xl border border-white/30 hover:bg-white/30 transition-all flex items-center gap-2 btn-shimmer"
+                  className="px-4 sm:px-8 py-3 sm:py-4 bg-white/20 backdrop-blur-sm text-white font-semibold rounded-lg sm:rounded-xl border border-white/30 hover:bg-white/30 transition-all flex items-center gap-2 btn-shimmer text-sm sm:text-base"
                 >
-                  <Download className="w-5 h-5 relative z-10" />
+                  <Download className="w-4 h-4 sm:w-5 sm:h-5 relative z-10" />
                   <span className="relative z-10">Download Full Proposal</span>
                 </MagneticButton>
               </div>
 
               {/* Contact info */}
-              <div className="flex flex-col sm:flex-row items-center justify-center gap-6 text-white/70 text-sm">
-                <span className="flex items-center gap-2">
-                  <Mail className="w-4 h-4" />
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-6 text-white/70 text-xs sm:text-sm">
+                <span className="flex items-center gap-1.5 sm:gap-2">
+                  <Mail className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                   rsimd@ohcs.gov.gh
                 </span>
-                <span className="flex items-center gap-2">
-                  <MapPin className="w-4 h-4" />
+                <span className="flex items-center gap-1.5 sm:gap-2">
+                  <MapPin className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                   OHCS, Ministries, Accra, Ghana
                 </span>
               </div>
