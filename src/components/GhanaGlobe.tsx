@@ -1,7 +1,7 @@
-import { useState, useEffect, useRef, useMemo } from 'react';
-import { motion, AnimatePresence, useAnimation } from 'framer-motion';
+import { useState, useEffect, useRef, useMemo, useCallback } from 'react';
+import { motion, AnimatePresence, useAnimation, useMotionValue, useTransform } from 'framer-motion';
 
-// MDA locations across Ghana with map coordinates (percentage-based for SVG positioning)
+// MDA locations across Ghana with map coordinates
 const MDA_LOCATIONS = [
   { name: 'Office of the Head of Civil Service', city: 'Accra', x: 72, y: 88, type: 'headquarters' },
   { name: 'Ministry of Finance', city: 'Accra', x: 70, y: 86, type: 'ministry' },
@@ -21,150 +21,316 @@ const MDA_LOCATIONS = [
   { name: 'Savannah Regional Admin', city: 'Damongo', x: 38, y: 32, type: 'regional' },
 ];
 
-// Ghana map SVG path (simplified outline)
-const GHANA_PATH = `
-  M 55 5
-  C 62 3, 70 5, 75 8
-  L 80 12
-  C 82 15, 83 20, 82 25
-  L 85 35
-  C 87 42, 88 50, 87 58
-  L 88 68
-  C 89 75, 88 82, 85 88
-  L 80 92
-  C 75 95, 68 96, 60 95
-  L 50 93
-  C 42 94, 35 92, 28 88
-  L 22 82
-  C 18 78, 15 72, 15 65
-  L 12 55
-  C 10 48, 12 40, 15 32
-  L 18 22
-  C 20 15, 25 10, 32 7
-  L 42 5
-  C 48 4, 52 5, 55 5
+// Accurate Ghana map path with more detail
+const GHANA_MAIN_PATH = `
+  M 55 2
+  C 58 1.5, 62 2, 68 4
+  L 75 7
+  C 80 9, 84 12, 86 16
+  L 88 22
+  C 90 28, 91 35, 90 42
+  L 89 52
+  C 88 60, 87 68, 86 75
+  L 85 82
+  C 84 86, 82 90, 78 93
+  L 70 96
+  C 64 97, 58 97, 52 96
+  L 42 94
+  C 35 93, 28 90, 22 85
+  L 17 78
+  C 13 73, 10 66, 10 58
+  L 11 48
+  C 12 40, 14 32, 18 24
+  L 23 16
+  C 27 10, 33 6, 40 4
+  L 48 2.5
+  C 51 2, 53 2, 55 2
   Z
 `;
 
-// Regional boundaries (simplified)
+// Regional boundaries for layered effect
 const REGIONS = [
-  { name: 'Upper West', path: 'M 15 5 L 40 5 L 42 25 L 20 28 Z', color: '#006B3F' },
-  { name: 'Upper East', path: 'M 40 5 L 75 8 L 72 25 L 42 25 Z', color: '#007A47' },
-  { name: 'Savannah', path: 'M 20 28 L 55 25 L 55 42 L 25 45 Z', color: '#006B3F' },
-  { name: 'Northern', path: 'M 55 25 L 75 28 L 72 45 L 55 42 Z', color: '#008550' },
-  { name: 'North East', path: 'M 72 25 L 82 30 L 80 42 L 72 45 Z', color: '#006B3F' },
-  { name: 'Bono East', path: 'M 25 45 L 45 42 L 45 58 L 28 60 Z', color: '#007A47' },
-  { name: 'Bono', path: 'M 45 42 L 60 45 L 58 60 L 45 58 Z', color: '#006B3F' },
-  { name: 'Ahafo', path: 'M 28 60 L 45 58 L 42 72 L 25 70 Z', color: '#008550' },
-  { name: 'Ashanti', path: 'M 45 58 L 65 55 L 62 75 L 42 72 Z', color: '#007A47' },
-  { name: 'Eastern', path: 'M 65 55 L 82 52 L 80 75 L 62 75 Z', color: '#006B3F' },
-  { name: 'Oti', path: 'M 80 42 L 88 48 L 86 65 L 80 60 Z', color: '#007A47' },
-  { name: 'Volta', path: 'M 80 60 L 88 65 L 88 82 L 78 80 Z', color: '#006B3F' },
-  { name: 'Western North', path: 'M 15 65 L 28 60 L 25 78 L 15 75 Z', color: '#008550' },
-  { name: 'Western', path: 'M 15 75 L 28 78 L 30 92 L 18 88 Z', color: '#006B3F' },
-  { name: 'Central', path: 'M 30 78 L 50 75 L 52 92 L 30 92 Z', color: '#007A47' },
-  { name: 'Greater Accra', path: 'M 62 82 L 78 80 L 80 92 L 62 92 Z', color: '#008550' },
+  { name: 'Upper West', center: { x: 28, y: 15 }, color: '#006B3F' },
+  { name: 'Upper East', center: { x: 58, y: 10 }, color: '#007A47' },
+  { name: 'Savannah', center: { x: 38, y: 32 }, color: '#008550' },
+  { name: 'Northern', center: { x: 55, y: 28 }, color: '#006B3F' },
+  { name: 'Bono', center: { x: 32, y: 50 }, color: '#007A47' },
+  { name: 'Ashanti', center: { x: 45, y: 60 }, color: '#008550' },
+  { name: 'Eastern', center: { x: 65, y: 68 }, color: '#006B3F' },
+  { name: 'Volta', center: { x: 80, y: 62 }, color: '#007A47' },
+  { name: 'Western', center: { x: 22, y: 78 }, color: '#008550' },
+  { name: 'Central', center: { x: 48, y: 85 }, color: '#006B3F' },
+  { name: 'Greater Accra', center: { x: 72, y: 88 }, color: '#007A47' },
 ];
 
-// Floating particle component
-function FloatingParticle({ delay, duration, startX, startY }: { delay: number; duration: number; startX: number; startY: number }) {
+// Holographic scan line component
+function HolographicScanLines() {
   return (
-    <motion.circle
-      cx={startX}
-      cy={startY}
-      r={Math.random() * 1.5 + 0.5}
-      fill={Math.random() > 0.5 ? '#FCD116' : '#006B3F'}
-      initial={{ opacity: 0, scale: 0 }}
-      animate={{
-        opacity: [0, 0.6, 0],
-        scale: [0, 1, 0],
-        cx: [startX, startX + (Math.random() - 0.5) * 20],
-        cy: [startY, startY - Math.random() * 30],
-      }}
-      transition={{
-        duration,
-        delay,
-        repeat: Infinity,
-        ease: "easeOut",
-      }}
-    />
+    <g opacity="0.15">
+      {Array.from({ length: 50 }).map((_, i) => (
+        <motion.line
+          key={i}
+          x1="0"
+          y1={i * 2}
+          x2="100"
+          y2={i * 2}
+          stroke="#00ffff"
+          strokeWidth="0.15"
+          initial={{ opacity: 0 }}
+          animate={{
+            opacity: [0.1, 0.3, 0.1],
+            x1: [-5, 0, -5],
+            x2: [105, 100, 105]
+          }}
+          transition={{
+            duration: 3,
+            delay: i * 0.03,
+            repeat: Infinity,
+            ease: "easeInOut"
+          }}
+        />
+      ))}
+    </g>
   );
 }
 
-// Connection line with animated particle
-function ConnectionLine({
-  from,
-  to,
-  delay
-}: {
-  from: { x: number; y: number };
-  to: { x: number; y: number };
-  delay: number;
-}) {
-  const midX = (from.x + to.x) / 2;
-  const midY = (from.y + to.y) / 2 - 10; // Curve upward
-
-  const pathD = `M ${from.x} ${from.y} Q ${midX} ${midY} ${to.x} ${to.y}`;
-
+// Aurora effect overlay
+function AuroraEffect() {
   return (
     <g>
-      {/* Base line */}
+      <defs>
+        <linearGradient id="aurora1" x1="0%" y1="0%" x2="100%" y2="100%">
+          <motion.stop
+            offset="0%"
+            animate={{ stopColor: ['#00ff88', '#00ffff', '#ff00ff', '#00ff88'] }}
+            transition={{ duration: 8, repeat: Infinity }}
+            stopOpacity="0.3"
+          />
+          <motion.stop
+            offset="50%"
+            animate={{ stopColor: ['#00ffff', '#ff00ff', '#00ff88', '#00ffff'] }}
+            transition={{ duration: 8, repeat: Infinity }}
+            stopOpacity="0.2"
+          />
+          <motion.stop
+            offset="100%"
+            animate={{ stopColor: ['#ff00ff', '#00ff88', '#00ffff', '#ff00ff'] }}
+            transition={{ duration: 8, repeat: Infinity }}
+            stopOpacity="0.1"
+          />
+        </linearGradient>
+      </defs>
       <motion.path
-        d={pathD}
-        fill="none"
-        stroke="url(#connectionGradient)"
-        strokeWidth="0.5"
-        strokeDasharray="2,2"
-        initial={{ pathLength: 0, opacity: 0 }}
-        animate={{ pathLength: 1, opacity: 0.4 }}
-        transition={{ duration: 1.5, delay }}
-      />
-
-      {/* Animated particle along path */}
-      <motion.circle
-        r="1.5"
-        fill="#FCD116"
-        filter="url(#glow)"
-        initial={{ offsetDistance: '0%' }}
-        animate={{ offsetDistance: '100%' }}
-        transition={{
-          duration: 2,
-          delay: delay + 0.5,
-          repeat: Infinity,
-          ease: "linear",
+        d={GHANA_MAIN_PATH}
+        fill="url(#aurora1)"
+        animate={{
+          opacity: [0.3, 0.5, 0.3],
         }}
-        style={{ offsetPath: `path("${pathD}")` }}
+        transition={{ duration: 4, repeat: Infinity }}
       />
     </g>
   );
 }
 
-// MDA Point component with pulse effect
-function MDAPoint({
+// 3D Layered map effect
+function LayeredMapEffect() {
+  const layers = [0, 1, 2, 3, 4];
+
+  return (
+    <g>
+      {layers.map((layer) => (
+        <motion.path
+          key={layer}
+          d={GHANA_MAIN_PATH}
+          fill="none"
+          stroke={layer === 0 ? '#FCD116' : `rgba(0, 255, 200, ${0.1 + layer * 0.05})`}
+          strokeWidth={layer === 0 ? 1.5 : 0.5}
+          transform={`translate(${layer * -0.5}, ${layer * -0.8})`}
+          initial={{ opacity: 0, pathLength: 0 }}
+          animate={{
+            opacity: layer === 0 ? 1 : 0.3 - layer * 0.05,
+            pathLength: 1
+          }}
+          transition={{
+            duration: 2,
+            delay: layer * 0.1,
+            pathLength: { duration: 2.5, delay: layer * 0.1 }
+          }}
+        />
+      ))}
+    </g>
+  );
+}
+
+// Glowing energy wave emanating from headquarters
+function EnergyWave({ cx, cy }: { cx: number; cy: number }) {
+  return (
+    <g>
+      {[0, 1, 2, 3].map((i) => (
+        <motion.circle
+          key={i}
+          cx={cx}
+          cy={cy}
+          r={5}
+          fill="none"
+          stroke="url(#energyGradient)"
+          strokeWidth="0.5"
+          initial={{ r: 5, opacity: 0.8 }}
+          animate={{
+            r: [5, 40, 60],
+            opacity: [0.8, 0.2, 0],
+            strokeWidth: [1, 0.3, 0.1]
+          }}
+          transition={{
+            duration: 4,
+            delay: i * 1,
+            repeat: Infinity,
+            ease: "easeOut"
+          }}
+        />
+      ))}
+    </g>
+  );
+}
+
+// Data stream particle along connection path
+function DataStreamParticle({
+  path,
+  delay,
+  color,
+  reverse = false
+}: {
+  path: string;
+  delay: number;
+  color: string;
+  reverse?: boolean;
+}) {
+  return (
+    <g>
+      {/* Trail effect */}
+      <motion.circle
+        r="2"
+        fill={color}
+        filter="url(#particleGlow)"
+        initial={{ offsetDistance: reverse ? '100%' : '0%' }}
+        animate={{ offsetDistance: reverse ? '0%' : '100%' }}
+        transition={{
+          duration: 3,
+          delay,
+          repeat: Infinity,
+          ease: "linear"
+        }}
+        style={{ offsetPath: `path("${path}")` }}
+      />
+      {/* Core particle */}
+      <motion.circle
+        r="1"
+        fill="#ffffff"
+        initial={{ offsetDistance: reverse ? '100%' : '0%' }}
+        animate={{ offsetDistance: reverse ? '0%' : '100%' }}
+        transition={{
+          duration: 3,
+          delay,
+          repeat: Infinity,
+          ease: "linear"
+        }}
+        style={{ offsetPath: `path("${path}")` }}
+      />
+    </g>
+  );
+}
+
+// Advanced connection with data flow
+function AdvancedConnection({
+  from,
+  to,
+  delay,
+  isActive
+}: {
+  from: { x: number; y: number };
+  to: { x: number; y: number };
+  delay: number;
+  isActive: boolean;
+}) {
+  const midX = (from.x + to.x) / 2;
+  const midY = Math.min(from.y, to.y) - 15;
+  const pathD = `M ${from.x} ${from.y} Q ${midX} ${midY} ${to.x} ${to.y}`;
+
+  return (
+    <g>
+      {/* Glow path */}
+      <motion.path
+        d={pathD}
+        fill="none"
+        stroke="url(#connectionGlow)"
+        strokeWidth="3"
+        filter="url(#blur)"
+        initial={{ pathLength: 0, opacity: 0 }}
+        animate={{
+          pathLength: 1,
+          opacity: isActive ? 0.6 : 0.2
+        }}
+        transition={{ duration: 1.5, delay }}
+      />
+
+      {/* Main line */}
+      <motion.path
+        d={pathD}
+        fill="none"
+        stroke="url(#lineGradient)"
+        strokeWidth="0.8"
+        strokeLinecap="round"
+        initial={{ pathLength: 0 }}
+        animate={{ pathLength: 1 }}
+        transition={{ duration: 1.5, delay }}
+      />
+
+      {/* Dashed overlay */}
+      <motion.path
+        d={pathD}
+        fill="none"
+        stroke="#FCD116"
+        strokeWidth="0.3"
+        strokeDasharray="2,4"
+        initial={{ strokeDashoffset: 0 }}
+        animate={{ strokeDashoffset: -30 }}
+        transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+      />
+
+      {/* Data particles */}
+      <DataStreamParticle path={pathD} delay={delay} color="#00ffcc" />
+      <DataStreamParticle path={pathD} delay={delay + 1.5} color="#FCD116" reverse />
+    </g>
+  );
+}
+
+// Pulsing node with holographic effect
+function HolographicNode({
   mda,
   isHovered,
   isHeadquarters,
   onHover,
   index,
+  isConnected
 }: {
   mda: typeof MDA_LOCATIONS[0];
   isHovered: boolean;
   isHeadquarters: boolean;
   onHover: (mda: typeof MDA_LOCATIONS[0] | null) => void;
   index: number;
+  isConnected: boolean;
 }) {
+  const baseSize = isHeadquarters ? 5 : 2.5;
   const color = useMemo(() => {
     switch (mda.type) {
       case 'headquarters': return '#FCD116';
-      case 'ministry': return '#006B3F';
-      case 'agency': return '#CE1126';
-      case 'commission': return '#FCD116';
-      case 'regional': return '#006B3F';
+      case 'ministry': return '#00ff88';
+      case 'agency': return '#ff6b6b';
+      case 'commission': return '#00ffff';
+      case 'regional': return '#00ff88';
       default: return '#ffffff';
     }
   }, [mda.type]);
-
-  const size = isHeadquarters ? 4 : 2.5;
 
   return (
     <g
@@ -172,111 +338,186 @@ function MDAPoint({
       onMouseLeave={() => onHover(null)}
       style={{ cursor: 'pointer' }}
     >
-      {/* Outer pulse rings */}
+      {/* Outer rotating ring for headquarters */}
       {isHeadquarters && (
+        <>
+          <motion.circle
+            cx={mda.x}
+            cy={mda.y}
+            r={baseSize + 8}
+            fill="none"
+            stroke="url(#rotatingRing)"
+            strokeWidth="0.5"
+            strokeDasharray="3,3"
+            initial={{ rotate: 0 }}
+            animate={{ rotate: 360 }}
+            transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+            style={{ transformOrigin: `${mda.x}px ${mda.y}px` }}
+          />
+          <motion.circle
+            cx={mda.x}
+            cy={mda.y}
+            r={baseSize + 5}
+            fill="none"
+            stroke={color}
+            strokeWidth="0.3"
+            strokeDasharray="1,2"
+            initial={{ rotate: 0 }}
+            animate={{ rotate: -360 }}
+            transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
+            style={{ transformOrigin: `${mda.x}px ${mda.y}px` }}
+          />
+        </>
+      )}
+
+      {/* Pulse rings */}
+      {(isHeadquarters || isHovered) && (
         <>
           {[0, 1, 2].map((i) => (
             <motion.circle
               key={i}
               cx={mda.x}
               cy={mda.y}
-              r={size}
+              r={baseSize}
               fill="none"
               stroke={color}
               strokeWidth="0.5"
-              initial={{ scale: 1, opacity: 0.6 }}
-              animate={{ scale: [1, 3, 4], opacity: [0.6, 0.2, 0] }}
+              initial={{ scale: 1, opacity: 0.8 }}
+              animate={{
+                scale: [1, isHeadquarters ? 4 : 2.5],
+                opacity: [0.8, 0]
+              }}
               transition={{
-                duration: 2.5,
-                delay: i * 0.8,
+                duration: isHeadquarters ? 3 : 2,
+                delay: i * (isHeadquarters ? 1 : 0.5),
                 repeat: Infinity,
-                ease: "easeOut",
+                ease: "easeOut"
               }}
             />
           ))}
         </>
       )}
 
-      {/* Hover pulse ring */}
-      {isHovered && !isHeadquarters && (
-        <motion.circle
-          cx={mda.x}
-          cy={mda.y}
-          r={size}
+      {/* Hexagon background for hovered state */}
+      {isHovered && (
+        <motion.polygon
+          points={`
+            ${mda.x},${mda.y - 6}
+            ${mda.x + 5.2},${mda.y - 3}
+            ${mda.x + 5.2},${mda.y + 3}
+            ${mda.x},${mda.y + 6}
+            ${mda.x - 5.2},${mda.y + 3}
+            ${mda.x - 5.2},${mda.y - 3}
+          `}
           fill="none"
           stroke={color}
           strokeWidth="0.5"
-          initial={{ scale: 1, opacity: 0.8 }}
-          animate={{ scale: [1, 2.5], opacity: [0.8, 0] }}
-          transition={{ duration: 1, repeat: Infinity }}
+          initial={{ opacity: 0, scale: 0 }}
+          animate={{ opacity: 1, scale: 1 }}
+          exit={{ opacity: 0, scale: 0 }}
         />
       )}
 
-      {/* Glow effect */}
+      {/* Ambient glow */}
       <motion.circle
         cx={mda.x}
         cy={mda.y}
-        r={isHovered ? size * 2.5 : size * 1.8}
+        r={isHovered ? baseSize * 4 : baseSize * 2.5}
         fill={color}
-        opacity={isHovered ? 0.4 : 0.2}
+        opacity={isHovered ? 0.4 : 0.15}
         filter="url(#blur)"
         animate={{
-          r: isHovered ? [size * 2.5, size * 3, size * 2.5] : [size * 1.8, size * 2.2, size * 1.8],
+          r: isHovered
+            ? [baseSize * 4, baseSize * 4.5, baseSize * 4]
+            : [baseSize * 2.5, baseSize * 3, baseSize * 2.5],
+          opacity: isHovered ? [0.4, 0.5, 0.4] : [0.15, 0.25, 0.15]
         }}
         transition={{ duration: 2, repeat: Infinity }}
       />
 
-      {/* Main point */}
+      {/* Main node */}
       <motion.circle
         cx={mda.x}
         cy={mda.y}
-        r={isHovered ? size * 1.5 : size}
+        r={isHovered ? baseSize * 1.5 : baseSize}
         fill={color}
-        filter={isHeadquarters ? "url(#glow)" : undefined}
+        filter={isHeadquarters ? "url(#nodeGlow)" : undefined}
         initial={{ scale: 0 }}
         animate={{ scale: 1 }}
-        transition={{ delay: index * 0.05, type: "spring" }}
+        transition={{ delay: index * 0.05 + 0.5, type: "spring", stiffness: 200 }}
       />
 
-      {/* Inner bright core */}
+      {/* Inner core */}
       <motion.circle
         cx={mda.x}
         cy={mda.y}
-        r={size * 0.4}
+        r={baseSize * 0.4}
         fill="#ffffff"
         initial={{ scale: 0 }}
-        animate={{ scale: 1 }}
-        transition={{ delay: index * 0.05 + 0.1, type: "spring" }}
+        animate={{ scale: [1, 1.2, 1] }}
+        transition={{
+          scale: { duration: 2, repeat: Infinity },
+          delay: index * 0.05 + 0.6
+        }}
       />
 
-      {/* Label on hover */}
+      {/* Connection indicator */}
+      {isConnected && !isHeadquarters && (
+        <motion.circle
+          cx={mda.x}
+          cy={mda.y}
+          r={baseSize + 2}
+          fill="none"
+          stroke="#00ffcc"
+          strokeWidth="0.3"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: [0, 0.8, 0] }}
+          transition={{ duration: 2, repeat: Infinity }}
+        />
+      )}
+
+      {/* Label */}
       <AnimatePresence>
         {isHovered && (
           <motion.g
-            initial={{ opacity: 0, y: 5 }}
+            initial={{ opacity: 0, y: -5 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 5 }}
+            exit={{ opacity: 0, y: -5 }}
           >
-            <rect
-              x={mda.x - 25}
-              y={mda.y - 22}
-              width="50"
-              height="16"
+            {/* Background panel */}
+            <motion.rect
+              x={mda.x - 28}
+              y={mda.y - 28}
+              width="56"
+              height="20"
               rx="3"
-              fill="rgba(13, 17, 23, 0.95)"
+              fill="rgba(0, 10, 20, 0.95)"
               stroke={color}
               strokeWidth="0.5"
+              filter="url(#labelGlow)"
+            />
+            {/* Accent line */}
+            <rect
+              x={mda.x - 28}
+              y={mda.y - 28}
+              width="56"
+              height="2"
+              rx="1"
+              fill={color}
             />
             <text
               x={mda.x}
-              y={mda.y - 12}
+              y={mda.y - 15}
               textAnchor="middle"
               fill="white"
-              fontSize="3.5"
+              fontSize="4"
               fontWeight="bold"
+              fontFamily="monospace"
             >
               {mda.city}
             </text>
+            {/* Status indicator */}
+            <circle cx={mda.x - 22} cy={mda.y - 15} r="1.5" fill="#00ff88" />
           </motion.g>
         )}
       </AnimatePresence>
@@ -284,256 +525,497 @@ function MDAPoint({
   );
 }
 
-// Data flow animation overlay
-function DataFlowOverlay() {
-  const headquarters = MDA_LOCATIONS.find(m => m.type === 'headquarters')!;
-  const regionalOffices = MDA_LOCATIONS.filter(m => m.type === 'regional');
+// Animated contour lines
+function ContourLines() {
+  const contours = useMemo(() =>
+    Array.from({ length: 8 }).map((_, i) => ({
+      id: i,
+      scale: 0.85 + i * 0.02,
+      opacity: 0.1 - i * 0.01,
+    }))
+  , []);
 
   return (
     <g>
-      {regionalOffices.map((mda, i) => (
-        <ConnectionLine
-          key={i}
-          from={{ x: headquarters.x, y: headquarters.y }}
-          to={{ x: mda.x, y: mda.y }}
-          delay={i * 0.2}
+      {contours.map(({ id, scale, opacity }) => (
+        <motion.path
+          key={id}
+          d={GHANA_MAIN_PATH}
+          fill="none"
+          stroke="#00ffcc"
+          strokeWidth="0.3"
+          opacity={opacity}
+          transform={`scale(${scale})`}
+          style={{ transformOrigin: '50px 50px' }}
+          initial={{ pathLength: 0 }}
+          animate={{ pathLength: 1 }}
+          transition={{ duration: 3, delay: id * 0.2 }}
         />
       ))}
     </g>
   );
 }
 
-// Animated grid background
-function AnimatedGrid() {
+// Floating data particles in the atmosphere
+function AtmosphericParticles() {
+  const particles = useMemo(() =>
+    Array.from({ length: 60 }).map((_, i) => ({
+      id: i,
+      startX: Math.random() * 100,
+      startY: Math.random() * 100,
+      size: Math.random() * 1.5 + 0.3,
+      duration: Math.random() * 4 + 3,
+      delay: Math.random() * 3,
+      color: ['#FCD116', '#00ff88', '#00ffff', '#ff6b6b'][Math.floor(Math.random() * 4)]
+    }))
+  , []);
+
   return (
-    <g opacity="0.1">
-      {Array.from({ length: 10 }).map((_, i) => (
-        <motion.line
-          key={`h-${i}`}
-          x1="0"
-          y1={i * 10}
-          x2="100"
-          y2={i * 10}
-          stroke="#FCD116"
-          strokeWidth="0.2"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: [0.1, 0.3, 0.1] }}
-          transition={{ duration: 3, delay: i * 0.1, repeat: Infinity }}
-        />
-      ))}
-      {Array.from({ length: 10 }).map((_, i) => (
-        <motion.line
-          key={`v-${i}`}
-          x1={i * 10}
-          y1="0"
-          x2={i * 10}
-          y2="100"
-          stroke="#006B3F"
-          strokeWidth="0.2"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: [0.1, 0.3, 0.1] }}
-          transition={{ duration: 3, delay: i * 0.1 + 0.5, repeat: Infinity }}
+    <g>
+      {particles.map((p) => (
+        <motion.circle
+          key={p.id}
+          cx={p.startX}
+          cy={p.startY}
+          r={p.size}
+          fill={p.color}
+          initial={{ opacity: 0, scale: 0 }}
+          animate={{
+            opacity: [0, 0.8, 0],
+            scale: [0, 1, 0],
+            cx: [p.startX, p.startX + (Math.random() - 0.5) * 15],
+            cy: [p.startY, p.startY - Math.random() * 25],
+          }}
+          transition={{
+            duration: p.duration,
+            delay: p.delay,
+            repeat: Infinity,
+            ease: "easeOut"
+          }}
         />
       ))}
     </g>
   );
 }
 
-// Radar sweep effect
-function RadarSweep() {
-  const headquarters = MDA_LOCATIONS.find(m => m.type === 'headquarters')!;
-
+// Glitch effect overlay
+function GlitchEffect() {
   return (
     <motion.g
-      style={{ transformOrigin: `${headquarters.x}% ${headquarters.y}%` }}
-      animate={{ rotate: 360 }}
-      transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
+      animate={{
+        x: [0, -1, 1, 0],
+        opacity: [1, 0.8, 1, 0.9, 1],
+      }}
+      transition={{
+        duration: 0.1,
+        repeat: Infinity,
+        repeatDelay: 5,
+      }}
     >
-      <defs>
-        <linearGradient id="radarGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-          <stop offset="0%" stopColor="#FCD116" stopOpacity="0" />
-          <stop offset="100%" stopColor="#FCD116" stopOpacity="0.3" />
-        </linearGradient>
-      </defs>
-      <path
-        d={`M ${headquarters.x} ${headquarters.y} L ${headquarters.x + 40} ${headquarters.y - 5} A 40 40 0 0 1 ${headquarters.x + 35} ${headquarters.y + 20} Z`}
-        fill="url(#radarGradient)"
+      <motion.path
+        d={GHANA_MAIN_PATH}
+        fill="none"
+        stroke="#ff0066"
+        strokeWidth="0.5"
+        opacity="0"
+        animate={{
+          opacity: [0, 0.5, 0],
+          x: [-2, 2, -2],
+        }}
+        transition={{
+          duration: 0.15,
+          repeat: Infinity,
+          repeatDelay: 4,
+        }}
+      />
+      <motion.path
+        d={GHANA_MAIN_PATH}
+        fill="none"
+        stroke="#00ffff"
+        strokeWidth="0.5"
+        opacity="0"
+        animate={{
+          opacity: [0, 0.5, 0],
+          x: [2, -2, 2],
+        }}
+        transition={{
+          duration: 0.15,
+          repeat: Infinity,
+          repeatDelay: 4,
+          delay: 0.05,
+        }}
       />
     </motion.g>
   );
 }
 
-// Main Ghana Map Component
+// Futuristic corner brackets
+function CornerBrackets() {
+  return (
+    <g>
+      {/* Top left */}
+      <motion.path
+        d="M 8 20 L 8 8 L 20 8"
+        fill="none"
+        stroke="#FCD116"
+        strokeWidth="0.8"
+        initial={{ pathLength: 0 }}
+        animate={{ pathLength: 1 }}
+        transition={{ duration: 1, delay: 0.5 }}
+      />
+      <circle cx="8" cy="8" r="1" fill="#FCD116" />
+
+      {/* Top right */}
+      <motion.path
+        d="M 80 8 L 92 8 L 92 20"
+        fill="none"
+        stroke="#FCD116"
+        strokeWidth="0.8"
+        initial={{ pathLength: 0 }}
+        animate={{ pathLength: 1 }}
+        transition={{ duration: 1, delay: 0.6 }}
+      />
+      <circle cx="92" cy="8" r="1" fill="#FCD116" />
+
+      {/* Bottom left */}
+      <motion.path
+        d="M 8 80 L 8 92 L 20 92"
+        fill="none"
+        stroke="#FCD116"
+        strokeWidth="0.8"
+        initial={{ pathLength: 0 }}
+        animate={{ pathLength: 1 }}
+        transition={{ duration: 1, delay: 0.7 }}
+      />
+      <circle cx="8" cy="92" r="1" fill="#FCD116" />
+
+      {/* Bottom right */}
+      <motion.path
+        d="M 92 80 L 92 92 L 80 92"
+        fill="none"
+        stroke="#FCD116"
+        strokeWidth="0.8"
+        initial={{ pathLength: 0 }}
+        animate={{ pathLength: 1 }}
+        transition={{ duration: 1, delay: 0.8 }}
+      />
+      <circle cx="92" cy="92" r="1" fill="#FCD116" />
+    </g>
+  );
+}
+
+// HUD style data readout
+function HUDReadout({ x, y, label, value, color }: { x: number; y: number; label: string; value: string; color: string }) {
+  return (
+    <motion.g
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ delay: 1.5 }}
+    >
+      <rect x={x} y={y} width="18" height="8" fill="rgba(0,0,0,0.5)" stroke={color} strokeWidth="0.3" rx="1" />
+      <text x={x + 9} y={y + 3} textAnchor="middle" fill={color} fontSize="2" fontFamily="monospace" opacity="0.7">
+        {label}
+      </text>
+      <text x={x + 9} y={y + 6.5} textAnchor="middle" fill="white" fontSize="2.5" fontFamily="monospace" fontWeight="bold">
+        {value}
+      </text>
+    </motion.g>
+  );
+}
+
+// Main Component
 export default function GhanaGlobe() {
   const [hoveredMDA, setHoveredMDA] = useState<typeof MDA_LOCATIONS[0] | null>(null);
-  const [activeConnections, setActiveConnections] = useState(0);
-  const [dataPackets, setDataPackets] = useState(0);
+  const [activeConnections, setActiveConnections] = useState(47);
+  const [dataFlow, setDataFlow] = useState(12847);
+  const [systemStatus, setSystemStatus] = useState('OPTIMAL');
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setActiveConnections(prev => (prev + Math.floor(Math.random() * 8) + 1) % 100);
-      setDataPackets(prev => prev + Math.floor(Math.random() * 50) + 10);
+      setActiveConnections(prev => Math.min(99, Math.max(30, prev + Math.floor(Math.random() * 10) - 4)));
+      setDataFlow(prev => prev + Math.floor(Math.random() * 100) + 50);
     }, 2000);
     return () => clearInterval(interval);
   }, []);
 
-  const headquarters = MDA_LOCATIONS.find(m => m.type === 'headquarters')!;
+  const headquarters = useMemo(() =>
+    MDA_LOCATIONS.find(m => m.type === 'headquarters')!
+  , []);
 
-  // Generate floating particles
-  const particles = useMemo(() => {
-    return Array.from({ length: 40 }).map((_, i) => ({
-      id: i,
-      delay: Math.random() * 5,
-      duration: Math.random() * 3 + 2,
-      startX: Math.random() * 100,
-      startY: Math.random() * 100,
-    }));
-  }, []);
+  const regionalOffices = useMemo(() =>
+    MDA_LOCATIONS.filter(m => m.type === 'regional')
+  , []);
 
   return (
     <div className="relative w-full h-[500px] md:h-[650px] lg:h-[700px]">
-      {/* Animated background */}
+      {/* Deep space background */}
       <div className="absolute inset-0 overflow-hidden rounded-3xl">
-        <div className="absolute inset-0 bg-gradient-to-br from-surface-900 via-surface-900 to-surface-800" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-[#0a192f] via-[#020c1b] to-black" />
 
-        {/* Animated gradient orbs */}
+        {/* Animated gradient meshes */}
         <motion.div
-          className="absolute top-1/4 right-1/4 w-96 h-96 bg-ghana-green/20 rounded-full blur-3xl"
-          animate={{
-            scale: [1, 1.2, 1],
-            opacity: [0.2, 0.3, 0.2],
+          className="absolute top-0 left-1/4 w-[600px] h-[600px] rounded-full"
+          style={{
+            background: 'radial-gradient(circle, rgba(0,255,136,0.15) 0%, transparent 70%)',
           }}
-          transition={{ duration: 6, repeat: Infinity }}
+          animate={{
+            scale: [1, 1.3, 1],
+            x: [0, 50, 0],
+            y: [0, 30, 0],
+          }}
+          transition={{ duration: 12, repeat: Infinity }}
         />
         <motion.div
-          className="absolute bottom-1/4 left-1/4 w-80 h-80 bg-ghana-gold/15 rounded-full blur-3xl"
+          className="absolute bottom-0 right-1/4 w-[500px] h-[500px] rounded-full"
+          style={{
+            background: 'radial-gradient(circle, rgba(252,209,22,0.1) 0%, transparent 70%)',
+          }}
           animate={{
             scale: [1.2, 1, 1.2],
-            opacity: [0.15, 0.25, 0.15],
+            x: [0, -40, 0],
+            y: [0, -40, 0],
+          }}
+          transition={{ duration: 10, repeat: Infinity }}
+        />
+        <motion.div
+          className="absolute top-1/2 left-1/2 w-[400px] h-[400px] rounded-full -translate-x-1/2 -translate-y-1/2"
+          style={{
+            background: 'radial-gradient(circle, rgba(0,255,255,0.08) 0%, transparent 70%)',
+          }}
+          animate={{
+            scale: [1, 1.5, 1],
           }}
           transition={{ duration: 8, repeat: Infinity }}
         />
-      </div>
 
-      {/* Stats overlay - left */}
-      <div className="absolute top-2 left-2 sm:top-4 sm:left-4 z-10">
-        <motion.div
-          initial={{ opacity: 0, x: -20 }}
-          animate={{ opacity: 1, x: 0 }}
-          className="bg-surface-900/90 backdrop-blur-md rounded-xl sm:rounded-2xl p-3 sm:p-5 border border-ghana-gold/30 shadow-xl shadow-black/50"
-        >
-          <div className="flex items-center gap-2 mb-2">
+        {/* Star field effect */}
+        <div className="absolute inset-0">
+          {Array.from({ length: 50 }).map((_, i) => (
             <motion.div
-              className="w-2 h-2 rounded-full bg-ghana-green"
-              animate={{ scale: [1, 1.3, 1], opacity: [1, 0.7, 1] }}
-              transition={{ duration: 1.5, repeat: Infinity }}
+              key={i}
+              className="absolute w-0.5 h-0.5 bg-white rounded-full"
+              style={{
+                left: `${Math.random() * 100}%`,
+                top: `${Math.random() * 100}%`,
+              }}
+              animate={{
+                opacity: [0.2, 0.8, 0.2],
+                scale: [1, 1.5, 1],
+              }}
+              transition={{
+                duration: Math.random() * 3 + 2,
+                repeat: Infinity,
+                delay: Math.random() * 2,
+              }}
             />
-            <span className="text-surface-400 text-[10px] sm:text-xs uppercase tracking-wider">Live Network</span>
-          </div>
-          <div className="text-ghana-gold font-bold text-2xl sm:text-4xl">{MDA_LOCATIONS.length}</div>
-          <div className="text-surface-300 text-xs sm:text-sm">MDAs Connected</div>
-          <div className="mt-3 pt-3 border-t border-white/10 space-y-1">
-            <div className="flex items-center justify-between">
-              <span className="text-surface-400 text-[10px] sm:text-xs">Active Links</span>
-              <span className="text-ghana-green text-xs sm:text-sm font-medium">{activeConnections}</span>
-            </div>
-            <div className="flex items-center justify-between">
-              <span className="text-surface-400 text-[10px] sm:text-xs">Data Packets</span>
-              <span className="text-ghana-gold text-xs sm:text-sm font-medium">{dataPackets.toLocaleString()}</span>
-            </div>
-          </div>
-        </motion.div>
+          ))}
+        </div>
       </div>
 
-      {/* Legend - bottom left */}
-      <div className="absolute bottom-2 left-2 sm:bottom-4 sm:left-4 z-10">
+      {/* Main stats panel - top left */}
+      <div className="absolute top-3 left-3 sm:top-5 sm:left-5 z-20">
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3 }}
-          className="bg-surface-900/90 backdrop-blur-md rounded-xl sm:rounded-2xl p-3 sm:p-4 border border-white/10 shadow-xl shadow-black/50"
-        >
-          <div className="text-surface-400 text-[10px] sm:text-xs uppercase tracking-wider mb-2">Node Types</div>
-          <div className="space-y-1.5 sm:space-y-2">
-            <div className="flex items-center gap-2">
-              <motion.div
-                className="w-3 h-3 rounded-full bg-ghana-gold"
-                animate={{ boxShadow: ['0 0 5px #FCD116', '0 0 15px #FCD116', '0 0 5px #FCD116'] }}
-                transition={{ duration: 2, repeat: Infinity }}
-              />
-              <span className="text-surface-300 text-[10px] sm:text-xs">Headquarters</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <div className="w-2.5 h-2.5 rounded-full bg-ghana-green shadow-lg shadow-ghana-green/50" />
-              <span className="text-surface-300 text-[10px] sm:text-xs">Regional Offices</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <div className="w-2.5 h-2.5 rounded-full bg-ghana-red shadow-lg shadow-ghana-red/50" />
-              <span className="text-surface-300 text-[10px] sm:text-xs">Agencies</span>
-            </div>
-          </div>
-        </motion.div>
-      </div>
-
-      {/* Instruction - top right */}
-      <div className="absolute top-2 right-2 sm:top-4 sm:right-4 z-10">
-        <motion.div
-          initial={{ opacity: 0, x: 20 }}
+          initial={{ opacity: 0, x: -30 }}
           animate={{ opacity: 1, x: 0 }}
-          className="bg-surface-900/80 backdrop-blur-md rounded-lg sm:rounded-xl px-3 py-2 border border-white/10 flex items-center gap-2"
+          transition={{ delay: 0.2 }}
+          className="relative"
         >
-          <span className="text-surface-300 text-[10px] sm:text-xs">Hover to explore</span>
+          <div className="absolute inset-0 bg-gradient-to-r from-[#00ff88]/20 to-transparent rounded-2xl blur-xl" />
+          <div className="relative bg-[#0a192f]/90 backdrop-blur-xl rounded-2xl p-4 sm:p-5 border border-[#00ff88]/30 shadow-2xl shadow-[#00ff88]/10">
+            {/* Header with animated indicator */}
+            <div className="flex items-center gap-2 mb-3">
+              <motion.div
+                className="w-2 h-2 rounded-full bg-[#00ff88]"
+                animate={{
+                  boxShadow: ['0 0 5px #00ff88', '0 0 20px #00ff88', '0 0 5px #00ff88'],
+                  scale: [1, 1.2, 1]
+                }}
+                transition={{ duration: 1.5, repeat: Infinity }}
+              />
+              <span className="text-[#00ff88] text-[10px] sm:text-xs uppercase tracking-[0.2em] font-mono">
+                NETWORK ACTIVE
+              </span>
+            </div>
+
+            {/* Main stat */}
+            <motion.div
+              className="text-white font-bold text-4xl sm:text-5xl font-mono"
+              animate={{ opacity: [1, 0.8, 1] }}
+              transition={{ duration: 2, repeat: Infinity }}
+            >
+              {MDA_LOCATIONS.length}
+            </motion.div>
+            <div className="text-[#64ffda] text-xs sm:text-sm font-mono mt-1">MDAs Connected</div>
+
+            {/* Secondary stats */}
+            <div className="mt-4 pt-4 border-t border-[#64ffda]/20 space-y-2">
+              <div className="flex justify-between items-center">
+                <span className="text-[#8892b0] text-[10px] sm:text-xs font-mono">ACTIVE LINKS</span>
+                <motion.span
+                  className="text-[#00ff88] text-xs sm:text-sm font-mono font-bold"
+                  key={activeConnections}
+                  initial={{ opacity: 0.5 }}
+                  animate={{ opacity: 1 }}
+                >
+                  {activeConnections}
+                </motion.span>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-[#8892b0] text-[10px] sm:text-xs font-mono">DATA FLOW</span>
+                <motion.span
+                  className="text-[#FCD116] text-xs sm:text-sm font-mono font-bold"
+                  key={dataFlow}
+                  initial={{ opacity: 0.5 }}
+                  animate={{ opacity: 1 }}
+                >
+                  {dataFlow.toLocaleString()} KB/s
+                </motion.span>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-[#8892b0] text-[10px] sm:text-xs font-mono">STATUS</span>
+                <span className="text-[#00ff88] text-xs sm:text-sm font-mono font-bold flex items-center gap-1">
+                  <motion.span
+                    animate={{ opacity: [1, 0.5, 1] }}
+                    transition={{ duration: 1, repeat: Infinity }}
+                  >
+                    ●
+                  </motion.span>
+                  {systemStatus}
+                </span>
+              </div>
+            </div>
+          </div>
+        </motion.div>
+      </div>
+
+      {/* Node type legend - bottom left */}
+      <div className="absolute bottom-3 left-3 sm:bottom-5 sm:left-5 z-20">
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.4 }}
+          className="bg-[#0a192f]/90 backdrop-blur-xl rounded-2xl p-4 border border-[#64ffda]/20 shadow-xl"
+        >
+          <div className="text-[#64ffda] text-[10px] sm:text-xs uppercase tracking-[0.15em] font-mono mb-3">
+            Node Classification
+          </div>
+          <div className="space-y-2">
+            {[
+              { color: '#FCD116', label: 'Headquarters', glow: true },
+              { color: '#00ff88', label: 'Regional Admin' },
+              { color: '#ff6b6b', label: 'Agencies' },
+              { color: '#00ffff', label: 'Commission' },
+            ].map((item) => (
+              <div key={item.label} className="flex items-center gap-2">
+                <motion.div
+                  className="w-3 h-3 rounded-full"
+                  style={{
+                    backgroundColor: item.color,
+                    boxShadow: item.glow ? `0 0 10px ${item.color}` : 'none'
+                  }}
+                  animate={item.glow ? {
+                    boxShadow: [`0 0 5px ${item.color}`, `0 0 15px ${item.color}`, `0 0 5px ${item.color}`]
+                  } : {}}
+                  transition={{ duration: 2, repeat: Infinity }}
+                />
+                <span className="text-[#ccd6f6] text-[10px] sm:text-xs font-mono">{item.label}</span>
+              </div>
+            ))}
+          </div>
+        </motion.div>
+      </div>
+
+      {/* Interactive hint - top right */}
+      <motion.div
+        initial={{ opacity: 0, x: 30 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ delay: 0.6 }}
+        className="absolute top-3 right-3 sm:top-5 sm:right-5 z-20"
+      >
+        <div className="bg-[#0a192f]/80 backdrop-blur-xl rounded-xl px-4 py-2 border border-[#FCD116]/30 flex items-center gap-3">
+          <span className="text-[#ccd6f6] text-[10px] sm:text-xs font-mono">HOVER TO EXPLORE</span>
           <motion.div
-            className="w-5 h-5 rounded-full border border-ghana-gold/50 flex items-center justify-center"
+            className="relative w-6 h-6"
             animate={{ scale: [1, 1.1, 1] }}
             transition={{ duration: 1.5, repeat: Infinity }}
           >
-            <svg className="w-3 h-3 text-ghana-gold" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 15l-2 5L9 9l11 4-5 2z" />
-            </svg>
+            <div className="absolute inset-0 border border-[#FCD116]/50 rounded-full" />
+            <motion.div
+              className="absolute inset-0 flex items-center justify-center"
+              animate={{ rotate: [0, 10, -10, 0] }}
+              transition={{ duration: 2, repeat: Infinity }}
+            >
+              <svg className="w-3 h-3 text-[#FCD116]" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M13.5 9a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/>
+              </svg>
+            </motion.div>
           </motion.div>
-        </motion.div>
-      </div>
+        </div>
+      </motion.div>
 
-      {/* Main SVG Map */}
-      <div className="absolute inset-0 flex items-center justify-center p-4 sm:p-8">
+      {/* Main SVG visualization */}
+      <div className="absolute inset-0 flex items-center justify-center p-6 sm:p-10">
         <motion.svg
           viewBox="0 0 100 100"
-          className="w-full h-full max-w-[500px] max-h-[600px]"
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.8 }}
+          className="w-full h-full max-w-[550px] max-h-[650px]"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 1 }}
         >
           <defs>
-            {/* Gradients */}
-            <linearGradient id="mapGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+            {/* Advanced gradients */}
+            <linearGradient id="mapFill" x1="0%" y1="0%" x2="100%" y2="100%">
               <stop offset="0%" stopColor="#006B3F" stopOpacity="0.9" />
-              <stop offset="50%" stopColor="#007A47" stopOpacity="0.85" />
+              <stop offset="30%" stopColor="#008550" stopOpacity="0.8" />
+              <stop offset="70%" stopColor="#007A47" stopOpacity="0.85" />
               <stop offset="100%" stopColor="#006B3F" stopOpacity="0.9" />
             </linearGradient>
 
-            <linearGradient id="borderGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+            <linearGradient id="energyGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stopColor="#FCD116" stopOpacity="1" />
+              <stop offset="50%" stopColor="#00ff88" stopOpacity="0.8" />
+              <stop offset="100%" stopColor="#FCD116" stopOpacity="1" />
+            </linearGradient>
+
+            <linearGradient id="connectionGlow" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stopColor="#00ffcc" stopOpacity="0.8" />
+              <stop offset="50%" stopColor="#00ff88" stopOpacity="0.5" />
+              <stop offset="100%" stopColor="#00ffcc" stopOpacity="0.8" />
+            </linearGradient>
+
+            <linearGradient id="lineGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stopColor="#00ffcc" />
+              <stop offset="50%" stopColor="#FCD116" />
+              <stop offset="100%" stopColor="#00ffcc" />
+            </linearGradient>
+
+            <linearGradient id="rotatingRing" x1="0%" y1="0%" x2="100%" y2="100%">
               <stop offset="0%" stopColor="#FCD116" />
-              <stop offset="50%" stopColor="#006B3F" />
+              <stop offset="25%" stopColor="transparent" />
+              <stop offset="50%" stopColor="#FCD116" />
+              <stop offset="75%" stopColor="transparent" />
               <stop offset="100%" stopColor="#FCD116" />
             </linearGradient>
 
-            <linearGradient id="connectionGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-              <stop offset="0%" stopColor="#FCD116" stopOpacity="0.8" />
-              <stop offset="50%" stopColor="#006B3F" stopOpacity="0.5" />
-              <stop offset="100%" stopColor="#FCD116" stopOpacity="0.8" />
-            </linearGradient>
-
-            <radialGradient id="hqGlow" cx="50%" cy="50%" r="50%">
-              <stop offset="0%" stopColor="#FCD116" stopOpacity="1" />
+            <radialGradient id="centerGlow" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stopColor="#FCD116" stopOpacity="0.3" />
               <stop offset="100%" stopColor="#FCD116" stopOpacity="0" />
             </radialGradient>
 
             {/* Filters */}
-            <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
-              <feGaussianBlur stdDeviation="1.5" result="coloredBlur" />
+            <filter id="nodeGlow" x="-100%" y="-100%" width="300%" height="300%">
+              <feGaussianBlur stdDeviation="2" result="blur" />
               <feMerge>
-                <feMergeNode in="coloredBlur" />
+                <feMergeNode in="blur" />
+                <feMergeNode in="blur" />
+                <feMergeNode in="SourceGraphic" />
+              </feMerge>
+            </filter>
+
+            <filter id="particleGlow" x="-100%" y="-100%" width="300%" height="300%">
+              <feGaussianBlur stdDeviation="1" result="blur" />
+              <feMerge>
+                <feMergeNode in="blur" />
                 <feMergeNode in="SourceGraphic" />
               </feMerge>
             </filter>
@@ -542,165 +1024,195 @@ export default function GhanaGlobe() {
               <feGaussianBlur stdDeviation="2" />
             </filter>
 
+            <filter id="labelGlow" x="-50%" y="-50%" width="200%" height="200%">
+              <feDropShadow dx="0" dy="0" stdDeviation="2" floodColor="#00ffcc" floodOpacity="0.5" />
+            </filter>
+
             <filter id="mapShadow" x="-20%" y="-20%" width="140%" height="140%">
-              <feDropShadow dx="0" dy="2" stdDeviation="3" floodColor="#000000" floodOpacity="0.5" />
+              <feDropShadow dx="2" dy="4" stdDeviation="4" floodColor="#000000" floodOpacity="0.6" />
             </filter>
           </defs>
 
-          {/* Animated grid background */}
-          <AnimatedGrid />
+          {/* Background layers */}
+          <HolographicScanLines />
 
-          {/* Radar sweep effect */}
-          <RadarSweep />
+          {/* Corner brackets */}
+          <CornerBrackets />
 
-          {/* Ghana map outline - shadow layer */}
+          {/* Contour lines */}
+          <ContourLines />
+
+          {/* Map shadow */}
           <motion.path
-            d={GHANA_PATH}
-            fill="rgba(0,0,0,0.3)"
-            transform="translate(1, 2)"
+            d={GHANA_MAIN_PATH}
+            fill="rgba(0,0,0,0.4)"
+            transform="translate(2, 3)"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ duration: 1 }}
+            transition={{ duration: 1, delay: 0.3 }}
           />
 
-          {/* Ghana map main fill with gradient */}
+          {/* Main map fill */}
           <motion.path
-            d={GHANA_PATH}
-            fill="url(#mapGradient)"
+            d={GHANA_MAIN_PATH}
+            fill="url(#mapFill)"
             filter="url(#mapShadow)"
-            initial={{ opacity: 0, scale: 0.95 }}
+            initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.8 }}
+            transition={{ duration: 1.2 }}
+            style={{ transformOrigin: '50px 50px' }}
           />
 
-          {/* Animated border glow */}
-          <motion.path
-            d={GHANA_PATH}
-            fill="none"
-            stroke="url(#borderGradient)"
-            strokeWidth="1"
-            strokeDasharray="5,3"
-            initial={{ strokeDashoffset: 0 }}
-            animate={{ strokeDashoffset: -100 }}
-            transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-          />
+          {/* Aurora overlay */}
+          <AuroraEffect />
 
-          {/* Secondary border */}
-          <motion.path
-            d={GHANA_PATH}
-            fill="none"
-            stroke="#FCD116"
-            strokeWidth="0.5"
-            opacity="0.5"
-            initial={{ pathLength: 0 }}
-            animate={{ pathLength: 1 }}
-            transition={{ duration: 2, delay: 0.5 }}
-          />
+          {/* Glitch effect */}
+          <GlitchEffect />
 
-          {/* Inner pattern overlay */}
-          <motion.path
-            d={GHANA_PATH}
-            fill="none"
-            stroke="#ffffff"
-            strokeWidth="0.2"
-            opacity="0.1"
-            strokeDasharray="1,5"
-          />
+          {/* Layered 3D border effect */}
+          <LayeredMapEffect />
 
-          {/* Floating particles */}
-          {particles.map((p) => (
-            <FloatingParticle key={p.id} {...p} />
+          {/* Atmospheric particles */}
+          <AtmosphericParticles />
+
+          {/* Energy waves from headquarters */}
+          <EnergyWave cx={headquarters.x} cy={headquarters.y} />
+
+          {/* Network connections */}
+          {regionalOffices.map((mda, i) => (
+            <AdvancedConnection
+              key={i}
+              from={{ x: headquarters.x, y: headquarters.y }}
+              to={{ x: mda.x, y: mda.y }}
+              delay={i * 0.15}
+              isActive={hoveredMDA?.name === mda.name}
+            />
           ))}
 
-          {/* Data flow connections */}
-          <DataFlowOverlay />
-
-          {/* MDA Points */}
+          {/* MDA Nodes */}
           {MDA_LOCATIONS.map((mda, i) => (
-            <MDAPoint
+            <HolographicNode
               key={i}
               mda={mda}
               index={i}
               isHovered={hoveredMDA?.name === mda.name}
               isHeadquarters={mda.type === 'headquarters'}
               onHover={setHoveredMDA}
+              isConnected={mda.type === 'regional'}
             />
           ))}
 
-          {/* Headquarters beacon effect */}
+          {/* Central headquarters glow */}
           <motion.circle
             cx={headquarters.x}
             cy={headquarters.y}
-            r="8"
-            fill="url(#hqGlow)"
-            opacity="0.3"
+            r="15"
+            fill="url(#centerGlow)"
             animate={{
-              r: [8, 12, 8],
-              opacity: [0.3, 0.5, 0.3],
+              r: [15, 20, 15],
+              opacity: [0.5, 0.8, 0.5],
             }}
-            transition={{ duration: 2, repeat: Infinity }}
+            transition={{ duration: 3, repeat: Infinity }}
           />
 
-          {/* Map label */}
-          <motion.g
+          {/* HUD mini readouts on map */}
+          <HUDReadout x="5" y="5" label="LAT" value="7.9465" color="#00ffcc" />
+          <HUDReadout x="77" y="5" label="LON" value="-1.0232" color="#00ffcc" />
+
+          {/* Map title */}
+          <motion.text
+            x="50"
+            y="98"
+            textAnchor="middle"
+            fill="#FCD116"
+            fontSize="3"
+            fontFamily="monospace"
+            fontWeight="bold"
+            letterSpacing="0.3em"
             initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 1 }}
+            animate={{ opacity: [0.3, 0.6, 0.3] }}
+            transition={{ duration: 3, repeat: Infinity }}
           >
-            <text
-              x="50"
-              y="50"
-              textAnchor="middle"
-              fill="#FCD116"
-              fontSize="5"
-              fontWeight="bold"
-              opacity="0.15"
-            >
-              GHANA
-            </text>
-          </motion.g>
+            GHANA DIGITAL NETWORK
+          </motion.text>
         </motion.svg>
       </div>
 
-      {/* Hovered MDA info panel */}
+      {/* Hovered MDA detail panel */}
       <AnimatePresence>
         {hoveredMDA && (
           <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: 20 }}
-            className="absolute bottom-2 right-2 sm:bottom-4 sm:right-4 z-10"
+            initial={{ opacity: 0, x: 30, scale: 0.95 }}
+            animate={{ opacity: 1, x: 0, scale: 1 }}
+            exit={{ opacity: 0, x: 30, scale: 0.95 }}
+            className="absolute bottom-3 right-3 sm:bottom-5 sm:right-5 z-20"
           >
-            <div className="bg-surface-900/95 backdrop-blur-md rounded-xl sm:rounded-2xl p-4 sm:p-5 border border-ghana-gold/40 shadow-2xl shadow-ghana-gold/10 max-w-[220px] sm:max-w-xs">
-              <div className="flex items-start gap-3">
-                <motion.div
-                  className={`w-3 h-3 rounded-full mt-1 flex-shrink-0 ${
-                    hoveredMDA.type === 'headquarters' ? 'bg-ghana-gold' :
-                    hoveredMDA.type === 'regional' ? 'bg-ghana-green' : 'bg-ghana-red'
-                  }`}
-                  animate={{ scale: [1, 1.2, 1] }}
-                  transition={{ duration: 1, repeat: Infinity }}
-                  style={{
-                    boxShadow: hoveredMDA.type === 'headquarters'
-                      ? '0 0 10px #FCD116'
-                      : hoveredMDA.type === 'regional'
-                      ? '0 0 10px #006B3F'
-                      : '0 0 10px #CE1126'
-                  }}
-                />
-                <div>
-                  <h4 className="text-white font-bold text-sm sm:text-base leading-tight">{hoveredMDA.name}</h4>
-                  <p className="text-ghana-gold text-xs sm:text-sm mt-1">{hoveredMDA.city}, Ghana</p>
-                  <div className="flex items-center gap-2 mt-2 pt-2 border-t border-white/10">
-                    <span className="text-surface-400 text-[10px] sm:text-xs capitalize">{hoveredMDA.type.replace('_', ' ')}</span>
-                    <motion.span
-                      className="text-ghana-green text-[10px] sm:text-xs flex items-center gap-1"
-                      animate={{ opacity: [1, 0.5, 1] }}
-                      transition={{ duration: 1.5, repeat: Infinity }}
-                    >
-                      <span className="w-1.5 h-1.5 rounded-full bg-ghana-green" />
-                      Online
-                    </motion.span>
+            <div className="relative">
+              <div className="absolute inset-0 bg-gradient-to-r from-[#FCD116]/20 to-[#00ff88]/20 rounded-2xl blur-xl" />
+              <div className="relative bg-[#0a192f]/95 backdrop-blur-xl rounded-2xl p-5 border border-[#FCD116]/40 shadow-2xl shadow-[#FCD116]/10 max-w-[260px]">
+                {/* Status header */}
+                <div className="flex items-center justify-between mb-3">
+                  <div className="flex items-center gap-2">
+                    <motion.div
+                      className="w-2 h-2 rounded-full"
+                      style={{ backgroundColor: hoveredMDA.type === 'headquarters' ? '#FCD116' : '#00ff88' }}
+                      animate={{
+                        boxShadow: [
+                          `0 0 5px ${hoveredMDA.type === 'headquarters' ? '#FCD116' : '#00ff88'}`,
+                          `0 0 15px ${hoveredMDA.type === 'headquarters' ? '#FCD116' : '#00ff88'}`,
+                          `0 0 5px ${hoveredMDA.type === 'headquarters' ? '#FCD116' : '#00ff88'}`
+                        ]
+                      }}
+                      transition={{ duration: 1, repeat: Infinity }}
+                    />
+                    <span className="text-[#00ff88] text-[10px] font-mono uppercase tracking-wider">ONLINE</span>
+                  </div>
+                  <span className="text-[#64ffda] text-[10px] font-mono opacity-70">
+                    NODE #{MDA_LOCATIONS.indexOf(hoveredMDA) + 1}
+                  </span>
+                </div>
+
+                {/* Main info */}
+                <h4 className="text-white font-bold text-sm sm:text-base leading-tight mb-1 font-mono">
+                  {hoveredMDA.name}
+                </h4>
+                <p className="text-[#FCD116] text-xs sm:text-sm font-mono">
+                  {hoveredMDA.city}, Ghana
+                </p>
+
+                {/* Details grid */}
+                <div className="mt-4 pt-4 border-t border-[#64ffda]/20 grid grid-cols-2 gap-3">
+                  <div>
+                    <span className="text-[#8892b0] text-[10px] font-mono block">TYPE</span>
+                    <span className="text-[#ccd6f6] text-xs font-mono capitalize">{hoveredMDA.type}</span>
+                  </div>
+                  <div>
+                    <span className="text-[#8892b0] text-[10px] font-mono block">LATENCY</span>
+                    <span className="text-[#00ff88] text-xs font-mono">{Math.floor(Math.random() * 20) + 5}ms</span>
+                  </div>
+                  <div>
+                    <span className="text-[#8892b0] text-[10px] font-mono block">UPTIME</span>
+                    <span className="text-[#ccd6f6] text-xs font-mono">99.{Math.floor(Math.random() * 9) + 1}%</span>
+                  </div>
+                  <div>
+                    <span className="text-[#8892b0] text-[10px] font-mono block">PACKETS</span>
+                    <span className="text-[#FCD116] text-xs font-mono">{(Math.floor(Math.random() * 500) + 100).toLocaleString()}</span>
+                  </div>
+                </div>
+
+                {/* Connection status bar */}
+                <div className="mt-4 pt-3 border-t border-[#64ffda]/20">
+                  <div className="flex items-center justify-between mb-1">
+                    <span className="text-[#8892b0] text-[10px] font-mono">CONNECTION STRENGTH</span>
+                    <span className="text-[#00ff88] text-[10px] font-mono">EXCELLENT</span>
+                  </div>
+                  <div className="h-1.5 bg-[#1a365d] rounded-full overflow-hidden">
+                    <motion.div
+                      className="h-full bg-gradient-to-r from-[#00ff88] to-[#FCD116] rounded-full"
+                      initial={{ width: '0%' }}
+                      animate={{ width: '95%' }}
+                      transition={{ duration: 1 }}
+                    />
                   </div>
                 </div>
               </div>
@@ -709,30 +1221,38 @@ export default function GhanaGlobe() {
         )}
       </AnimatePresence>
 
-      {/* Decorative corner elements */}
-      <div className="absolute top-0 left-0 w-20 h-20 pointer-events-none">
+      {/* Decorative animated lines at edges */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden rounded-3xl">
+        {/* Top edge */}
         <motion.div
-          className="absolute top-4 left-4 w-12 h-[2px] bg-gradient-to-r from-ghana-gold to-transparent"
-          animate={{ opacity: [0.3, 0.7, 0.3] }}
-          transition={{ duration: 2, repeat: Infinity }}
+          className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#FCD116] to-transparent"
+          animate={{ opacity: [0.3, 0.8, 0.3] }}
+          transition={{ duration: 3, repeat: Infinity }}
         />
+        {/* Bottom edge */}
         <motion.div
-          className="absolute top-4 left-4 w-[2px] h-12 bg-gradient-to-b from-ghana-gold to-transparent"
-          animate={{ opacity: [0.3, 0.7, 0.3] }}
-          transition={{ duration: 2, repeat: Infinity, delay: 0.5 }}
+          className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#00ff88] to-transparent"
+          animate={{ opacity: [0.3, 0.8, 0.3] }}
+          transition={{ duration: 3, repeat: Infinity, delay: 1.5 }}
         />
-      </div>
-      <div className="absolute bottom-0 right-0 w-20 h-20 pointer-events-none">
+        {/* Left edge */}
         <motion.div
-          className="absolute bottom-4 right-4 w-12 h-[2px] bg-gradient-to-l from-ghana-gold to-transparent"
-          animate={{ opacity: [0.3, 0.7, 0.3] }}
-          transition={{ duration: 2, repeat: Infinity }}
+          className="absolute top-0 bottom-0 left-0 w-px bg-gradient-to-b from-transparent via-[#00ffcc] to-transparent"
+          animate={{ opacity: [0.3, 0.8, 0.3] }}
+          transition={{ duration: 3, repeat: Infinity, delay: 0.75 }}
         />
+        {/* Right edge */}
         <motion.div
-          className="absolute bottom-4 right-4 w-[2px] h-12 bg-gradient-to-t from-ghana-gold to-transparent"
-          animate={{ opacity: [0.3, 0.7, 0.3] }}
-          transition={{ duration: 2, repeat: Infinity, delay: 0.5 }}
+          className="absolute top-0 bottom-0 right-0 w-px bg-gradient-to-b from-transparent via-[#FCD116] to-transparent"
+          animate={{ opacity: [0.3, 0.8, 0.3] }}
+          transition={{ duration: 3, repeat: Infinity, delay: 2.25 }}
         />
+
+        {/* Corner glow effects */}
+        <div className="absolute top-0 left-0 w-32 h-32 bg-gradient-to-br from-[#FCD116]/20 to-transparent" />
+        <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-bl from-[#00ff88]/20 to-transparent" />
+        <div className="absolute bottom-0 left-0 w-32 h-32 bg-gradient-to-tr from-[#00ffcc]/20 to-transparent" />
+        <div className="absolute bottom-0 right-0 w-32 h-32 bg-gradient-to-tl from-[#FCD116]/20 to-transparent" />
       </div>
     </div>
   );
