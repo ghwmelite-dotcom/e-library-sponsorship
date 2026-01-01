@@ -3075,29 +3075,247 @@ export default function Sponsorship() {
         </div>
       </section>
 
-      {/* ===== FOOTER ===== */}
-      <footer className="relative py-12 px-6 border-t border-white/10">
-        <div className="max-w-7xl mx-auto text-center">
-          <div className="flex items-center justify-center gap-2 mb-4">
-            <BlackStar className="w-8 h-8 text-ghana-gold" animate={false} />
-            <span className="text-xl font-heading font-bold text-white">OHCS E-Library</span>
+      {/* ===== ENHANCED FOOTER ===== */}
+      <footer className="relative py-16 sm:py-20 px-6 overflow-hidden">
+        {/* Animated top border */}
+        <div className="absolute top-0 left-0 right-0 h-px overflow-hidden">
+          <motion.div
+            className="absolute inset-0 bg-gradient-to-r from-transparent via-ghana-gold to-transparent"
+            animate={{ x: ['-100%', '100%'] }}
+            transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent" />
+        </div>
+
+        {/* Background effects */}
+        <div className="absolute inset-0 pointer-events-none overflow-hidden">
+          {/* Floating particles */}
+          {Array.from({ length: 20 }).map((_, i) => (
+            <motion.div
+              key={`footer-particle-${i}`}
+              className={`absolute rounded-full ${i % 2 === 0 ? 'bg-ghana-gold/20' : 'bg-ghana-green/20'}`}
+              style={{
+                left: `${Math.random() * 100}%`,
+                top: `${Math.random() * 100}%`,
+                width: Math.random() * 4 + 2,
+                height: Math.random() * 4 + 2,
+              }}
+              animate={{
+                y: [-20, 20, -20],
+                opacity: [0.2, 0.5, 0.2],
+              }}
+              transition={{
+                duration: Math.random() * 8 + 6,
+                delay: Math.random() * 3,
+                repeat: Infinity,
+                ease: "easeInOut",
+              }}
+            />
+          ))}
+
+          {/* Gradient orbs */}
+          <motion.div
+            className="absolute -bottom-20 left-1/4 w-64 h-64 bg-ghana-green/10 rounded-full blur-3xl"
+            animate={{ opacity: [0.1, 0.2, 0.1], scale: [1, 1.1, 1] }}
+            transition={{ duration: 6, repeat: Infinity }}
+          />
+          <motion.div
+            className="absolute -bottom-20 right-1/4 w-64 h-64 bg-ghana-gold/10 rounded-full blur-3xl"
+            animate={{ opacity: [0.1, 0.2, 0.1], scale: [1.1, 1, 1.1] }}
+            transition={{ duration: 6, repeat: Infinity, delay: 2 }}
+          />
+        </div>
+
+        <div className="max-w-7xl mx-auto relative z-10">
+          {/* Main footer content */}
+          <div className="text-center mb-10">
+            {/* Logo with effects */}
+            <motion.div
+              className="flex items-center justify-center gap-3 mb-5"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+            >
+              <motion.div
+                className="relative"
+                animate={{ rotate: [0, 5, -5, 0] }}
+                transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+              >
+                <BlackStar className="w-10 h-10 sm:w-12 sm:h-12 text-ghana-gold drop-shadow-[0_0_10px_rgba(252,209,22,0.5)]" animate={false} />
+                <motion.div
+                  className="absolute inset-0 bg-ghana-gold/20 blur-xl rounded-full"
+                  animate={{ scale: [1, 1.3, 1], opacity: [0.3, 0.5, 0.3] }}
+                  transition={{ duration: 2, repeat: Infinity }}
+                />
+              </motion.div>
+              <motion.span
+                className="text-2xl sm:text-3xl font-heading font-bold bg-gradient-to-r from-white via-ghana-gold to-white bg-clip-text text-transparent bg-[length:200%_auto]"
+                animate={{ backgroundPosition: ['0% center', '200% center'] }}
+                transition={{ duration: 5, repeat: Infinity, ease: "linear" }}
+              >
+                OHCS E-Library
+              </motion.span>
+            </motion.div>
+
+            {/* Tagline with typing effect look */}
+            <motion.p
+              className="text-surface-300 text-base sm:text-lg mb-8 flex items-center justify-center gap-2"
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.2 }}
+            >
+              <motion.span
+                className="inline-block w-2 h-2 rounded-full bg-ghana-green"
+                animate={{ scale: [1, 1.2, 1], opacity: [0.5, 1, 0.5] }}
+                transition={{ duration: 1.5, repeat: Infinity }}
+              />
+              Empowering Ghana's Civil Service for the Digital Age
+            </motion.p>
+
+            {/* Links with enhanced styling */}
+            <motion.div
+              className="flex flex-wrap items-center justify-center gap-4 sm:gap-8"
+              initial={{ opacity: 0, y: 10 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.3 }}
+            >
+              <motion.a
+                href="https://ohcs-elibrary.pages.dev"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group relative px-5 py-2.5 rounded-xl bg-white/5 border border-white/10 hover:border-ghana-gold/50 transition-all flex items-center gap-2 overflow-hidden"
+                whileHover={{ scale: 1.05, y: -2 }}
+                whileTap={{ scale: 0.98 }}
+              >
+                <motion.div
+                  className="absolute inset-0 bg-gradient-to-r from-transparent via-ghana-gold/10 to-transparent"
+                  initial={{ x: '-100%' }}
+                  whileHover={{ x: '100%' }}
+                  transition={{ duration: 0.5 }}
+                />
+                <ExternalLink className="w-4 h-4 text-ghana-gold relative z-10" />
+                <span className="text-surface-300 group-hover:text-white transition-colors relative z-10">Platform Demo</span>
+              </motion.a>
+
+              <motion.a
+                href="https://ohcs.gov.gh/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group relative px-5 py-2.5 rounded-xl bg-white/5 border border-white/10 hover:border-ghana-green/50 transition-all flex items-center gap-2 overflow-hidden"
+                whileHover={{ scale: 1.05, y: -2 }}
+                whileTap={{ scale: 0.98 }}
+              >
+                <motion.div
+                  className="absolute inset-0 bg-gradient-to-r from-transparent via-ghana-green/10 to-transparent"
+                  initial={{ x: '-100%' }}
+                  whileHover={{ x: '100%' }}
+                  transition={{ duration: 0.5 }}
+                />
+                <motion.div
+                  className="relative z-10"
+                  animate={{ rotate: 360 }}
+                  transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+                >
+                  <Globe className="w-4 h-4 text-ghana-green" />
+                </motion.div>
+                <span className="text-surface-300 group-hover:text-white transition-colors relative z-10">OHCS Website</span>
+              </motion.a>
+            </motion.div>
           </div>
-          <p className="text-surface-400 mb-6">
-            Empowering Ghana's Civil Service for the Digital Age
-          </p>
-          <div className="flex items-center justify-center gap-6">
-            <a href="https://ohcs-elibrary.pages.dev" target="_blank" rel="noopener noreferrer" className="text-surface-400 hover:text-ghana-gold transition-colors flex items-center gap-2">
-              <ExternalLink className="w-4 h-4" />
-              Platform Demo
-            </a>
-            <a href="https://ohcs.gov.gh/" target="_blank" rel="noopener noreferrer" className="text-surface-400 hover:text-ghana-gold transition-colors flex items-center gap-2">
-              <Globe className="w-4 h-4" />
-              OHCS Website
-            </a>
+
+          {/* Decorative divider */}
+          <div className="relative my-8">
+            <div className="absolute inset-0 flex items-center">
+              <motion.div
+                className="w-full h-px bg-gradient-to-r from-transparent via-white/20 to-transparent"
+                initial={{ scaleX: 0 }}
+                whileInView={{ scaleX: 1 }}
+                viewport={{ once: true }}
+                transition={{ duration: 1 }}
+              />
+            </div>
+            <div className="relative flex justify-center">
+              <motion.div
+                className="px-4 bg-surface-900"
+                initial={{ opacity: 0, scale: 0 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.5, type: "spring" }}
+              >
+                <div className="flex items-center gap-2">
+                  {[0, 1, 2].map((i) => (
+                    <motion.div
+                      key={i}
+                      className={`w-1.5 h-1.5 rounded-full ${i === 1 ? 'bg-ghana-gold' : 'bg-ghana-green'}`}
+                      animate={{ scale: [1, 1.3, 1], opacity: [0.5, 1, 0.5] }}
+                      transition={{ duration: 1.5, delay: i * 0.2, repeat: Infinity }}
+                    />
+                  ))}
+                </div>
+              </motion.div>
+            </div>
           </div>
-          <div className="mt-8 pt-8 border-t border-white/10 text-surface-400 text-sm">
-            <p>&copy; {Math.max(2026, new Date().getFullYear())} Office of the Head of Civil Service, Ghana. All rights reserved.</p>
-          </div>
+
+          {/* Copyright section */}
+          <motion.div
+            className="text-center"
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.4 }}
+          >
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-4 text-surface-500 text-sm">
+              <div className="flex items-center gap-2">
+                <motion.div
+                  className="w-5 h-5 rounded-full bg-gradient-to-br from-ghana-green to-ghana-gold flex items-center justify-center"
+                  animate={{ rotate: [0, 360] }}
+                  transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+                >
+                  <span className="text-[8px] font-bold text-black">©</span>
+                </motion.div>
+                <span>{Math.max(2026, new Date().getFullYear())}</span>
+              </div>
+              <span className="hidden sm:inline text-ghana-gold">•</span>
+              <span>Office of the Head of Civil Service, Ghana</span>
+            </div>
+            <motion.p
+              className="mt-3 text-surface-600 text-xs flex items-center justify-center gap-2"
+              animate={{ opacity: [0.5, 0.8, 0.5] }}
+              transition={{ duration: 3, repeat: Infinity }}
+            >
+              <Sparkles className="w-3 h-3 text-ghana-gold" />
+              Building the future of public service
+              <Sparkles className="w-3 h-3 text-ghana-gold" />
+            </motion.p>
+          </motion.div>
+        </div>
+
+        {/* Corner accents */}
+        <div className="absolute bottom-0 left-0 w-24 h-24 pointer-events-none">
+          <motion.div
+            className="absolute bottom-4 left-4 w-12 h-[2px] bg-gradient-to-r from-ghana-green to-transparent"
+            animate={{ opacity: [0.3, 0.6, 0.3] }}
+            transition={{ duration: 2, repeat: Infinity }}
+          />
+          <motion.div
+            className="absolute bottom-4 left-4 w-[2px] h-12 bg-gradient-to-t from-ghana-green to-transparent"
+            animate={{ opacity: [0.3, 0.6, 0.3] }}
+            transition={{ duration: 2, repeat: Infinity, delay: 0.5 }}
+          />
+        </div>
+        <div className="absolute bottom-0 right-0 w-24 h-24 pointer-events-none">
+          <motion.div
+            className="absolute bottom-4 right-4 w-12 h-[2px] bg-gradient-to-l from-ghana-gold to-transparent"
+            animate={{ opacity: [0.3, 0.6, 0.3] }}
+            transition={{ duration: 2, repeat: Infinity }}
+          />
+          <motion.div
+            className="absolute bottom-4 right-4 w-[2px] h-12 bg-gradient-to-t from-ghana-gold to-transparent"
+            animate={{ opacity: [0.3, 0.6, 0.3] }}
+            transition={{ duration: 2, repeat: Infinity, delay: 0.5 }}
+          />
         </div>
       </footer>
 
