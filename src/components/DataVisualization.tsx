@@ -513,21 +513,21 @@ function GrowthChart({ delay = 0 }: { delay?: number }) {
   }, [isInView, delay]);
 
   const dataPoints = [
-    { month: 'M1', users: 10000, engagement: 20 },
-    { month: 'M2', users: 35000, engagement: 35 },
-    { month: 'M3', users: 75000, engagement: 50 },
-    { month: 'M4', users: 120000, engagement: 62 },
-    { month: 'M5', users: 180000, engagement: 71 },
-    { month: 'M6', users: 250000, engagement: 78 },
-    { month: 'M7', users: 310000, engagement: 82 },
-    { month: 'M8', users: 370000, engagement: 85 },
-    { month: 'M9', users: 420000, engagement: 87 },
-    { month: 'M10', users: 460000, engagement: 89 },
-    { month: 'M11', users: 490000, engagement: 91 },
-    { month: 'M12', users: 500000, engagement: 92 },
+    { month: 'M1', users: 2000, engagement: 20 },
+    { month: 'M2', users: 6500, engagement: 35 },
+    { month: 'M3', users: 14000, engagement: 50 },
+    { month: 'M4', users: 22000, engagement: 62 },
+    { month: 'M5', users: 33000, engagement: 71 },
+    { month: 'M6', users: 46500, engagement: 78 },
+    { month: 'M7', users: 58000, engagement: 82 },
+    { month: 'M8', users: 69000, engagement: 85 },
+    { month: 'M9', users: 78000, engagement: 87 },
+    { month: 'M10', users: 85500, engagement: 89 },
+    { month: 'M11', users: 91000, engagement: 91 },
+    { month: 'M12', users: 93000, engagement: 92 },
   ];
 
-  const maxUsers = 500000;
+  const maxUsers = 93000;
 
   const linePath = `M${dataPoints.map((d, i) =>
     `${(i / (dataPoints.length - 1)) * 100},${100 - (d.users / maxUsers) * 100}`

@@ -1047,8 +1047,8 @@ function ROICalculator() {
 
   // Calculate ROI metrics based on investment
   const calculateROI = (amount: number) => {
-    const baseImpressions = 500000; // Civil servants reached
-    const certificateLogos = amount >= 3750000 ? 500000 : amount >= 1500000 ? 250000 : 0;
+    const baseImpressions = 93000; // Civil servants reached
+    const certificateLogos = amount >= 3750000 ? 93000 : amount >= 1500000 ? 46000 : 0;
     const brandExposureMonths = 60; // 5 years
     const estimatedMediaValue = amount * 2.5; // 2.5x media value multiplier
     const governmentConnections = amount >= 7500000 ? 50 : amount >= 3750000 ? 30 : amount >= 1500000 ? 15 : 5;
@@ -1667,7 +1667,7 @@ export default function Sponsorship() {
         '"Powered By" attribution across platform',
         'Advisory Board seat',
         'Co-host national launch event',
-        'Logo on 500,000+ certificates',
+        'Logo on 93,000+ certificates',
         'Dedicated sponsor dashboard',
         'Priority feature requests',
       ],
@@ -1905,7 +1905,7 @@ export default function Sponsorship() {
         <div className="max-w-7xl mx-auto px-6">
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 text-center">
             {[
-              { value: 500000, suffix: '+', label: 'Civil Servants' },
+              { value: 93000, suffix: '+', label: 'Civil Servants' },
               { value: 50, suffix: '+', label: 'MDAs Connected' },
               { value: 108, prefix: 'GHS ', suffix: 'M+', label: 'Annual Savings' },
               { value: 99, suffix: '%', label: 'Faster Access' },
@@ -2280,7 +2280,7 @@ export default function Sponsorship() {
                 <div className="flex-1 text-center md:text-left">
                   <blockquote className="text-xl md:text-2xl text-white font-medium leading-relaxed mb-6">
                     "The OHCS E-Library represents a paradigm shift in how Ghana's civil service accesses knowledge.
-                    This initiative will empower over 500,000 public servants with the tools they need to serve our nation better."
+                    This initiative will empower over 93,000 public servants with the tools they need to serve our nation better."
                   </blockquote>
                   <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-4">
                     <div>
@@ -2532,7 +2532,7 @@ export default function Sponsorship() {
               {
                 icon: Star,
                 title: 'Brand Visibility',
-                description: 'Logo exposure to 500,000+ civil servants across 50+ government entities',
+                description: 'Logo exposure to 93,000+ civil servants across 50+ government entities',
                 highlights: ['Platform branding', 'Certificate logos', 'Launch event recognition'],
               },
               {
@@ -3274,7 +3274,7 @@ export default function Sponsorship() {
                     animate={{ textShadow: ['0 0 10px rgba(252,209,22,0)', '0 0 20px rgba(252,209,22,0.5)', '0 0 10px rgba(252,209,22,0)'] }}
                     transition={{ duration: 2, repeat: Infinity }}
                   >
-                    500,000+
+                    93,000+
                   </motion.span>
                   {' '}public servants and transform governance in Ghana.
                 </motion.p>

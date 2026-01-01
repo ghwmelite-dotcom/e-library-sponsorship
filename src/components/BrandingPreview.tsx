@@ -901,7 +901,7 @@ export default function BrandingPreview() {
             >
               <Eye className="w-5 h-5 mt-0.5 flex-shrink-0" />
             </motion.div>
-            <span>See your brand featured across the platform! Your logo will appear on <strong>500,000+</strong> certificates.</span>
+            <span>See your brand featured across the platform! Your logo will appear on <strong>93,000+</strong> certificates.</span>
           </p>
         </motion.div>
       </motion.div>
@@ -991,7 +991,7 @@ export default function BrandingPreview() {
                 Certificate Branding
               </h4>
               <p className="text-surface-400 text-sm max-w-md mx-auto">
-                Your logo on <span className="text-ghana-gold font-semibold">500,000+</span> certificates issued to civil servants completing courses and training programs.
+                Your logo on <span className="text-ghana-gold font-semibold">93,000+</span> certificates issued to civil servants completing courses and training programs.
               </p>
               <motion.div
                 className="inline-flex items-center gap-2 px-4 py-2 bg-ghana-gold/10 rounded-full border border-ghana-gold/20"
