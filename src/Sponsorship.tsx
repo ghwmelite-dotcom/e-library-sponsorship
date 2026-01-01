@@ -1869,17 +1869,6 @@ export default function Sponsorship() {
                 <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
               </span>
             </MagneticButton>
-            <MagneticButton
-              href="https://ohcs-elibrary.pages.dev"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="group px-8 py-4 bg-white/10 backdrop-blur-sm text-white font-semibold rounded-xl border border-white/20 hover:bg-white/20 transition-all btn-shimmer"
-            >
-              <span className="flex items-center gap-2 relative z-10">
-                <Play className="w-5 h-5" />
-                View Platform Demo
-              </span>
-            </MagneticButton>
             <motion.button
               onClick={() => setIsLeadModalOpen(true)}
               className="group px-8 py-4 bg-gradient-to-r from-surface-800 to-surface-700 text-white font-semibold rounded-xl border border-ghana-gold/30 hover:border-ghana-gold/50 transition-all shadow-lg hover:shadow-ghana-gold/20"
