@@ -2713,61 +2713,362 @@ export default function Sponsorship() {
         </div>
       </section>
 
-      {/* ===== CALL TO ACTION ===== */}
-      <section className="relative py-24 px-6">
-        <div className="max-w-4xl mx-auto">
+      {/* ===== ENHANCED CALL TO ACTION ===== */}
+      <section className="relative py-24 px-6 overflow-hidden">
+        {/* Background floating particles */}
+        <div className="absolute inset-0 pointer-events-none">
+          {Array.from({ length: 40 }).map((_, i) => (
+            <motion.div
+              key={`cta-particle-${i}`}
+              className={`absolute rounded-full ${i % 3 === 0 ? 'bg-ghana-gold/30' : 'bg-white/20'}`}
+              style={{
+                left: `${Math.random() * 100}%`,
+                top: `${Math.random() * 100}%`,
+                width: Math.random() * 6 + 2,
+                height: Math.random() * 6 + 2,
+              }}
+              animate={{
+                y: [-40, 40, -40],
+                x: [-20, 20, -20],
+                opacity: [0.2, 0.6, 0.2],
+                scale: [1, 1.3, 1],
+              }}
+              transition={{
+                duration: Math.random() * 12 + 8,
+                delay: Math.random() * 5,
+                repeat: Infinity,
+                ease: "easeInOut",
+              }}
+            />
+          ))}
+        </div>
+
+        <div className="max-w-4xl mx-auto relative z-10">
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
             className="relative overflow-hidden rounded-3xl"
           >
-            {/* Background gradient */}
-            <div className="absolute inset-0 bg-gradient-to-br from-ghana-green via-ghana-green/80 to-ghana-green/60" />
-            <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiNmZmYiIGZpbGwtb3BhY2l0eT0iMC4xIj48cGF0aCBkPSJNMzYgMzRjMC0yLjIgMS44LTQgNC00czQgMS44IDQgNC0xLjggNC00IDQtNC0xLjgtNC00eiIvPjwvZz48L2c+PC9zdmc+')] opacity-30" />
+            {/* Animated border glow */}
+            <motion.div
+              className="absolute -inset-[2px] rounded-3xl"
+              style={{
+                background: 'conic-gradient(from 0deg, #006B3F, #FCD116, #006B3F, #FCD116, #006B3F)',
+              }}
+              animate={{ rotate: 360 }}
+              transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
+            />
 
-            {/* Golden accent */}
-            <div className="absolute top-0 right-0 w-64 h-64 bg-ghana-gold/20 rounded-full blur-3xl" />
+            {/* Inner container */}
+            <div className="relative rounded-3xl overflow-hidden">
+              {/* Background gradient */}
+              <div className="absolute inset-0 bg-gradient-to-br from-ghana-green via-ghana-green/90 to-ghana-green/70" />
 
-            <div className="relative z-10 p-4 sm:p-8 md:p-12 text-center">
-              <BlackStar className="w-12 h-12 sm:w-16 sm:h-16 mx-auto text-ghana-gold mb-4 sm:mb-6" animate={false} />
-
-              <h2 className="text-2xl sm:text-3xl md:text-4xl font-heading font-bold text-white mb-3 sm:mb-4">
-                Be Part of History
-              </h2>
-              <p className="text-base sm:text-xl text-white/80 mb-6 sm:mb-8 max-w-2xl mx-auto">
-                Join us in building Africa's most comprehensive civil service digital platform.
-                Your partnership will empower 500,000+ public servants and transform governance in Ghana.
-              </p>
-
-              <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 mb-6 sm:mb-8">
-                <MagneticButton
-                  href="#schedule-meeting"
-                  className="group px-4 sm:px-8 py-3 sm:py-4 btn-animated-gradient text-black font-bold rounded-lg sm:rounded-xl shadow-lg hover:shadow-xl transition-all hover:scale-105 flex items-center gap-2 text-sm sm:text-base"
-                >
-                  <CalendarClock className="w-4 h-4 sm:w-5 sm:h-5 relative z-10" />
-                  <span className="relative z-10">Schedule a Meeting</span>
-                  <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 group-hover:translate-x-1 transition-transform relative z-10" />
-                </MagneticButton>
-                <MagneticButton
-                  onClick={() => setIsLeadModalOpen(true)}
-                  className="px-4 sm:px-8 py-3 sm:py-4 bg-white/20 backdrop-blur-sm text-white font-semibold rounded-lg sm:rounded-xl border border-white/30 hover:bg-white/30 transition-all flex items-center gap-2 btn-shimmer text-sm sm:text-base"
-                >
-                  <Download className="w-4 h-4 sm:w-5 sm:h-5 relative z-10" />
-                  <span className="relative z-10">Download Full Proposal</span>
-                </MagneticButton>
+              {/* Animated mesh pattern */}
+              <div className="absolute inset-0 opacity-20 pointer-events-none">
+                <svg width="100%" height="100%" className="absolute inset-0">
+                  <defs>
+                    <pattern id="cta-mesh" width="50" height="50" patternUnits="userSpaceOnUse">
+                      <path d="M 50 0 L 0 0 0 50" fill="none" stroke="white" strokeWidth="0.5" />
+                    </pattern>
+                  </defs>
+                  <rect width="100%" height="100%" fill="url(#cta-mesh)" />
+                </svg>
               </div>
 
-              {/* Contact info */}
-              <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-6 text-white/70 text-xs sm:text-sm">
-                <span className="flex items-center gap-1.5 sm:gap-2">
-                  <Mail className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-                  rsimd@ohcs.gov.gh
-                </span>
-                <span className="flex items-center gap-1.5 sm:gap-2">
-                  <MapPin className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-                  OHCS, Ministries, Accra, Ghana
-                </span>
+              {/* Animated shimmer waves */}
+              <motion.div
+                className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent"
+                animate={{ x: ['-100%', '100%'] }}
+                transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
+              />
+              <motion.div
+                className="absolute inset-0 bg-gradient-to-r from-transparent via-ghana-gold/10 to-transparent"
+                animate={{ x: ['100%', '-100%'] }}
+                transition={{ duration: 5, repeat: Infinity, ease: "linear", delay: 1 }}
+              />
+
+              {/* Animated golden orbs */}
+              <motion.div
+                className="absolute top-0 right-0 w-80 h-80 bg-ghana-gold/20 rounded-full blur-3xl"
+                animate={{
+                  scale: [1, 1.3, 1],
+                  opacity: [0.2, 0.4, 0.2],
+                  x: [0, 20, 0],
+                  y: [0, -20, 0],
+                }}
+                transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+              />
+              <motion.div
+                className="absolute bottom-0 left-0 w-64 h-64 bg-white/10 rounded-full blur-3xl"
+                animate={{
+                  scale: [1.2, 1, 1.2],
+                  opacity: [0.1, 0.2, 0.1],
+                }}
+                transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 1 }}
+              />
+
+              {/* Corner decorations */}
+              <div className="absolute top-0 left-0 w-32 h-32 pointer-events-none">
+                <motion.div
+                  className="absolute top-4 left-4 w-16 h-[2px] bg-gradient-to-r from-ghana-gold to-transparent"
+                  animate={{ opacity: [0.5, 1, 0.5], scaleX: [0.8, 1, 0.8] }}
+                  transition={{ duration: 2, repeat: Infinity }}
+                />
+                <motion.div
+                  className="absolute top-4 left-4 w-[2px] h-16 bg-gradient-to-b from-ghana-gold to-transparent"
+                  animate={{ opacity: [0.5, 1, 0.5], scaleY: [0.8, 1, 0.8] }}
+                  transition={{ duration: 2, repeat: Infinity, delay: 0.3 }}
+                />
+              </div>
+              <div className="absolute top-0 right-0 w-32 h-32 pointer-events-none">
+                <motion.div
+                  className="absolute top-4 right-4 w-16 h-[2px] bg-gradient-to-l from-ghana-gold to-transparent"
+                  animate={{ opacity: [0.5, 1, 0.5], scaleX: [0.8, 1, 0.8] }}
+                  transition={{ duration: 2, repeat: Infinity, delay: 0.5 }}
+                />
+                <motion.div
+                  className="absolute top-4 right-4 w-[2px] h-16 bg-gradient-to-b from-ghana-gold to-transparent"
+                  animate={{ opacity: [0.5, 1, 0.5], scaleY: [0.8, 1, 0.8] }}
+                  transition={{ duration: 2, repeat: Infinity, delay: 0.8 }}
+                />
+              </div>
+              <div className="absolute bottom-0 left-0 w-32 h-32 pointer-events-none">
+                <motion.div
+                  className="absolute bottom-4 left-4 w-16 h-[2px] bg-gradient-to-r from-ghana-gold to-transparent"
+                  animate={{ opacity: [0.5, 1, 0.5], scaleX: [0.8, 1, 0.8] }}
+                  transition={{ duration: 2, repeat: Infinity, delay: 1 }}
+                />
+                <motion.div
+                  className="absolute bottom-4 left-4 w-[2px] h-16 bg-gradient-to-t from-ghana-gold to-transparent"
+                  animate={{ opacity: [0.5, 1, 0.5], scaleY: [0.8, 1, 0.8] }}
+                  transition={{ duration: 2, repeat: Infinity, delay: 1.3 }}
+                />
+              </div>
+              <div className="absolute bottom-0 right-0 w-32 h-32 pointer-events-none">
+                <motion.div
+                  className="absolute bottom-4 right-4 w-16 h-[2px] bg-gradient-to-l from-ghana-gold to-transparent"
+                  animate={{ opacity: [0.5, 1, 0.5], scaleX: [0.8, 1, 0.8] }}
+                  transition={{ duration: 2, repeat: Infinity, delay: 1.5 }}
+                />
+                <motion.div
+                  className="absolute bottom-4 right-4 w-[2px] h-16 bg-gradient-to-t from-ghana-gold to-transparent"
+                  animate={{ opacity: [0.5, 1, 0.5], scaleY: [0.8, 1, 0.8] }}
+                  transition={{ duration: 2, repeat: Infinity, delay: 1.8 }}
+                />
+              </div>
+
+              <div className="relative z-10 p-6 sm:p-10 md:p-14 text-center">
+                {/* Enhanced animated star */}
+                <motion.div
+                  className="relative w-16 h-16 sm:w-20 sm:h-20 mx-auto mb-6 sm:mb-8"
+                  animate={{ rotate: [0, 360] }}
+                  transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+                >
+                  {/* Outer glow rings */}
+                  {[0, 1, 2].map((i) => (
+                    <motion.div
+                      key={i}
+                      className="absolute inset-0 rounded-full border border-ghana-gold/30"
+                      animate={{
+                        scale: [1, 1.5 + i * 0.3, 2 + i * 0.3],
+                        opacity: [0.5, 0.2, 0],
+                      }}
+                      transition={{
+                        duration: 2,
+                        delay: i * 0.4,
+                        repeat: Infinity,
+                        ease: "easeOut",
+                      }}
+                    />
+                  ))}
+                  {/* Star with glow */}
+                  <motion.div
+                    className="absolute inset-0 flex items-center justify-center"
+                    animate={{ rotate: [0, -360] }}
+                    transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+                  >
+                    <div className="relative">
+                      <BlackStar className="w-12 h-12 sm:w-16 sm:h-16 text-ghana-gold drop-shadow-[0_0_15px_rgba(252,209,22,0.5)]" animate={false} />
+                      <motion.div
+                        className="absolute inset-0 bg-ghana-gold/30 blur-xl rounded-full"
+                        animate={{ scale: [1, 1.3, 1], opacity: [0.3, 0.6, 0.3] }}
+                        transition={{ duration: 2, repeat: Infinity }}
+                      />
+                    </div>
+                  </motion.div>
+                  {/* Orbiting dots */}
+                  {[0, 1, 2, 3].map((i) => (
+                    <motion.div
+                      key={`orbit-${i}`}
+                      className="absolute w-2 h-2 bg-ghana-gold rounded-full shadow-lg shadow-ghana-gold/50"
+                      style={{
+                        top: '50%',
+                        left: '50%',
+                      }}
+                      animate={{ rotate: 360 }}
+                      transition={{
+                        duration: 4,
+                        delay: i * 1,
+                        repeat: Infinity,
+                        ease: "linear",
+                      }}
+                      initial={{ rotate: i * 90 }}
+                    >
+                      <motion.div
+                        style={{ transform: 'translateX(35px) translateY(-50%)' }}
+                      />
+                    </motion.div>
+                  ))}
+                </motion.div>
+
+                {/* Enhanced title */}
+                <motion.h2
+                  className="text-2xl sm:text-3xl md:text-5xl font-heading font-bold text-white mb-4 sm:mb-6"
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                >
+                  Be Part of{' '}
+                  <motion.span
+                    className="relative inline-block"
+                  >
+                    <span className="bg-gradient-to-r from-ghana-gold via-yellow-300 to-ghana-gold bg-clip-text text-transparent bg-[length:200%_auto]" style={{ WebkitBackgroundClip: 'text' }}>
+                      History
+                    </span>
+                    <motion.span
+                      className="absolute -bottom-1 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-ghana-gold to-transparent"
+                      animate={{ scaleX: [0, 1, 0], opacity: [0, 1, 0] }}
+                      transition={{ duration: 3, repeat: Infinity }}
+                    />
+                  </motion.span>
+                </motion.h2>
+
+                <motion.p
+                  className="text-base sm:text-xl text-white/90 mb-8 sm:mb-10 max-w-2xl mx-auto leading-relaxed"
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: 0.1 }}
+                >
+                  Join us in building Africa's most comprehensive civil service digital platform.
+                  Your partnership will empower{' '}
+                  <motion.span
+                    className="font-bold text-ghana-gold"
+                    animate={{ textShadow: ['0 0 10px rgba(252,209,22,0)', '0 0 20px rgba(252,209,22,0.5)', '0 0 10px rgba(252,209,22,0)'] }}
+                    transition={{ duration: 2, repeat: Infinity }}
+                  >
+                    500,000+
+                  </motion.span>
+                  {' '}public servants and transform governance in Ghana.
+                </motion.p>
+
+                {/* Enhanced buttons */}
+                <motion.div
+                  className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-5 mb-8 sm:mb-10"
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: 0.2 }}
+                >
+                  {/* Primary CTA */}
+                  <motion.div
+                    whileHover={{ scale: 1.05, y: -3 }}
+                    whileTap={{ scale: 0.98 }}
+                    className="relative"
+                  >
+                    <motion.div
+                      className="absolute -inset-1 bg-gradient-to-r from-ghana-gold via-yellow-300 to-ghana-gold rounded-xl sm:rounded-2xl blur-md opacity-70"
+                      animate={{ opacity: [0.5, 0.8, 0.5] }}
+                      transition={{ duration: 2, repeat: Infinity }}
+                    />
+                    <MagneticButton
+                      href="#schedule-meeting"
+                      className="group relative px-6 sm:px-10 py-4 sm:py-5 bg-gradient-to-r from-ghana-gold via-yellow-400 to-ghana-gold bg-[length:200%_auto] text-black font-bold rounded-xl sm:rounded-2xl shadow-xl flex items-center gap-3 text-sm sm:text-base overflow-hidden"
+                    >
+                      <motion.div
+                        className="absolute inset-0 bg-gradient-to-r from-ghana-gold via-yellow-400 to-ghana-gold bg-[length:200%_auto]"
+                        animate={{ backgroundPosition: ['0% center', '200% center'] }}
+                        transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
+                      />
+                      <motion.div
+                        className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent"
+                        animate={{ x: ['-100%', '100%'] }}
+                        transition={{ duration: 1.5, repeat: Infinity, ease: "linear" }}
+                      />
+                      <CalendarClock className="w-5 h-5 sm:w-6 sm:h-6 relative z-10" />
+                      <span className="relative z-10">Schedule a Meeting</span>
+                      <ArrowRight className="w-5 h-5 sm:w-6 sm:h-6 relative z-10 group-hover:translate-x-1 transition-transform" />
+                    </MagneticButton>
+                  </motion.div>
+
+                  {/* Secondary CTA */}
+                  <motion.div
+                    whileHover={{ scale: 1.05, y: -3 }}
+                    whileTap={{ scale: 0.98 }}
+                  >
+                    <MagneticButton
+                      onClick={() => setIsLeadModalOpen(true)}
+                      className="group relative px-6 sm:px-10 py-4 sm:py-5 bg-white/10 backdrop-blur-sm text-white font-semibold rounded-xl sm:rounded-2xl border-2 border-white/30 hover:bg-white/20 hover:border-white/50 transition-all flex items-center gap-3 text-sm sm:text-base overflow-hidden"
+                    >
+                      <motion.div
+                        className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent"
+                        initial={{ x: '-100%' }}
+                        whileHover={{ x: '100%' }}
+                        transition={{ duration: 0.6 }}
+                      />
+                      <motion.div
+                        className="relative z-10"
+                        animate={{ y: [0, -2, 0] }}
+                        transition={{ duration: 1.5, repeat: Infinity }}
+                      >
+                        <Download className="w-5 h-5 sm:w-6 sm:h-6" />
+                      </motion.div>
+                      <span className="relative z-10">Download Full Proposal</span>
+                    </MagneticButton>
+                  </motion.div>
+                </motion.div>
+
+                {/* Enhanced contact info */}
+                <motion.div
+                  className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-8"
+                  initial={{ opacity: 0 }}
+                  whileInView={{ opacity: 1 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: 0.3 }}
+                >
+                  <motion.a
+                    href="mailto:rsimd@ohcs.gov.gh"
+                    className="group flex items-center gap-2 text-white/80 hover:text-white text-sm sm:text-base transition-colors"
+                    whileHover={{ scale: 1.05 }}
+                  >
+                    <motion.div
+                      className="p-2 rounded-full bg-white/10 group-hover:bg-white/20 transition-colors"
+                      whileHover={{ rotate: [0, -10, 10, 0] }}
+                      transition={{ duration: 0.5 }}
+                    >
+                      <Mail className="w-4 h-4 sm:w-5 sm:h-5" />
+                    </motion.div>
+                    <span>rsimd@ohcs.gov.gh</span>
+                  </motion.a>
+
+                  <div className="hidden sm:block w-1.5 h-1.5 rounded-full bg-ghana-gold" />
+
+                  <motion.span
+                    className="group flex items-center gap-2 text-white/80 text-sm sm:text-base"
+                    whileHover={{ scale: 1.05 }}
+                  >
+                    <motion.div
+                      className="p-2 rounded-full bg-white/10"
+                      animate={{ y: [0, -3, 0] }}
+                      transition={{ duration: 2, repeat: Infinity }}
+                    >
+                      <MapPin className="w-4 h-4 sm:w-5 sm:h-5" />
+                    </motion.div>
+                    <span>OHCS, Ministries, Accra, Ghana</span>
+                  </motion.span>
+                </motion.div>
               </div>
             </div>
           </motion.div>
