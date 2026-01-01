@@ -47,6 +47,7 @@ import {
   Send,
   CheckCircle2,
   Loader2,
+  Rocket,
 } from 'lucide-react';
 
 // ===== LOADING SCREEN COMPONENT =====
@@ -2213,180 +2214,239 @@ export default function Sponsorship() {
         </div>
       </section>
 
-      {/* ===== ENDORSEMENTS & TESTIMONIALS ===== */}
+      {/* ===== ALIGNED WITH NATIONAL DEVELOPMENT GOALS ===== */}
       <section className="relative py-24 px-6 overflow-hidden">
-        {/* Background effects */}
+        {/* Enhanced background effects */}
         <div className="absolute inset-0 pointer-events-none">
-          <div className="absolute top-1/4 left-0 w-[500px] h-[500px] bg-ghana-gold/5 rounded-full blur-3xl" />
-          <div className="absolute bottom-1/4 right-0 w-[400px] h-[400px] bg-ghana-green/5 rounded-full blur-3xl" />
+          <div className="absolute top-0 left-1/4 w-[600px] h-[600px] bg-ghana-green/8 rounded-full blur-[100px]" />
+          <div className="absolute bottom-0 right-1/4 w-[500px] h-[500px] bg-ghana-gold/8 rounded-full blur-[100px]" />
+          {/* Animated particles */}
+          {[...Array(20)].map((_, i) => (
+            <motion.div
+              key={i}
+              className="absolute w-1 h-1 bg-ghana-gold/30 rounded-full"
+              style={{
+                left: `${Math.random() * 100}%`,
+                top: `${Math.random() * 100}%`,
+              }}
+              animate={{
+                y: [0, -30, 0],
+                opacity: [0.3, 0.8, 0.3],
+              }}
+              transition={{
+                duration: 3 + Math.random() * 2,
+                repeat: Infinity,
+                delay: Math.random() * 2,
+              }}
+            />
+          ))}
         </div>
 
         <div className="max-w-6xl mx-auto relative z-10">
+          {/* Main heading with stunning animation */}
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             className="text-center mb-16"
           >
-            <span className="inline-block px-4 py-2 bg-ghana-gold/20 text-ghana-gold rounded-full text-sm font-medium mb-6">
-              ENDORSEMENTS & SUPPORT
-            </span>
-            <h2 className="text-4xl md:text-5xl font-heading font-bold mb-6 text-white">
-              Backed by{' '}
-              <span className="bg-gradient-to-r from-ghana-gold to-yellow-300 bg-clip-text text-transparent">
-                Ghana's Leaders
+            <motion.span
+              className="inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-ghana-green/20 via-ghana-gold/20 to-ghana-green/20 border border-ghana-gold/30 text-ghana-gold rounded-full text-sm font-semibold mb-8 backdrop-blur-sm"
+              animate={{
+                boxShadow: ['0 0 20px rgba(252,209,22,0.1)', '0 0 40px rgba(252,209,22,0.2)', '0 0 20px rgba(252,209,22,0.1)']
+              }}
+              transition={{ duration: 3, repeat: Infinity }}
+            >
+              <Target className="w-4 h-4" />
+              STRATEGIC NATIONAL ALIGNMENT
+            </motion.span>
+            <h2 className="text-4xl md:text-5xl lg:text-6xl font-heading font-bold mb-6 text-white">
+              Aligned with{' '}
+              <span className="relative">
+                <span className="bg-gradient-to-r from-ghana-gold via-yellow-300 to-ghana-gold bg-clip-text text-transparent">
+                  Ghana's Vision
+                </span>
+                <motion.span
+                  className="absolute -bottom-2 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-ghana-gold to-transparent"
+                  animate={{ scaleX: [0.5, 1, 0.5], opacity: [0.5, 1, 0.5] }}
+                  transition={{ duration: 3, repeat: Infinity }}
+                />
               </span>
             </h2>
-            <p className="text-xl text-surface-300 max-w-3xl mx-auto">
-              Join a movement endorsed by government officials and industry leaders
-              committed to transforming Ghana's public sector.
+            <p className="text-xl text-surface-300 max-w-3xl mx-auto leading-relaxed">
+              Your sponsorship directly supports national priorities and positions your brand
+              at the forefront of Ghana's digital transformation agenda.
             </p>
           </motion.div>
 
-          {/* Main endorsement card */}
-          <motion.div
-            initial={{ opacity: 0, y: 40 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="mb-12"
-          >
-            <div className="relative p-8 md:p-12 rounded-3xl bg-gradient-to-br from-surface-800/80 to-surface-900/90 border border-ghana-gold/30 overflow-hidden">
-              {/* Decorative quote mark */}
-              <div className="absolute top-6 left-6 text-ghana-gold/10 text-[120px] font-serif leading-none">"</div>
-
-              {/* Animated border */}
-              <motion.div
-                className="absolute inset-0 rounded-3xl"
-                style={{
-                  background: 'conic-gradient(from 0deg, transparent, rgba(252,209,22,0.2), transparent, rgba(0,107,63,0.2), transparent)',
-                }}
-                animate={{ rotate: 360 }}
-                transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-              />
-              <div className="absolute inset-[1px] bg-gradient-to-br from-surface-800/95 to-surface-900/98 rounded-3xl" />
-
-              <div className="relative z-10 flex flex-col md:flex-row gap-8 items-center">
-                {/* Avatar/Logo */}
-                <motion.div
-                  className="flex-shrink-0"
-                  whileHover={{ scale: 1.05 }}
-                >
-                  <div className="w-24 h-24 md:w-32 md:h-32 rounded-2xl bg-gradient-to-br from-ghana-gold/30 to-ghana-green/20 border-2 border-ghana-gold/40 flex items-center justify-center shadow-xl shadow-ghana-gold/10">
-                    <Building2 className="w-12 h-12 md:w-16 md:h-16 text-ghana-gold" />
-                  </div>
-                </motion.div>
-
-                {/* Quote content */}
-                <div className="flex-1 text-center md:text-left">
-                  <blockquote className="text-xl md:text-2xl text-white font-medium leading-relaxed mb-6">
-                    "The OHCS E-Library represents a paradigm shift in how Ghana's civil service accesses knowledge.
-                    This initiative will empower over 93,000 public servants with the tools they need to serve our nation better."
-                  </blockquote>
-                  <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-4">
-                    <div>
-                      <p className="text-ghana-gold font-bold text-lg">Office of the Head of Civil Service</p>
-                      <p className="text-surface-400">Government of Ghana</p>
-                    </div>
-                    <motion.div
-                      className="hidden md:flex items-center gap-2 px-4 py-2 bg-ghana-green/20 rounded-full"
-                      animate={{ scale: [1, 1.02, 1] }}
-                      transition={{ duration: 2, repeat: Infinity }}
-                    >
-                      <BadgeCheck className="w-5 h-5 text-ghana-green" />
-                      <span className="text-ghana-green text-sm font-medium">Official Endorsement</span>
-                    </motion.div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </motion.div>
-
-          {/* Supporting testimonials grid */}
-          <div className="grid md:grid-cols-3 gap-6">
+          {/* National Development Goals - Hero Cards */}
+          <div className="grid md:grid-cols-2 gap-6 mb-12">
             {[
               {
-                quote: "A groundbreaking initiative that positions Ghana as a leader in digital governance across Africa.",
-                author: "Technology Advisory Board",
-                role: "Digital Transformation Unit",
-                icon: Globe,
-                color: 'green' as const,
+                title: 'Ghana Beyond Aid',
+                description: 'Building self-reliant institutions through knowledge empowerment and digital capacity building for sustainable development.',
+                icon: Rocket,
+                gradient: 'from-ghana-green to-emerald-600',
+                bgGradient: 'from-ghana-green/20 to-emerald-600/10',
               },
               {
-                quote: "This platform will revolutionize capacity building and knowledge sharing across all MDAs.",
-                author: "Ministry of Education",
-                role: "Capacity Building Division",
-                icon: GraduationCap,
-                color: 'gold' as const,
+                title: 'Digital Ghana Agenda',
+                description: 'Accelerating the digitalization of government services and creating a knowledge-driven public sector workforce.',
+                icon: Zap,
+                gradient: 'from-ghana-gold to-yellow-400',
+                bgGradient: 'from-ghana-gold/20 to-yellow-400/10',
               },
-              {
-                quote: "The ROI potential for sponsors is exceptional, with unparalleled access to government stakeholders.",
-                author: "Ghana Investment Promotion",
-                role: "Partnership Advisory",
-                icon: TrendingUp,
-                color: 'green' as const,
-              },
-            ].map((testimonial, index) => (
+            ].map((goal, index) => (
               <motion.div
-                key={testimonial.author}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
+                key={goal.title}
+                initial={{ opacity: 0, x: index === 0 ? -30 : 30 }}
+                whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}
-                transition={{ delay: index * 0.15 }}
-                className="group relative p-6 rounded-2xl bg-gradient-to-br from-surface-800/60 to-surface-900/80 border border-white/10 hover:border-ghana-gold/30 transition-all"
+                transition={{ delay: index * 0.2 }}
+                className="group relative"
               >
-                {/* Icon */}
-                <div className={`inline-flex p-3 rounded-xl mb-4 ${
-                  testimonial.color === 'green'
-                    ? 'bg-ghana-green/20'
-                    : 'bg-ghana-gold/20'
-                }`}>
-                  <testimonial.icon className={`w-6 h-6 ${
-                    testimonial.color === 'green'
-                      ? 'text-ghana-green'
-                      : 'text-ghana-gold'
-                  }`} />
-                </div>
+                <div className={`absolute inset-0 bg-gradient-to-br ${goal.bgGradient} rounded-3xl blur-xl opacity-50 group-hover:opacity-70 transition-opacity`} />
+                <div className="relative p-8 rounded-3xl bg-gradient-to-br from-surface-800/90 to-surface-900/95 border border-white/10 group-hover:border-white/20 transition-all overflow-hidden">
+                  {/* Animated corner accent */}
+                  <motion.div
+                    className={`absolute top-0 right-0 w-32 h-32 bg-gradient-to-bl ${goal.gradient} opacity-10 rounded-bl-full`}
+                    animate={{ scale: [1, 1.1, 1] }}
+                    transition={{ duration: 4, repeat: Infinity }}
+                  />
 
-                {/* Quote */}
-                <p className="text-surface-300 text-sm leading-relaxed mb-4">
-                  "{testimonial.quote}"
-                </p>
-
-                {/* Author */}
-                <div className="pt-4 border-t border-white/10">
-                  <p className={`font-semibold ${
-                    testimonial.color === 'green'
-                      ? 'text-ghana-green'
-                      : 'text-ghana-gold'
-                  }`}>{testimonial.author}</p>
-                  <p className="text-surface-500 text-sm">{testimonial.role}</p>
+                  <div className="flex items-start gap-5">
+                    <motion.div
+                      className={`flex-shrink-0 p-4 rounded-2xl bg-gradient-to-br ${goal.gradient} shadow-lg`}
+                      whileHover={{ scale: 1.1, rotate: 5 }}
+                    >
+                      <goal.icon className="w-8 h-8 text-white" />
+                    </motion.div>
+                    <div>
+                      <h3 className="text-2xl font-bold text-white mb-3">{goal.title}</h3>
+                      <p className="text-surface-300 leading-relaxed">{goal.description}</p>
+                    </div>
+                  </div>
                 </div>
               </motion.div>
             ))}
           </div>
 
-          {/* Trust badges */}
+          {/* UN SDG Alignment - Stunning Visual */}
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="relative"
+          >
+            {/* Glowing border effect */}
+            <div className="absolute -inset-[1px] bg-gradient-to-r from-ghana-green via-ghana-gold to-ghana-green rounded-3xl opacity-30 blur-sm" />
+
+            <div className="relative p-8 md:p-12 rounded-3xl bg-gradient-to-br from-surface-800/95 to-surface-900 border border-white/10 overflow-hidden">
+              {/* Background pattern */}
+              <div className="absolute inset-0 opacity-5">
+                <div className="absolute inset-0" style={{
+                  backgroundImage: 'radial-gradient(circle at 2px 2px, white 1px, transparent 0)',
+                  backgroundSize: '32px 32px'
+                }} />
+              </div>
+
+              <div className="relative z-10">
+                <div className="flex flex-col md:flex-row items-center gap-6 mb-10">
+                  <motion.div
+                    className="p-4 rounded-2xl bg-gradient-to-br from-blue-500/20 to-blue-600/10 border border-blue-500/30"
+                    animate={{
+                      boxShadow: ['0 0 20px rgba(59,130,246,0.2)', '0 0 40px rgba(59,130,246,0.3)', '0 0 20px rgba(59,130,246,0.2)']
+                    }}
+                    transition={{ duration: 3, repeat: Infinity }}
+                  >
+                    <Globe className="w-10 h-10 text-blue-400" />
+                  </motion.div>
+                  <div className="text-center md:text-left">
+                    <h3 className="text-2xl md:text-3xl font-bold text-white mb-2">
+                      United Nations Sustainable Development Goals
+                    </h3>
+                    <p className="text-surface-400">Contributing to global development through targeted impact</p>
+                  </div>
+                </div>
+
+                {/* SDG Cards */}
+                <div className="grid sm:grid-cols-3 gap-4">
+                  {[
+                    {
+                      sdg: 'SDG 4',
+                      title: 'Quality Education',
+                      description: 'Lifelong learning opportunities for civil servants',
+                      color: 'from-red-500 to-red-600',
+                      bgColor: 'bg-red-500/10',
+                      borderColor: 'border-red-500/30',
+                    },
+                    {
+                      sdg: 'SDG 16',
+                      title: 'Strong Institutions',
+                      description: 'Building effective, accountable institutions',
+                      color: 'from-blue-500 to-blue-600',
+                      bgColor: 'bg-blue-500/10',
+                      borderColor: 'border-blue-500/30',
+                    },
+                    {
+                      sdg: 'SDG 17',
+                      title: 'Partnerships',
+                      description: 'Public-private collaboration for development',
+                      color: 'from-purple-500 to-purple-600',
+                      bgColor: 'bg-purple-500/10',
+                      borderColor: 'border-purple-500/30',
+                    },
+                  ].map((sdg, index) => (
+                    <motion.div
+                      key={sdg.sdg}
+                      initial={{ opacity: 0, y: 20 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: true }}
+                      transition={{ delay: 0.1 * index }}
+                      whileHover={{ scale: 1.02, y: -5 }}
+                      className={`relative p-6 rounded-2xl ${sdg.bgColor} border ${sdg.borderColor} overflow-hidden group cursor-default`}
+                    >
+                      {/* Animated shine effect */}
+                      <motion.div
+                        className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent -skew-x-12"
+                        initial={{ x: '-100%' }}
+                        whileHover={{ x: '100%' }}
+                        transition={{ duration: 0.6 }}
+                      />
+
+                      <div className="relative z-10">
+                        <span className={`inline-block px-3 py-1 rounded-lg bg-gradient-to-r ${sdg.color} text-white text-sm font-bold mb-3`}>
+                          {sdg.sdg}
+                        </span>
+                        <h4 className="text-white font-semibold mb-2">{sdg.title}</h4>
+                        <p className="text-surface-400 text-sm">{sdg.description}</p>
+                      </div>
+                    </motion.div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </motion.div>
+
+          {/* Impact Statement */}
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.3 }}
-            className="mt-16 text-center"
+            className="mt-12 text-center"
           >
-            <p className="text-surface-500 text-sm mb-6">ALIGNED WITH NATIONAL DEVELOPMENT GOALS</p>
-            <div className="flex flex-wrap justify-center gap-4">
-              {['Ghana Beyond Aid', 'Digital Ghana Agenda', 'SDG 4: Education', 'SDG 16: Institutions', 'SDG 17: Partnerships'].map((badge, index) => (
-                <motion.span
-                  key={badge}
-                  initial={{ opacity: 0, scale: 0.8 }}
-                  whileInView={{ opacity: 1, scale: 1 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: index * 0.1 }}
-                  className="px-4 py-2 bg-white/5 border border-white/10 rounded-full text-surface-400 text-sm hover:border-ghana-gold/30 hover:text-ghana-gold transition-all cursor-default"
-                >
-                  {badge}
-                </motion.span>
-              ))}
+            <div className="inline-flex flex-col sm:flex-row items-center gap-4 px-8 py-5 bg-gradient-to-r from-surface-800/80 via-surface-800/60 to-surface-800/80 rounded-2xl border border-white/10">
+              <motion.div
+                animate={{ rotate: [0, 360] }}
+                transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+              >
+                <Award className="w-8 h-8 text-ghana-gold" />
+              </motion.div>
+              <p className="text-surface-300">
+                Your partnership badge will reflect your commitment to{' '}
+                <span className="text-ghana-gold font-semibold">Ghana's development priorities</span>
+              </p>
             </div>
           </motion.div>
         </div>
