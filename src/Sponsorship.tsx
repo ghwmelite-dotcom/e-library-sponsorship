@@ -5,7 +5,6 @@ import { motion, useScroll, useTransform, useInView, useSpring, AnimatePresence 
 const GhanaGlobe = lazy(() => import('./components/GhanaGlobe'));
 const BrandingPreview = lazy(() => import('./components/BrandingPreview'));
 const DataVisualization = lazy(() => import('./components/DataVisualization'));
-const HorizontalStory = lazy(() => import('./components/HorizontalStory'));
 import {
   Brain,
   BookOpen,
@@ -1374,18 +1373,6 @@ export default function Sponsorship() {
           </motion.div>
         </div>
       </motion.section>
-
-      {/* ===== HORIZONTAL SCROLL STORY ===== */}
-      <Suspense fallback={
-        <div className="h-screen flex items-center justify-center bg-[#0a0908]">
-          <div className="text-center">
-            <div className="w-16 h-16 border-4 border-ghana-gold/30 border-t-ghana-gold rounded-full animate-spin mx-auto mb-4" />
-            <p className="text-surface-400">Loading Story...</p>
-          </div>
-        </div>
-      }>
-        <HorizontalStory />
-      </Suspense>
 
       {/* ===== STATISTICS BAR ===== */}
       <section className="relative py-16 border-y border-white/10 bg-gradient-to-r from-ghana-green/10 via-transparent to-ghana-green/10">
