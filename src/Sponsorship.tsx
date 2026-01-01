@@ -459,30 +459,38 @@ function SponsorTierCard({
     platinum: {
       gradient: 'from-slate-300 via-white to-slate-300',
       border: 'border-slate-300/50',
-      glow: 'shadow-slate-300/20',
+      glow: 'shadow-slate-300/30',
       icon: 'text-slate-200',
       bg: 'from-slate-800/50 to-slate-900/80',
+      accent: '#e2e8f0',
+      particle: 'bg-slate-300',
     },
     gold: {
       gradient: 'from-ghana-gold via-yellow-300 to-ghana-gold',
       border: 'border-ghana-gold/50',
-      glow: 'shadow-ghana-gold/20',
+      glow: 'shadow-ghana-gold/30',
       icon: 'text-ghana-gold',
       bg: 'from-yellow-900/30 to-amber-900/50',
+      accent: '#FCD116',
+      particle: 'bg-ghana-gold',
     },
     silver: {
       gradient: 'from-gray-400 via-gray-300 to-gray-400',
       border: 'border-gray-400/50',
-      glow: 'shadow-gray-400/20',
+      glow: 'shadow-gray-400/30',
       icon: 'text-gray-300',
       bg: 'from-gray-800/50 to-gray-900/80',
+      accent: '#9ca3af',
+      particle: 'bg-gray-400',
     },
     bronze: {
       gradient: 'from-amber-600 via-orange-400 to-amber-600',
       border: 'border-amber-600/50',
-      glow: 'shadow-amber-600/20',
+      glow: 'shadow-amber-600/30',
       icon: 'text-amber-500',
       bg: 'from-amber-900/30 to-orange-900/50',
+      accent: '#d97706',
+      particle: 'bg-amber-500',
     },
   };
 
@@ -496,26 +504,97 @@ function SponsorTierCard({
       transition={{ delay, duration: 0.6, type: "spring" }}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-      className={`relative group ${featured ? 'lg:-mt-8 lg:mb-8' : ''}`}
+      className={`relative group ${featured ? 'lg:-mt-8 lg:mb-8 z-10' : ''}`}
     >
+      {/* Featured badge with animation */}
       {featured && (
-        <div className="absolute -top-4 left-1/2 -translate-x-1/2 z-10">
-          <span className="px-4 py-1 bg-gradient-to-r from-ghana-gold to-yellow-400 text-black text-xs font-bold rounded-full shadow-lg">
+        <motion.div
+          className="absolute -top-4 left-1/2 -translate-x-1/2 z-20"
+          initial={{ y: -20, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ delay: delay + 0.3, type: "spring" }}
+        >
+          <motion.span
+            className="px-5 py-1.5 bg-gradient-to-r from-ghana-gold via-yellow-400 to-ghana-gold text-black text-xs font-bold rounded-full shadow-lg shadow-ghana-gold/30 flex items-center gap-1.5"
+            animate={{ boxShadow: ['0 10px 40px rgba(252,209,22,0.3)', '0 10px 60px rgba(252,209,22,0.5)', '0 10px 40px rgba(252,209,22,0.3)'] }}
+            transition={{ duration: 2, repeat: Infinity }}
+          >
+            <Sparkles className="w-3 h-3" />
             RECOMMENDED
-          </span>
-        </div>
+          </motion.span>
+        </motion.div>
       )}
 
-      <div className={`relative overflow-hidden rounded-3xl ${config.border} border-2 bg-gradient-to-br ${config.bg} backdrop-blur-xl transition-all duration-500 ${featured ? 'shadow-2xl ' + config.glow : ''} hover:shadow-2xl hover:${config.glow}`}>
+      <div className={`relative overflow-hidden rounded-3xl ${config.border} border-2 bg-gradient-to-br ${config.bg} backdrop-blur-xl transition-all duration-500 ${featured ? 'shadow-2xl ' + config.glow : ''} hover:shadow-2xl`}>
+        {/* Animated rotating border glow for featured */}
+        {featured && (
+          <motion.div
+            className="absolute inset-0 rounded-3xl"
+            style={{
+              background: `conic-gradient(from 0deg, transparent, ${config.accent}40, transparent, ${config.accent}20, transparent)`,
+            }}
+            animate={{ rotate: 360 }}
+            transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
+          />
+        )}
+
+        {/* Inner background */}
+        <div className={`absolute inset-[2px] rounded-3xl bg-gradient-to-br ${config.bg}`} />
+
+        {/* Floating particles on hover */}
+        <AnimatePresence>
+          {isHovered && (
+            <>
+              {[...Array(6)].map((_, i) => (
+                <motion.div
+                  key={i}
+                  className={`absolute w-1.5 h-1.5 rounded-full ${config.particle}`}
+                  initial={{
+                    x: '50%',
+                    y: '50%',
+                    opacity: 0,
+                    scale: 0,
+                  }}
+                  animate={{
+                    x: `${20 + Math.random() * 60}%`,
+                    y: `${10 + Math.random() * 80}%`,
+                    opacity: [0, 0.8, 0],
+                    scale: [0, 1, 0.5],
+                  }}
+                  exit={{ opacity: 0, scale: 0 }}
+                  transition={{
+                    duration: 2,
+                    delay: i * 0.15,
+                    repeat: Infinity,
+                  }}
+                />
+              ))}
+            </>
+          )}
+        </AnimatePresence>
+
         {/* Animated gradient border effect */}
         <div className={`absolute inset-0 bg-gradient-to-r ${config.gradient} opacity-0 group-hover:opacity-10 transition-opacity duration-500`} />
+
+        {/* Shimmer effect */}
+        <motion.div
+          className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent -skew-x-12"
+          initial={{ x: '-100%' }}
+          animate={isHovered ? { x: '200%' } : { x: '-100%' }}
+          transition={{ duration: 1, ease: "easeInOut" }}
+        />
 
         {/* Header */}
         <div className="relative p-6 pb-4 border-b border-white/10">
           <div className="flex items-center justify-between mb-4">
-            <Icon className={`w-10 h-10 ${config.icon}`} />
             <motion.div
-              animate={isHovered ? { rotate: 360 } : { rotate: 0 }}
+              className={`p-3 rounded-xl bg-white/5 backdrop-blur-sm border border-white/10`}
+              whileHover={{ scale: 1.1, rotate: [0, -5, 5, 0] }}
+            >
+              <Icon className={`w-8 h-8 ${config.icon}`} />
+            </motion.div>
+            <motion.div
+              animate={isHovered ? { rotate: 360, scale: 1.1 } : { rotate: 0, scale: 1 }}
               transition={{ duration: 1 }}
             >
               <BlackStar className={`w-8 h-8 ${config.icon}`} animate={false} />
@@ -524,11 +603,23 @@ function SponsorTierCard({
           <h3 className={`text-2xl font-heading font-bold bg-gradient-to-r ${config.gradient} bg-clip-text text-transparent`}>
             {tier}
           </h3>
-          <p className="text-3xl font-bold text-white mt-2">{investment}</p>
+          <div className="flex items-baseline gap-1 mt-2">
+            <span className="text-3xl font-bold text-white">{investment}</span>
+          </div>
+          {featured && (
+            <motion.p
+              className="text-xs text-surface-400 mt-2"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: delay + 0.5 }}
+            >
+              Maximum visibility & exclusive benefits
+            </motion.p>
+          )}
         </div>
 
-        {/* Benefits */}
-        <div className="p-6 space-y-3">
+        {/* Benefits with enhanced styling */}
+        <div className="relative p-6 space-y-3">
           <AnimatePresence>
             {benefits.map((benefit, index) => (
               <motion.div
@@ -536,21 +627,39 @@ function SponsorTierCard({
                 initial={{ opacity: 0, x: -20 }}
                 animate={isInView ? { opacity: 1, x: 0 } : {}}
                 transition={{ delay: delay + 0.1 * index }}
-                className="flex items-start gap-3"
+                className="flex items-start gap-3 group/item"
               >
-                <Check className={`w-5 h-5 ${config.icon} flex-shrink-0 mt-0.5`} />
-                <span className="text-surface-300 text-sm">{benefit}</span>
+                <motion.div
+                  className={`flex-shrink-0 mt-0.5 w-5 h-5 rounded-full flex items-center justify-center bg-gradient-to-r ${config.gradient}`}
+                  whileHover={{ scale: 1.2 }}
+                >
+                  <Check className="w-3 h-3 text-black" />
+                </motion.div>
+                <span className="text-surface-300 text-sm group-hover/item:text-white transition-colors">{benefit}</span>
               </motion.div>
             ))}
           </AnimatePresence>
         </div>
 
-        {/* CTA */}
-        <div className="p-6 pt-0">
-          <button className={`w-full py-3 rounded-xl font-semibold transition-all duration-300 bg-gradient-to-r ${config.gradient} text-black hover:shadow-lg hover:${config.glow} hover:scale-[1.02] relative overflow-hidden group`}>
-            <span className="relative z-10">Become a Partner</span>
-            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
-          </button>
+        {/* Enhanced CTA */}
+        <div className="relative p-6 pt-0">
+          <motion.a
+            href="#schedule-meeting"
+            className={`block w-full py-3.5 rounded-xl font-semibold text-center transition-all duration-300 bg-gradient-to-r ${config.gradient} text-black hover:shadow-lg relative overflow-hidden`}
+            whileHover={{ scale: 1.02, y: -2 }}
+            whileTap={{ scale: 0.98 }}
+          >
+            <span className="relative z-10 flex items-center justify-center gap-2">
+              Become a Partner
+              <ArrowRight className="w-4 h-4" />
+            </span>
+            <motion.div
+              className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent"
+              initial={{ x: '-100%' }}
+              whileHover={{ x: '100%' }}
+              transition={{ duration: 0.6 }}
+            />
+          </motion.a>
         </div>
       </div>
     </motion.div>
@@ -1771,6 +1880,17 @@ export default function Sponsorship() {
                 View Platform Demo
               </span>
             </MagneticButton>
+            <motion.button
+              onClick={() => setIsLeadModalOpen(true)}
+              className="group px-8 py-4 bg-gradient-to-r from-surface-800 to-surface-700 text-white font-semibold rounded-xl border border-ghana-gold/30 hover:border-ghana-gold/50 transition-all shadow-lg hover:shadow-ghana-gold/20"
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+            >
+              <span className="flex items-center gap-2 relative z-10">
+                <Download className="w-5 h-5 text-ghana-gold" />
+                Download Sponsor Deck
+              </span>
+            </motion.button>
           </motion.div>
 
           {/* Scroll indicator */}
@@ -2104,6 +2224,185 @@ export default function Sponsorship() {
         </div>
       </section>
 
+      {/* ===== ENDORSEMENTS & TESTIMONIALS ===== */}
+      <section className="relative py-24 px-6 overflow-hidden">
+        {/* Background effects */}
+        <div className="absolute inset-0 pointer-events-none">
+          <div className="absolute top-1/4 left-0 w-[500px] h-[500px] bg-ghana-gold/5 rounded-full blur-3xl" />
+          <div className="absolute bottom-1/4 right-0 w-[400px] h-[400px] bg-ghana-green/5 rounded-full blur-3xl" />
+        </div>
+
+        <div className="max-w-6xl mx-auto relative z-10">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center mb-16"
+          >
+            <span className="inline-block px-4 py-2 bg-ghana-gold/20 text-ghana-gold rounded-full text-sm font-medium mb-6">
+              ENDORSEMENTS & SUPPORT
+            </span>
+            <h2 className="text-4xl md:text-5xl font-heading font-bold mb-6 text-white">
+              Backed by{' '}
+              <span className="bg-gradient-to-r from-ghana-gold to-yellow-300 bg-clip-text text-transparent">
+                Ghana's Leaders
+              </span>
+            </h2>
+            <p className="text-xl text-surface-300 max-w-3xl mx-auto">
+              Join a movement endorsed by government officials and industry leaders
+              committed to transforming Ghana's public sector.
+            </p>
+          </motion.div>
+
+          {/* Main endorsement card */}
+          <motion.div
+            initial={{ opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="mb-12"
+          >
+            <div className="relative p-8 md:p-12 rounded-3xl bg-gradient-to-br from-surface-800/80 to-surface-900/90 border border-ghana-gold/30 overflow-hidden">
+              {/* Decorative quote mark */}
+              <div className="absolute top-6 left-6 text-ghana-gold/10 text-[120px] font-serif leading-none">"</div>
+
+              {/* Animated border */}
+              <motion.div
+                className="absolute inset-0 rounded-3xl"
+                style={{
+                  background: 'conic-gradient(from 0deg, transparent, rgba(252,209,22,0.2), transparent, rgba(0,107,63,0.2), transparent)',
+                }}
+                animate={{ rotate: 360 }}
+                transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+              />
+              <div className="absolute inset-[1px] bg-gradient-to-br from-surface-800/95 to-surface-900/98 rounded-3xl" />
+
+              <div className="relative z-10 flex flex-col md:flex-row gap-8 items-center">
+                {/* Avatar/Logo */}
+                <motion.div
+                  className="flex-shrink-0"
+                  whileHover={{ scale: 1.05 }}
+                >
+                  <div className="w-24 h-24 md:w-32 md:h-32 rounded-2xl bg-gradient-to-br from-ghana-gold/30 to-ghana-green/20 border-2 border-ghana-gold/40 flex items-center justify-center shadow-xl shadow-ghana-gold/10">
+                    <Building2 className="w-12 h-12 md:w-16 md:h-16 text-ghana-gold" />
+                  </div>
+                </motion.div>
+
+                {/* Quote content */}
+                <div className="flex-1 text-center md:text-left">
+                  <blockquote className="text-xl md:text-2xl text-white font-medium leading-relaxed mb-6">
+                    "The OHCS E-Library represents a paradigm shift in how Ghana's civil service accesses knowledge.
+                    This initiative will empower over 500,000 public servants with the tools they need to serve our nation better."
+                  </blockquote>
+                  <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-4">
+                    <div>
+                      <p className="text-ghana-gold font-bold text-lg">Office of the Head of Civil Service</p>
+                      <p className="text-surface-400">Government of Ghana</p>
+                    </div>
+                    <motion.div
+                      className="hidden md:flex items-center gap-2 px-4 py-2 bg-ghana-green/20 rounded-full"
+                      animate={{ scale: [1, 1.02, 1] }}
+                      transition={{ duration: 2, repeat: Infinity }}
+                    >
+                      <BadgeCheck className="w-5 h-5 text-ghana-green" />
+                      <span className="text-ghana-green text-sm font-medium">Official Endorsement</span>
+                    </motion.div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </motion.div>
+
+          {/* Supporting testimonials grid */}
+          <div className="grid md:grid-cols-3 gap-6">
+            {[
+              {
+                quote: "A groundbreaking initiative that positions Ghana as a leader in digital governance across Africa.",
+                author: "Technology Advisory Board",
+                role: "Digital Transformation Unit",
+                icon: Globe,
+                color: 'green' as const,
+              },
+              {
+                quote: "This platform will revolutionize capacity building and knowledge sharing across all MDAs.",
+                author: "Ministry of Education",
+                role: "Capacity Building Division",
+                icon: GraduationCap,
+                color: 'gold' as const,
+              },
+              {
+                quote: "The ROI potential for sponsors is exceptional, with unparalleled access to government stakeholders.",
+                author: "Ghana Investment Promotion",
+                role: "Partnership Advisory",
+                icon: TrendingUp,
+                color: 'green' as const,
+              },
+            ].map((testimonial, index) => (
+              <motion.div
+                key={testimonial.author}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: index * 0.15 }}
+                className="group relative p-6 rounded-2xl bg-gradient-to-br from-surface-800/60 to-surface-900/80 border border-white/10 hover:border-ghana-gold/30 transition-all"
+              >
+                {/* Icon */}
+                <div className={`inline-flex p-3 rounded-xl mb-4 ${
+                  testimonial.color === 'green'
+                    ? 'bg-ghana-green/20'
+                    : 'bg-ghana-gold/20'
+                }`}>
+                  <testimonial.icon className={`w-6 h-6 ${
+                    testimonial.color === 'green'
+                      ? 'text-ghana-green'
+                      : 'text-ghana-gold'
+                  }`} />
+                </div>
+
+                {/* Quote */}
+                <p className="text-surface-300 text-sm leading-relaxed mb-4">
+                  "{testimonial.quote}"
+                </p>
+
+                {/* Author */}
+                <div className="pt-4 border-t border-white/10">
+                  <p className={`font-semibold ${
+                    testimonial.color === 'green'
+                      ? 'text-ghana-green'
+                      : 'text-ghana-gold'
+                  }`}>{testimonial.author}</p>
+                  <p className="text-surface-500 text-sm">{testimonial.role}</p>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+
+          {/* Trust badges */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.3 }}
+            className="mt-16 text-center"
+          >
+            <p className="text-surface-500 text-sm mb-6">ALIGNED WITH NATIONAL DEVELOPMENT GOALS</p>
+            <div className="flex flex-wrap justify-center gap-4">
+              {['Ghana Beyond Aid', 'Digital Ghana Agenda', 'SDG 4: Education', 'SDG 16: Institutions', 'SDG 17: Partnerships'].map((badge, index) => (
+                <motion.span
+                  key={badge}
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  whileInView={{ opacity: 1, scale: 1 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: index * 0.1 }}
+                  className="px-4 py-2 bg-white/5 border border-white/10 rounded-full text-surface-400 text-sm hover:border-ghana-gold/30 hover:text-ghana-gold transition-all cursor-default"
+                >
+                  {badge}
+                </motion.span>
+              ))}
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
       {/* ===== ROI CALCULATOR ===== */}
       <section className="relative py-24 px-6 bg-gradient-to-b from-transparent via-ghana-green/5 to-transparent">
         <div className="max-w-4xl mx-auto">
@@ -2329,6 +2628,202 @@ export default function Sponsorship() {
               ))}
             </div>
           </div>
+        </div>
+      </section>
+
+      {/* ===== STRATEGIC PARTNERS & CONNECTIONS ===== */}
+      <section className="relative py-24 px-6 bg-gradient-to-b from-transparent via-surface-900/50 to-transparent overflow-hidden">
+        {/* Background effects */}
+        <div className="absolute inset-0 pointer-events-none">
+          <motion.div
+            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] rounded-full"
+            style={{
+              background: 'radial-gradient(circle, rgba(252,209,22,0.05) 0%, transparent 70%)',
+            }}
+            animate={{ scale: [1, 1.1, 1], rotate: [0, 180, 360] }}
+            transition={{ duration: 30, repeat: Infinity, ease: "linear" }}
+          />
+        </div>
+
+        <div className="max-w-6xl mx-auto relative z-10">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center mb-16"
+          >
+            <span className="inline-block px-4 py-2 bg-ghana-green/20 text-ghana-green rounded-full text-sm font-medium mb-6">
+              STRATEGIC NETWORK
+            </span>
+            <h2 className="text-4xl md:text-5xl font-heading font-bold mb-6 text-white">
+              Connect with{' '}
+              <span className="bg-gradient-to-r from-ghana-green to-ghana-gold bg-clip-text text-transparent">
+                Key Stakeholders
+              </span>
+            </h2>
+            <p className="text-xl text-surface-300 max-w-3xl mx-auto">
+              Join our network of strategic partners and leverage established relationships
+              with Ghana's key institutions and industry bodies.
+            </p>
+          </motion.div>
+
+          {/* Target Sponsor Categories */}
+          <div className="grid md:grid-cols-2 gap-8 mb-16">
+            {/* Tier 1 - High Alignment */}
+            <motion.div
+              initial={{ opacity: 0, x: -30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              className="relative p-6 md:p-8 rounded-2xl bg-gradient-to-br from-ghana-gold/10 to-surface-900/80 border border-ghana-gold/30 overflow-hidden"
+            >
+              <motion.div
+                className="absolute top-0 right-0 w-32 h-32 bg-ghana-gold/10 rounded-full blur-3xl"
+                animate={{ scale: [1, 1.2, 1], opacity: [0.3, 0.5, 0.3] }}
+                transition={{ duration: 4, repeat: Infinity }}
+              />
+
+              <div className="relative z-10">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="p-2 rounded-lg bg-ghana-gold/20">
+                    <Crown className="w-6 h-6 text-ghana-gold" />
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-bold text-white">Tier 1 - High Alignment</h3>
+                    <p className="text-surface-400 text-sm">Natural strategic partners</p>
+                  </div>
+                </div>
+
+                <div className="space-y-3">
+                  {[
+                    { name: 'Technology Companies', examples: 'Microsoft, Google, Oracle, SAP' },
+                    { name: 'Telecom Providers', examples: 'MTN Ghana, Vodafone, AirtelTigo' },
+                    { name: 'Financial Institutions', examples: 'Ecobank, Stanbic, GCB Bank' },
+                  ].map((category, i) => (
+                    <motion.div
+                      key={category.name}
+                      initial={{ opacity: 0, x: -20 }}
+                      whileInView={{ opacity: 1, x: 0 }}
+                      viewport={{ once: true }}
+                      transition={{ delay: i * 0.1 }}
+                      className="p-3 rounded-xl bg-white/5 border border-white/10 hover:border-ghana-gold/30 transition-all"
+                    >
+                      <p className="text-white font-medium text-sm">{category.name}</p>
+                      <p className="text-surface-500 text-xs">{category.examples}</p>
+                    </motion.div>
+                  ))}
+                </div>
+              </div>
+            </motion.div>
+
+            {/* Tier 2 - CSR Focused */}
+            <motion.div
+              initial={{ opacity: 0, x: 30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              className="relative p-6 md:p-8 rounded-2xl bg-gradient-to-br from-ghana-green/10 to-surface-900/80 border border-ghana-green/30 overflow-hidden"
+            >
+              <motion.div
+                className="absolute top-0 right-0 w-32 h-32 bg-ghana-green/10 rounded-full blur-3xl"
+                animate={{ scale: [1, 1.2, 1], opacity: [0.3, 0.5, 0.3] }}
+                transition={{ duration: 4, repeat: Infinity, delay: 1 }}
+              />
+
+              <div className="relative z-10">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="p-2 rounded-lg bg-ghana-green/20">
+                    <Heart className="w-6 h-6 text-ghana-green" />
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-bold text-white">Tier 2 - CSR Focused</h3>
+                    <p className="text-surface-400 text-sm">Strong social impact alignment</p>
+                  </div>
+                </div>
+
+                <div className="space-y-3">
+                  {[
+                    { name: 'Oil & Energy Sector', examples: 'Tullow Oil, ENI Ghana, Ghana Gas' },
+                    { name: 'Mining Companies', examples: 'Gold Fields, Newmont, AngloGold' },
+                    { name: 'FMCG & Consumer', examples: 'Unilever, Nestlé Ghana, Coca-Cola' },
+                  ].map((category, i) => (
+                    <motion.div
+                      key={category.name}
+                      initial={{ opacity: 0, x: 20 }}
+                      whileInView={{ opacity: 1, x: 0 }}
+                      viewport={{ once: true }}
+                      transition={{ delay: i * 0.1 }}
+                      className="p-3 rounded-xl bg-white/5 border border-white/10 hover:border-ghana-green/30 transition-all"
+                    >
+                      <p className="text-white font-medium text-sm">{category.name}</p>
+                      <p className="text-surface-500 text-xs">{category.examples}</p>
+                    </motion.div>
+                  ))}
+                </div>
+              </div>
+            </motion.div>
+          </div>
+
+          {/* Strategic Connections */}
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center mb-8"
+          >
+            <h3 className="text-2xl font-bold text-white mb-4">Leverage Our Strategic Connections</h3>
+            <p className="text-surface-400 max-w-2xl mx-auto">
+              As a sponsor, gain introductions and networking opportunities with these key institutions
+            </p>
+          </motion.div>
+
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            {[
+              { name: 'Ghana Investment Promotion Centre', abbr: 'GIPC', icon: Building2 },
+              { name: 'Ghana Chamber of Commerce', abbr: 'GNCCI', icon: Handshake },
+              { name: 'Association of Ghana Industries', abbr: 'AGI', icon: Building },
+              { name: 'Ghana Employers Association', abbr: 'GEA', icon: Users },
+            ].map((org, index) => (
+              <motion.div
+                key={org.abbr}
+                initial={{ opacity: 0, scale: 0.9 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true }}
+                transition={{ delay: index * 0.1 }}
+                whileHover={{ y: -5, scale: 1.02 }}
+                className="group p-4 md:p-6 rounded-xl bg-gradient-to-br from-surface-800/60 to-surface-900/80 border border-white/10 hover:border-ghana-gold/30 transition-all text-center"
+              >
+                <motion.div
+                  className="inline-flex p-3 rounded-xl bg-white/5 group-hover:bg-ghana-gold/10 transition-colors mb-3"
+                  whileHover={{ rotate: [0, -5, 5, 0] }}
+                >
+                  <org.icon className="w-6 h-6 text-surface-400 group-hover:text-ghana-gold transition-colors" />
+                </motion.div>
+                <p className="text-ghana-gold font-bold text-lg">{org.abbr}</p>
+                <p className="text-surface-500 text-xs mt-1 hidden md:block">{org.name}</p>
+              </motion.div>
+            ))}
+          </div>
+
+          {/* CTA for strategic partnerships */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="mt-12 text-center"
+          >
+            <p className="text-surface-400 mb-6">
+              Interested in strategic partnership opportunities?
+            </p>
+            <motion.a
+              href="#schedule-meeting"
+              className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-ghana-green to-ghana-green/80 text-white font-semibold rounded-xl shadow-lg shadow-ghana-green/20 hover:shadow-ghana-green/40 transition-all"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.98 }}
+            >
+              <Handshake className="w-5 h-5" />
+              <span>Discuss Partnership</span>
+              <ArrowRight className="w-4 h-4" />
+            </motion.a>
+          </motion.div>
         </div>
       </section>
 
@@ -2689,6 +3184,33 @@ export default function Sponsorship() {
                     </motion.div>
                     <span className="relative z-10 hidden sm:inline">Call: +233 505 982 361</span>
                     <span className="relative z-10 sm:hidden">+233 505 982 361</span>
+                  </motion.a>
+
+                  {/* WhatsApp Button - Popular in Ghana */}
+                  <motion.a
+                    href="https://wa.me/233505982361?text=Hello%2C%20I%27m%20interested%20in%20the%20OHCS%20E-Library%20sponsorship%20opportunity.%20I%27d%20like%20to%20learn%20more%20about%20partnership%20options."
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="group relative w-full py-3.5 sm:py-4 px-4 sm:px-6 bg-gradient-to-r from-[#25D366] to-[#128C7E] text-white font-semibold rounded-xl sm:rounded-2xl shadow-lg shadow-[#25D366]/20 transition-all flex items-center justify-center gap-2 sm:gap-3 overflow-hidden text-sm sm:text-base"
+                    whileHover={{ scale: 1.02, y: -2 }}
+                    whileTap={{ scale: 0.98 }}
+                  >
+                    <motion.div
+                      className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent"
+                      animate={{ x: ['-100%', '100%'] }}
+                      transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+                    />
+                    <svg className="w-5 h-5 sm:w-6 sm:h-6 relative z-10" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+                    </svg>
+                    <span className="relative z-10">Chat on WhatsApp</span>
+                    <motion.span
+                      className="relative z-10 px-2 py-0.5 bg-white/20 rounded-full text-xs"
+                      animate={{ scale: [1, 1.1, 1] }}
+                      transition={{ duration: 2, repeat: Infinity }}
+                    >
+                      Instant
+                    </motion.span>
                   </motion.a>
                 </div>
 
